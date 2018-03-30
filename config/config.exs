@@ -6,16 +6,14 @@
 use Mix.Config
 
 # General application configuration
-config :ex_diet,
-  ecto_repos: [ExDiet.Repo]
+config :ex_diet, ecto_repos: [ExDiet.Repo]
 
 # Configures the endpoint
 config :ex_diet, ExDietWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "m4NcRfxYZzAignPAWdzNap0Ljg6SoStDrfecjXTyVB73+LdHMNS6/I145MiRAXe9",
   render_errors: [view: ExDietWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: ExDiet.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: ExDiet.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -24,4 +22,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

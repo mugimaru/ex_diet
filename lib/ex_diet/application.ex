@@ -1,4 +1,6 @@
 defmodule ExDiet.Application do
+  @moduledoc false
+
   use Application
 
   # See https://hexdocs.pm/elixir/Application.html
@@ -11,7 +13,7 @@ defmodule ExDiet.Application do
       # Start the Ecto repository
       supervisor(ExDiet.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(ExDietWeb.Endpoint, []),
+      supervisor(ExDietWeb.Endpoint, [])
       # Start your own worker by calling: ExDiet.Worker.start_link(arg1, arg2, arg3)
       # worker(ExDiet.Worker, [arg1, arg2, arg3]),
     ]

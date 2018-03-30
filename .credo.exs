@@ -56,7 +56,7 @@
 
         # For some checks, like AliasUsage, you can only customize the priority
         # Priority values are: `low, normal, high, higher`
-        {Credo.Check.Design.AliasUsage, priority: :low, if_called_more_often_than: 1},
+        {Credo.Check.Design.AliasUsage, priority: :low, if_called_more_often_than: 2},
 
         # For others you can set parameters
 
@@ -82,7 +82,6 @@
         {Credo.Check.Readability.TrailingBlankLine},
         {Credo.Check.Readability.TrailingWhiteSpace},
         {Credo.Check.Readability.VariableNames},
-        {Credo.Check.Readability.Specs},
 
         {Credo.Check.Refactor.ABCSize, max_size: 50},
         {Credo.Check.Refactor.CondStatements},
