@@ -39,10 +39,17 @@ defmodule ExDiet.Mixfile do
     [
       {:phoenix, "~> 1.3.2"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
+      {:phoenix_ecto, "~> 3.3"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
+
+      {:absinthe, "~> 1.4.9"},
+      {:absinthe_plug, "~> 1.4.2"},
+      {:absinthe_relay, "~> 1.4.2"},
+      {:absinthe_phoenix, ">= 0.0.0"},
+      {:dataloader, "~> 1.0.0"},
+
       {:gettext, "~> 0.11"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},

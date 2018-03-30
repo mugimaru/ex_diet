@@ -1,6 +1,9 @@
 defmodule ExDietWeb.Router do
   use ExDietWeb, :router
 
+  pipeline :graphql do
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -11,6 +14,16 @@ defmodule ExDietWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  scope "/api" do
+    pipe_through(:graphql)
+
+    forward("/graphql", Absinthe.Plug, schema: ExDietWeb.GraphQL.Schema)
+
+    unless Mix.env() == :prod do
+      forward("/graphiql", Absinthe.Plug.GraphiQL, schema: ExDietWeb.GraphQL.Schema, interface: :advanced)
+    end
   end
 
   scope "/", ExDietWeb do
