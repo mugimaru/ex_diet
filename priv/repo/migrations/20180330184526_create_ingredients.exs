@@ -2,8 +2,7 @@ defmodule ExDiet.Repo.Migrations.CreateIngredients do
   use Ecto.Migration
 
   def change do
-    create table(:ingredients, primary_key: false) do
-      add :id, :binary_id, primary_key: true
+    create table(:ingredients) do
       add :name, :string, null: false
       add :protein, :decimal, null: false, default: 0
       add :fat, :decimal, null: false, default: 0

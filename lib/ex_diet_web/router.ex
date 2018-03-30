@@ -27,10 +27,6 @@ defmodule ExDietWeb.Router do
     pipe_through(:graphql)
 
     forward("/graphql", Absinthe.Plug, schema: ExDietWeb.GraphQL.Schema)
-
-    unless Mix.env() == :prod do
-      forward("/graphiql", Absinthe.Plug.GraphiQL, schema: ExDietWeb.GraphQL.Schema, interface: :advanced)
-    end
   end
 
   # Other scopes may use custom stacks.
