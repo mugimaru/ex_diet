@@ -1,19 +1,54 @@
-# ExDiet
+# ExDiet: calories calculator & daily meal planner
 
-To start your Phoenix server:
+## Stack
+* [Elixir](https://elixir-lang.org/)
+* [Phoenix](http://phoenixframework.org/)
+* [GraphQL](graphql.org) with [absinthe](https://github.com/absinthe-graphql/absinthe)
+* [Vue.js](https://vuejs.org/)
+* [TwitterBootstrap 4](https://getbootstrap.com/)
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Start Phoenix endpoint with `mix phx.server`
+## TODO
+- [x] bootstrap a phoenix app
+- [x] bootstrap an UI with vuejs
+- [x] setup graphql endpoint
+- [ ] build the core domain (ingredients, recipes, meals, calendar, etc)
+- [ ] build graphql API
+- [ ] add an UI
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+## Development
 
-## Learn more
+### Docker
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+prepare an image
+```
+docker-compose build web
+docker-compose run web mix ecto.prepare
+```
+
+```
+docker-compose up web
+```
+
+### Localhost
+
+```
+mix deps.get
+mix ecto.prepare
+mix phx.server
+```
+
+## Test
+
+### Docker
+
+```
+docker-compose run --rm test
+```
+
+### Localhost
+
+```
+mix deps.get
+mix test
+```
