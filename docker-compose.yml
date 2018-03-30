@@ -1,0 +1,51 @@
+version: '3.5'
+
+services:
+  web:
+    build: .
+    ports:
+      - "4000:4000"
+    command: mix phx.server
+    working_dir: /app
+    environment:
+      BUILD_PATH: /appdata/_build
+      DEPS_PATH: /appdata/deps
+      MIX_ENV: test
+      PG_USER: "postgres"
+      PG_PASSWORD: "postgres"
+      PG_HOST: "db"
+    links:
+      - db
+    volumes:
+      - .:/app
+      - appdata:/appdata
+
+  test:
+    image: exdiet_web
+    command: mix do deps.get, test
+    working_dir: /app
+    environment:
+      BUILD_PATH: /appdata/_build
+      DEPS_PATH: /appdata/deps
+      MIX_ENV: test
+      PG_USER: "postgres"
+      PG_PASSWORD: "postgres"
+      PG_HOST: "db"
+    links:
+      - db
+    volumes:
+      - .:/app
+      - appdata:/appdata
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  appdata: {}
+  pgdata: {}
