@@ -11,7 +11,9 @@ config :ex_diet, ExDietWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
+  watchers: [
+    node: ["node_modules/webpack/bin/webpack.js", "--watch", "--colors", cd: Path.expand("../assets", __DIR__)]
+  ]
 
 # ## SSL Support
 #

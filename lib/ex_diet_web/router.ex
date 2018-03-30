@@ -16,6 +16,12 @@ defmodule ExDietWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", ExDietWeb do
+    pipe_through :browser # Use the default browser stack
+
+    get "/", PageController, :index
+  end
+
   scope "/api" do
     pipe_through(:graphql)
 
@@ -24,12 +30,6 @@ defmodule ExDietWeb.Router do
     unless Mix.env() == :prod do
       forward("/graphiql", Absinthe.Plug.GraphiQL, schema: ExDietWeb.GraphQL.Schema, interface: :advanced)
     end
-  end
-
-  scope "/", ExDietWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
