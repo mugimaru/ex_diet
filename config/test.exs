@@ -16,4 +16,5 @@ config :ex_diet, ExDiet.Repo,
   password: System.get_env("PG_PASSWORD") || "postgres",
   database: System.get_env("PG_DATABASE") || "ex_diet-test",
   hostname: System.get_env("PG_HOST") || "localhost",
+  port: System.get_env("PGPORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox
