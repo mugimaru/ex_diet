@@ -2,6 +2,7 @@ defmodule ExDietWeb.Router do
   use ExDietWeb, :router
 
   pipeline :graphql do
+    plug(ExDietWeb.GraphQL.Plug.TokenAuth)
   end
 
   pipeline :browser do

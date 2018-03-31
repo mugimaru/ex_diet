@@ -20,10 +20,23 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+config :ex_diet, ExDiet.Accounts.Authentication,
+  issuer: "ex_diet",
+  secret_key: "4B/mGEhi852GZSMwEuPeiwsU5VrK7Ne7V22FL0gc05PO36nYWESuUQvsgPodF/Bg",
+  token_ttl: %{
+    "access" => {365, :day}
+  }
+
 config :guardian, Guardian.DB,
   repo: ExDiet.Repo,
   schema_name: "auth_tokens",
   sweep_interval: 60
+
+config :cors_plug,
+  origin: ["http://localhost:3000"],
+  headers: ["X-Apollo-Tracing", "Content-Type", "Authorization"],
+  max_age: 86400,
+  methods: ["GET", "POST"]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

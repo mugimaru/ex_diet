@@ -19,15 +19,22 @@ defmodule ExDietWeb.GraphQL.Errors do
   @spec from_code(atom) :: {:error, map}
 
   def from_code(:not_found), do: not_found()
+  def from_code(:invalid_credentials), do: invalid_credentials()
 
   @spec not_found() :: {:error, map}
 
   def not_found do
-    {:error,
-     %{
-       message: dgettext("errors", "resource not found"),
-       code: "not_found"
-     }}
+    {:error, %{message: dgettext("errors", "resource not found"), code: "not_found"}}
+  end
+
+  @spec authentication_required() :: {:error, map}
+
+  def authentication_required do
+    {:error, %{message: dgettext("errors", "authentication required"), code: "authentication_required"}}
+  end
+
+  def invalid_credentials do
+    {:error, %{message: dgettext("errors", "invalid credentials"), code: "invalid_credentials"}}
   end
 
   @spec from_changeset(Changeset.t()) :: {:error, error}

@@ -13,4 +13,8 @@ defmodule ExDietWeb.ErrorView do
   def template_not_found(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
   end
+
+  def render("401.json", assigns) do
+    %{errors: [%{message: "Not authorized", code: assigns[:reason]}]}
+  end
 end

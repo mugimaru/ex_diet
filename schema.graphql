@@ -1,0 +1,131 @@
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+directive @action(mode: ActionMode!) on SUBSCRIPTION | MUTATION | QUERY
+
+directive @put on INLINE_FRAGMENT | FRAGMENT_SPREAD | FIELD
+
+enum ActionMode {
+  EXTERNAL
+  INTERNAL
+}
+
+input CreateIngredientInput {
+  carbonhydrate: Decimal!
+  energy: Decimal!
+  fat: Decimal!
+  name: String!
+  protein: Decimal!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+}
+
+# The `DateTime` scalar type represents a date and time in the UTC
+# timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+# string, including UTC timezone ("Z"). The parsed date and time string will
+# be converted to UTC and any UTC offset other than 0 will be rejected.
+scalar DateTime
+
+# The `Decimal` scalar type represents signed double-precision fractional
+# values parsed by the `Decimal` library.  The Decimal appears in a JSON
+# response as a string to preserve precision.
+scalar Decimal
+
+type Ingredient implements Node {
+  carbonhydrate: Decimal!
+  energy: Decimal!
+  fat: Decimal!
+
+  # The ID of an object
+  id: ID!
+  insertedAt: DateTime
+  name: String!
+  protein: Decimal!
+  updatedAt: DateTime
+}
+
+type IngredientConnection {
+  edges: [IngredientEdge]
+  pageInfo: PageInfo!
+}
+
+type IngredientEdge {
+  # A cursor for use in pagination
+  cursor: String!
+
+  # The item at the end of the edge
+  node: Ingredient
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+type PageInfo {
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+}
+
+type RootMutationType {
+  createIngredient(input: CreateIngredientInput!): Ingredient
+  createUser(input: CreateUserInput!): Session
+  deleteIngredient(id: ID!): Ingredient
+  login(input: LoginUserInput!): Session
+  logout: User
+  updateIngredient(id: ID!, input: UpdateIngredientInput!): Ingredient
+}
+
+type RootQueryType {
+  listIngredients(after: String, before: String, first: Int, last: Int): IngredientConnection
+  me: User
+
+  # Fetches an object given its ID
+  node(
+    # The id of an object.
+    id: ID!
+  ): Node
+}
+
+type Session {
+  token: String!
+  user: User!
+}
+
+input UpdateIngredientInput {
+  carbonhydrate: Decimal
+  energy: Decimal
+  fat: Decimal
+  name: String
+  protein: Decimal
+}
+
+type User implements Node {
+  email: String!
+
+  # The ID of an object
+  id: ID!
+  insertedAt: DateTime
+  updatedAt: DateTime
+}
+

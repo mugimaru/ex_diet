@@ -1,8 +1,11 @@
 {
-  "extensions": {
-    "endpoints": {
-      "development": {
-        "url": "http://localhost:4000/api/graphql"
+  "projects": {
+    "ExDiet": {
+      "schemaPath": "schema.graphql",
+      "extensions": {
+        "endpoints": {
+          "dev": "http://localhost:4000/api/graphql"
+        }
       }
     }
   }

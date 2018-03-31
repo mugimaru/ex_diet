@@ -43,6 +43,16 @@ defmodule ExDiet.GraphQLCase do
       def body_json(conn) do
         Poison.decode!(conn.resp_body, %{keys: :atoms})
       end
+
+      def authenticate(conn, %ExDiet.Accounts.User{} = user, opts \\ []) do
+        {:ok, token, _claims} = ExDiet.Accounts.Authentication.encode_and_sign(user, %{"typ" => "access"}, opts)
+        put_jwt_token(conn, token)
+      end
+
+      def put_jwt_token(conn, token) do
+        conn
+        |> put_req_header("authorization", "Bearer " <> token)
+      end
     end
   end
 end

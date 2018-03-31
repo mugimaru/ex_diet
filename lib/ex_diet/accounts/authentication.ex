@@ -1,12 +1,14 @@
 defmodule ExDiet.Accounts.Authentication do
+  @moduledoc """
+  Authentication helpers
+  """
+
   use Guardian, otp_app: :ex_diet
   require Logger
 
   alias ExDiet.Repo
-  alias ExDiet.Accounts
   alias ExDiet.Accounts.User
   alias Guardian.DB
-  alias Guardian.Token
 
   def subject_for_token(%User{} = resource, _claims \\ %{}) do
     {:ok, to_string(resource.id)}

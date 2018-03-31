@@ -12,4 +12,11 @@ defmodule ExDiet.Factory do
       energy: Enum.random(100..500) * 0.31
     }
   end
+
+  def user_factory do
+    %ExDiet.Accounts.User{
+      email: sequence(:email, &"user-#{&1}@example.com"),
+      password_hash: sequence("Password")
+    }
+  end
 end

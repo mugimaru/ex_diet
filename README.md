@@ -12,6 +12,7 @@
 - [x] bootstrap a phoenix app
 - [x] bootstrap an UI with vuejs
 - [x] setup graphql endpoint
+- [x] setup token authentication
 - [ ] build the core domain (ingredients, recipes, meals, calendar, etc)
 - [ ] build graphql API
 - [ ] add an UI
@@ -37,6 +38,20 @@ docker-compose up web
 mix deps.get
 mix ecto.prepare
 mix phx.server
+```
+
+### Graphql tools
+
+Update schema.graphql
+```
+npm install -g get-graphql-schema
+get-graphql-schema http://localhost:4000/api/graphql > schema.graphql
+```
+
+Run graphql playground
+```
+npm install -g graphql-cli
+graphql playground
 ```
 
 ## Test

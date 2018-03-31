@@ -1,4 +1,6 @@
 defmodule ExDiet.Accounts.User do
+  @moduledoc "User schema"
+
   use ExDiet.Schema
   import Ecto.Changeset
   import Ecto.Query

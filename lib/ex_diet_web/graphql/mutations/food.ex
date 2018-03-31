@@ -5,6 +5,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
   use Absinthe.Relay.Schema.Notation, :modern
 
   alias ExDietWeb.GraphQL.Resolvers.Food, as: Resolver
+  alias ExDietWeb.GraphQL.Middleware.RequireAuth
 
   input_object :create_ingredient_input do
     field(:name, non_null(:string))
@@ -26,6 +27,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field :create_ingredient, :ingredient do
       arg(:input, non_null(:create_ingredient_input))
 
+      middleware(RequireAuth)
       resolve(&Resolver.create_ingredient/3)
     end
 
@@ -33,12 +35,14 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
       arg(:id, non_null(:id))
       arg(:input, non_null(:update_ingredient_input))
 
+      middleware(RequireAuth)
       resolve(&Resolver.update_ingredient/3)
     end
 
     field :delete_ingredient, :ingredient do
       arg(:id, non_null(:id))
 
+      middleware(RequireAuth)
       resolve(&Resolver.delete_ingredient/3)
     end
   end

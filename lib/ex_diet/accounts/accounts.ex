@@ -22,5 +22,9 @@ defmodule ExDiet.Accounts do
     Authentication.login_user_with_token(token, token_type)
   end
 
-  def logout(u), do: Authentication.logout_user(u)
+  def logout(user) do
+    with {_deleted, _} <- Authentication.logout_user(user) do
+      {:ok, user}
+    end
+  end
 end

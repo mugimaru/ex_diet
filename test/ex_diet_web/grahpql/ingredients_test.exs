@@ -32,11 +32,12 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
   """
 
   test "an ability to create, update, read and delete ingredients" do
+    user = insert(:user)
     # create
     params = params_for(:ingredient, protein: 1, fat: 2, carbonhydrate: 3, energy: 4, name: "foobar")
-    conn = build_conn() |> graphql_send(@create_query, %{input: params})
+    conn = build_conn() |> authenticate(user)
 
-    result = conn |> graphql_result(:createIngredient)
+    result = conn |> graphql_send(@create_query, %{input: params}) |> graphql_result(:createIngredient)
 
     assert %{
              id: id,
@@ -59,7 +60,7 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
     assert result == [%{id: id}]
 
     # delete
-    conn = conn |> graphql_send(@delete_query, id: id)
+    conn = build_conn() |> authenticate(user) |> graphql_send(@delete_query, id: id)
     result = conn |> graphql_result(:deleteIngredient)
     assert result == %{id: id}
 
@@ -74,6 +75,7 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
 
     result =
       build_conn()
+      |> authenticate(insert(:user))
       |> graphql_send(@create_query, input: params_for(:ingredient, name: "foo"))
       |> graphql_errors()
 
