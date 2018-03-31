@@ -42,6 +42,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
   node object(:recipe) do
     field(:name, non_null(:string))
     field(:description, :string)
+    field(:weight_cooked, :integer)
 
     field(:user, :user) do
       resolve(dataloader(Recipe, :user))

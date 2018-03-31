@@ -10,6 +10,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
     createRecipe(input: $input) {
       name
       description
+      weight_cooked
       recipeIngredients {
         ingredient {
           name
@@ -25,6 +26,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
     updateRecipe(input: $input, id: $id) {
       name
       description
+      weight_cooked
       recipeIngredients {
         ingredient { name }
         weight
@@ -64,6 +66,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
 
       assert %{
                name: params[:name],
+               weight_cooked: nil,
                description: params[:description],
                recipeIngredients: [
                  %{ingredient: %{name: ingredient.name}, weight: 42}
@@ -83,6 +86,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
 
       params = %{
         name: "foo",
+        weight_cooked: 100,
         recipe_ingredients: [
           %{ingredient_id: ingredient_gid, weight: 31}
         ]
@@ -97,6 +101,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
       assert %{
                name: "foo",
                description: "bar",
+               weight_cooked: 100,
                recipeIngredients: [
                  %{ingredient: %{name: new_ingredient.name}, weight: 31},
                  %{ingredient: %{name: ingredient.name}, weight: 42}
@@ -106,7 +111,6 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
   end
 
   describe "`deleteRecipe` mutation" do
-    @tag :wip
     test "deletes recipe", %{user: user} do
       recipe = insert(:recipe)
       recipe_gid = Node.to_global_id("Recipe", recipe.id)
