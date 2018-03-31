@@ -3,6 +3,7 @@ defmodule ExDiet.Food.Ingredient do
 
   use ExDiet.Schema
   import Ecto.Changeset
+  alias ExDiet.Food.{RecipeIngredient, Recipe}
 
   @type t :: %__MODULE__{
           id: String.t(),
@@ -25,6 +26,8 @@ defmodule ExDiet.Food.Ingredient do
     field(:energy, :decimal)
 
     belongs_to(:user, ExDiet.Accounts.User)
+    has_many(:recipe_ingredients, RecipeIngredient)
+    many_to_many(:recipes, Recipe, join_through: RecipeIngredient)
 
     timestamps()
   end

@@ -3,7 +3,6 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
 
   alias ExDiet.Repo
   alias ExDiet.Food
-  import ExDietWeb.GraphQL.Resolvers.Node, only: [fetch_by_gid: 1]
 
   def list_ingredients(_parent, args, _resolution) do
     Absinthe.Relay.Connection.from_query(Food.Ingredient, &Repo.all/1, args)
@@ -16,22 +15,48 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
   end
 
   def update_ingredient(_, %{id: id, input: args}, _) do
-    mutate_ingredient(id, &Food.update_ingredient(&1, args))
+    with {:ok, ingredient} <- Repo.fetch(Food.Ingredient, id) do
+      Food.update_ingredient(ingredient, args)
+    end
   end
 
   def delete_ingredient(_, %{id: id}, _) do
-    mutate_ingredient(id, &Food.delete_ingredient/1)
-  end
-
-  defp mutate_ingredient(id, fun) do
-    with {:ok, %Food.Ingredient{} = ingredient} <- fetch_by_gid(id) do
-      fun.(ingredient)
-    else
-      {:ok, _type} ->
-        {:error, :invalid_entity_type}
-
-      any ->
-        any
+    with {:ok, ingredient} <- Repo.fetch(Food.Ingredient, id) do
+      Food.delete_ingredient(ingredient)
     end
   end
+
+  def create_recipe(_, %{input: args}, %{context: %{user: user}}) do
+    args
+    |> Map.put_new(:user_id, user.id)
+    |> Food.create_recipe()
+  end
+
+  def update_recipe(_, %{id: id, input: args}, _) do
+    with {:ok, recipe} <- Repo.fetch(Food.Recipe, id) do
+      recipe = Repo.preload(recipe, :recipe_ingredients)
+      Food.update_recipe(recipe, add_persisted_recipe_ingredients(recipe, args))
+    end
+  end
+
+  def delete_recipe(_, %{id: id}, _) do
+    with {:ok, recipe} <- Repo.fetch(Food.Recipe, id) do
+      Food.delete_recipe(recipe)
+    end
+  end
+
+  defp add_persisted_recipe_ingredients(recipe, %{recipe_ingredients: list} = args) when is_list(list) do
+    ids = list |> Enum.map(& &1[:id]) |> Enum.reject(&is_nil/1)
+    ingredients = Enum.reject(recipe.recipe_ingredients, &(&1.id in ids))
+
+    ri =
+      list ++
+        Enum.map(ingredients, fn ri ->
+          %{id: ri.id, recipe_id: ri.recipe_id, ingredient_id: ri.ingredient_id}
+        end)
+
+    Map.put(args, :recipe_ingredients, ri)
+  end
+
+  defp add_persisted_recipe_ingredients(_recipe, args), do: args
 end

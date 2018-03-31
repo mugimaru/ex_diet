@@ -6,6 +6,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
 
   alias ExDietWeb.GraphQL.Resolvers.Food, as: Resolver
   alias ExDietWeb.GraphQL.Middleware.RequireAuth
+  alias Absinthe.Relay.Node.ParseIDs
 
   input_object :create_ingredient_input do
     field(:name, non_null(:string))
@@ -23,6 +24,24 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field(:energy, :decimal)
   end
 
+  input_object :recipe_ingredient_input do
+    field(:id, :id)
+    field(:weight, non_null(:integer))
+    field(:ingredient_id, non_null(:id))
+  end
+
+  input_object :create_recipe_input do
+    field(:name, non_null(:string))
+    field(:description, :string)
+    field(:recipe_ingredients, list_of(:recipe_ingredient_input))
+  end
+
+  input_object :update_recipe_input do
+    field(:name, :string)
+    field(:description, :string)
+    field(:recipe_ingredients, list_of(:recipe_ingredient_input))
+  end
+
   object :food_mutations do
     field :create_ingredient, :ingredient do
       arg(:input, non_null(:create_ingredient_input))
@@ -35,6 +54,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
       arg(:id, non_null(:id))
       arg(:input, non_null(:update_ingredient_input))
 
+      middleware(ParseIDs, id: :ingredient)
       middleware(RequireAuth)
       resolve(&Resolver.update_ingredient/3)
     end
@@ -42,8 +62,45 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field :delete_ingredient, :ingredient do
       arg(:id, non_null(:id))
 
+      middleware(ParseIDs, id: :ingredient)
       middleware(RequireAuth)
       resolve(&Resolver.delete_ingredient/3)
+    end
+
+    field :create_recipe, :recipe do
+      arg(:input, non_null(:create_recipe_input))
+
+      middleware(RequireAuth)
+
+      middleware(
+        ParseIDs,
+        input: [recipe_ingredients: [ingredient_id: :ingredient, id: :recipe_ingredient]]
+      )
+
+      resolve(&Resolver.create_recipe/3)
+    end
+
+    field :update_recipe, :recipe do
+      arg(:id, non_null(:id))
+      arg(:input, non_null(:update_recipe_input))
+
+      middleware(RequireAuth)
+
+      middleware(
+        ParseIDs,
+        id: :recipe,
+        input: [recipe_ingredients: [ingredient_id: :ingredient, id: :recipe_ingredient]]
+      )
+
+      resolve(&Resolver.update_recipe/3)
+    end
+
+    field :delete_recipe, :recipe do
+      arg(:id, non_null(:id))
+
+      middleware(ParseIDs, id: :recipe)
+      middleware(RequireAuth)
+      resolve(&Resolver.delete_recipe/3)
     end
   end
 end

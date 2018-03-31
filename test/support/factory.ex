@@ -20,4 +20,24 @@ defmodule ExDiet.Factory do
       password_hash: sequence("Password")
     }
   end
+
+  def recipe_factory do
+    %ExDiet.Food.Recipe{
+      name: sequence("ingredient"),
+      user: build(:user)
+    }
+  end
+
+  def with_ingredient(recipe, ingredient, weight) do
+    insert(:recipe_ingredient, recipe: recipe, ingredient: ingredient, weight: weight)
+    recipe
+  end
+
+  def recipe_ingredient_factory do
+    %ExDiet.Food.RecipeIngredient{
+      recipe: build(:recipe),
+      ingredient: build(:ingredient),
+      weight: Enum.random(1..300)
+    }
+  end
 end

@@ -1,4 +1,4 @@
-defmodule ExDiet.Accounts.Loaders.User do
+defmodule ExDiet.Food.Loaders.RecipeIngredient do
   @moduledoc false
 
   def data do

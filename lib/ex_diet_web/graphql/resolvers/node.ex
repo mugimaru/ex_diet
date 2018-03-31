@@ -5,7 +5,9 @@ defmodule ExDietWeb.GraphQL.Resolvers.Node do
   alias Absinthe.Relay
 
   @absinthe_type_to_module_map [
-    ingredient: ExDiet.Food.Ingredient
+    ingredient: ExDiet.Food.Ingredient,
+    recipe: ExDiet.Food.Recipe,
+    recipe_ingredient: ExDiet.Food.RecipeIngredient
   ]
 
   def fetch_by_gid(gid) do

@@ -26,6 +26,7 @@ defmodule ExDiet.Accounts.User do
     field(:password_hash, :string)
 
     has_many(:ingredients, ExDiet.Food.Ingredient)
+    has_many(:recipes, ExDiet.Food.Recipe)
 
     timestamps()
   end

@@ -1,4 +1,6 @@
 defmodule ExDiet.Food.Loaders.Ingredient do
+  @moduledoc false
+
   def data do
     Dataloader.Ecto.new(ExDiet.Repo, query: &query/2)
   end

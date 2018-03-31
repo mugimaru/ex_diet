@@ -6,7 +6,7 @@ defmodule ExDiet.Food do
   import Ecto.Query, warn: false
   alias ExDiet.Repo
 
-  alias ExDiet.Food.Ingredient
+  alias ExDiet.Food.{Recipe, Ingredient}
 
   def create_ingredient(attrs \\ %{}) do
     %Ingredient{}
@@ -22,5 +22,21 @@ defmodule ExDiet.Food do
 
   def delete_ingredient(%Ingredient{} = ingredient) do
     Repo.delete(ingredient)
+  end
+
+  def create_recipe(attrs \\ %{}) do
+    %Recipe{}
+    |> Recipe.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_recipe(%Recipe{} = recipe, attrs) do
+    recipe
+    |> Recipe.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_recipe(%Recipe{} = recipe) do
+    Repo.delete(recipe)
   end
 end
