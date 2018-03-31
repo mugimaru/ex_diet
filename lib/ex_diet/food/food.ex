@@ -6,7 +6,7 @@ defmodule ExDiet.Food do
   import Ecto.Query, warn: false
   alias ExDiet.Repo
 
-  alias ExDiet.Food.{Recipe, Ingredient}
+  alias ExDiet.Food.{Recipe, Ingredient, Calendar}
 
   def create_ingredient(attrs \\ %{}) do
     %Ingredient{}
@@ -38,5 +38,17 @@ defmodule ExDiet.Food do
 
   def delete_recipe(%Recipe{} = recipe) do
     Repo.delete(recipe)
+  end
+
+  def create_calendar(attrs) do
+    %Calendar{}
+    |> Calendar.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_calendar(%Calendar{} = calendar, attrs) do
+    calendar
+    |> Calendar.changeset(attrs)
+    |> Repo.update()
   end
 end

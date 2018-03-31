@@ -7,6 +7,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Node do
   @absinthe_type_to_module_map [
     ingredient: ExDiet.Food.Ingredient,
     recipe: ExDiet.Food.Recipe,
+    calendar: ExDiet.Food.Calendar,
     recipe_ingredient: ExDiet.Food.RecipeIngredient
   ]
 

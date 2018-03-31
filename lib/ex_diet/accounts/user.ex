@@ -16,6 +16,8 @@ defmodule ExDiet.Accounts.User do
           password: String.t() | nil,
           password_hash: String.t(),
           ingredients: list(ExDiet.Food.Ingredient),
+          recipes: list(ExDiet.Food.Recipe),
+          calendars: list(ExDiet.Food.Calendar),
           inserted_at: %DateTime{},
           updated_at: %DateTime{}
         }
@@ -27,6 +29,7 @@ defmodule ExDiet.Accounts.User do
 
     has_many(:ingredients, ExDiet.Food.Ingredient)
     has_many(:recipes, ExDiet.Food.Recipe)
+    has_many(:calendars, ExDiet.Food.Calendar)
 
     timestamps()
   end

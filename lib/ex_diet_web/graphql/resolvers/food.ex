@@ -45,6 +45,18 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     end
   end
 
+  def create_calendar(_, %{input: args}, %{context: %{user: user}}) do
+    args
+    |> Map.put_new(:user_id, user.id)
+    |> Food.create_calendar()
+  end
+
+  def update_calendar(_, %{id: id, input: args}, _) do
+    with {:ok, calendar} <- Repo.fetch(Food.Calendar, id) do
+      Food.update_calendar(calendar, args)
+    end
+  end
+
   defp add_persisted_recipe_ingredients(recipe, %{recipe_ingredients: list} = args) when is_list(list) do
     ids = list |> Enum.map(& &1[:id]) |> Enum.reject(&is_nil/1)
     ingredients = Enum.reject(recipe.recipe_ingredients, &(&1.id in ids))

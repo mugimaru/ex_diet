@@ -17,6 +17,10 @@ defmodule ExDietWeb.GraphQL.Types.Accounts do
     field(:recipes, list_of(:recipe)) do
       resolve(dataloader(ExDiet.Accounts.User, :recipes))
     end
+
+    field(:calendars, list_of(:calendar)) do
+      resolve(dataloader(ExDiet.Accounts.User, :calendars))
+    end
   end
 
   object(:session) do
