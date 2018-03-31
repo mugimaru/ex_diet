@@ -15,5 +15,9 @@ defmodule ExDietWeb.GraphQL.Types.Food do
     field(:energy, non_null(:decimal))
     field(:inserted_at, :datetime)
     field(:updated_at, :datetime)
+
+    field(:user, :user) do
+      resolve(dataloader(ExDiet.Food.Ingredient, :user))
+    end
   end
 end

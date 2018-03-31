@@ -9,6 +9,10 @@ defmodule ExDietWeb.GraphQL.Types.Accounts do
     field(:email, non_null(:string))
     field(:inserted_at, :datetime)
     field(:updated_at, :datetime)
+
+    field(:ingredients, list_of(:ingredient)) do
+      resolve(dataloader(ExDiet.Accounts.User, :ingredients))
+    end
   end
 
   object(:session) do

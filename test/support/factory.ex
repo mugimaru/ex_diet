@@ -9,7 +9,8 @@ defmodule ExDiet.Factory do
       protein: Enum.random(1..100) * 0.31,
       fat: Enum.random(1..100) * 0.31,
       carbonhydrate: Enum.random(1..100) * 0.31,
-      energy: Enum.random(100..500) * 0.31
+      energy: Enum.random(100..500) * 0.31,
+      user: build(:user)
     }
   end
 

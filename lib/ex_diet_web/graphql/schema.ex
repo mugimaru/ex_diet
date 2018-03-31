@@ -49,5 +49,7 @@ defmodule ExDietWeb.GraphQL.Schema do
 
   def dataloader do
     Dataloader.new()
+    |> Dataloader.add_source(ExDiet.Food.Ingredient, ExDiet.Food.Loaders.Ingredient.data())
+    |> Dataloader.add_source(ExDiet.Accounts.User, ExDiet.Accounts.Loaders.User.data())
   end
 end

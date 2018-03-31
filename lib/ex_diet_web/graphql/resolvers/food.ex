@@ -9,8 +9,10 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     Absinthe.Relay.Connection.from_query(Food.Ingredient, &Repo.all/1, args)
   end
 
-  def create_ingredient(_, %{input: args}, _) do
-    Food.create_ingredient(args)
+  def create_ingredient(_, %{input: args}, %{context: %{user: user}}) do
+    args
+    |> Map.put_new(:user_id, user.id)
+    |> Food.create_ingredient()
   end
 
   def update_ingredient(_, %{id: id, input: args}, _) do

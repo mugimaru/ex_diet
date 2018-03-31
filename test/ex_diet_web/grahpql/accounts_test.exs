@@ -3,6 +3,8 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
   use ExDiet.GraphQLCase
   import ExDiet.Factory
 
+  alias Comeonin.Bcrypt
+
   @create_user_gql """
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -29,6 +31,15 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
   @logout_gql """
   mutation {
     logout { email }
+  }
+  """
+
+  @me_gql """
+  query {
+    me {
+      email
+      ingredients { name }
+    }
   }
   """
 
@@ -70,7 +81,7 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
         insert(
           :user,
           email: @user_attrs[:email],
-          password_hash: Comeonin.Bcrypt.hashpwsalt(@user_attrs[:password])
+          password_hash: Bcrypt.hashpwsalt(@user_attrs[:password])
         )
 
       result =
@@ -100,7 +111,7 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
         insert(
           :user,
           email: @user_attrs[:email],
-          password_hash: Comeonin.Bcrypt.hashpwsalt(@user_attrs[:password])
+          password_hash: Bcrypt.hashpwsalt(@user_attrs[:password])
         )
 
       result =
@@ -109,6 +120,25 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
         |> graphql_result(:login)
 
       assert result[:user][:email] == user.email
+    end
+  end
+
+  describe "`me` query" do
+    test "returns current user with a list of ingredients" do
+      ingredient = insert(:ingredient)
+
+      result =
+        build_conn()
+        |> authenticate(ingredient.user)
+        |> graphql_send(@me_gql)
+        |> graphql_result(:me)
+
+      assert %{
+               email: ingredient.user.email,
+               ingredients: [
+                 %{name: ingredient.name}
+               ]
+             } == result
     end
   end
 end

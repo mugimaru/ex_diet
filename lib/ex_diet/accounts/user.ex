@@ -15,6 +15,7 @@ defmodule ExDiet.Accounts.User do
           email: String.t(),
           password: String.t() | nil,
           password_hash: String.t(),
+          ingredients: list(ExDiet.Food.Ingredient),
           inserted_at: %DateTime{},
           updated_at: %DateTime{}
         }
@@ -23,6 +24,8 @@ defmodule ExDiet.Accounts.User do
     field(:password, :string, virtual: true)
     field(:email, :string)
     field(:password_hash, :string)
+
+    has_many(:ingredients, ExDiet.Food.Ingredient)
 
     timestamps()
   end

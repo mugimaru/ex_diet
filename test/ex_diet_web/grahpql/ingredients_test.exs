@@ -5,7 +5,7 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
 
   @create_query """
   mutation M($input: CreateIngredientInput!) {
-    createIngredient(input: $input) { id name protein fat carbonhydrate energy }
+    createIngredient(input: $input) { id name protein fat carbonhydrate energy user { email } }
   }
   """
 
@@ -47,6 +47,8 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
              energy: "4",
              name: "foobar"
            } = result
+
+    assert result[:user][:email] == user.email
 
     # update
     conn = conn |> graphql_send(@update_query, input: %{fat: 42}, id: id)
