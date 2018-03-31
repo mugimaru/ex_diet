@@ -1,4 +1,5 @@
 # ExDiet: calories calculator & daily meal planner
+[![build status](https://api.travis-ci.org/mugimaru73/ex_diet.svg?branch=master)](https://travis-ci.org/mugimaru73/ex_diet)
 
 ## Stack
 * [Elixir](https://elixir-lang.org/)
