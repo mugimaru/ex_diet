@@ -1,45 +1,25 @@
-// First we import the various pieces of Vue and Apollo.
-import Vue from 'vue'
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
-import VueApollo from 'vue-apollo'
-import BootstrapVue from 'bootstrap-vue'
+import Vue from 'vue';
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Router from 'vue-router';
+Vue.use(Router);
 
+import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 Vue.use(BootstrapVue);
 
+import App from './App.vue';
+import router from './config/router.js';
 
-// Import our main app component, the top-level container for our app.
-import App from './App.vue'
+import {apolloProvider, VueApollo} from './config/apollo.js';
+Vue.use(VueApollo);
 
-// Create the link the Apollo Client will manage between our frontend client and GraphQL server.
-// Note that this is setup for development/demo - deployment will require your real URL.
-const httpLink = new HttpLink({
-  // You should use an absolute URL here
-  uri: 'http://localhost:4000/api/graphql',
-})
-
-// Create the apollo client, with the Apollo caching.
-const apolloClient = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-  connectToDevTools: true,
-})
-
-// Install the vue plugin for VueApollo
-Vue.use(VueApollo)
-
-const apolloProvider = new VueApollo({
-  defaultClient: apolloClient,
-})
-
-// Bootstrap the new Vue app. It grabs onto the div with id="app that we created in the Phoenix HTML.
-// We pass the apolloProvider instance to it, so our components can all use the same connection.
 new Vue({
   el: '#app',
+  router,
+  data: {
+    userEmail: localStorage.getItem("userEmail")
+  },
   provide: apolloProvider.provide(),
   render: h => h(App)
-})
+});

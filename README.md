@@ -9,14 +9,21 @@
 * [TwitterBootstrap 4](https://getbootstrap.com/)
 
 ## TODO
+
+### Backend
 - [x] bootstrap a phoenix app
-- [x] bootstrap an UI with vuejs
 - [x] setup graphql endpoint
 - [x] setup token authentication
-- [ ] build the core domain (ingredients, recipes, meals, calendar, etc)
-- [ ] build graphql API
-- [ ] add an UI
+- [x] build the core domain (ingredients, recipes, meals, calendar, etc)
+- [x] build graphql API
+- [ ] deployment
 
+### Frontend
+- [x] bootstrap an UI with vuejs
+- [x] implement authentication
+- [ ] add ingredients crud
+- [ ] add recipes
+- [ ] add calendar dashboard
 
 ## Development
 
@@ -38,6 +45,12 @@ docker-compose up web
 mix deps.get
 mix ecto.prepare
 mix phx.server
+```
+
+### Assets
+
+```
+cd assets && npm install && cd -
 ```
 
 ### Graphql tools
