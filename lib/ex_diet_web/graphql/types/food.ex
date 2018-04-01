@@ -15,6 +15,24 @@ defmodule ExDietWeb.GraphQL.Types.Food do
     field(:energy, non_null(:decimal))
   end
 
+  object :eatable_fields do
+    field(:protein, non_null(:decimal)) do
+      resolve(&Resolver.nutrient_fact/3)
+    end
+
+    field(:fat, non_null(:decimal)) do
+      resolve(&Resolver.nutrient_fact/3)
+    end
+
+    field(:carbonhydrate, non_null(:decimal)) do
+      resolve(&Resolver.nutrient_fact/3)
+    end
+
+    field(:energy, non_null(:decimal)) do
+      resolve(&Resolver.nutrient_fact/3)
+    end
+  end
+
   connection(node_type: :ingredient)
 
   node object(:ingredient) do
@@ -41,22 +59,6 @@ defmodule ExDietWeb.GraphQL.Types.Food do
   node object(:recipe_ingredient) do
     field(:weight, non_null(:integer))
 
-    field(:protein, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:fat, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:carbonhydrate, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:energy, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
     field(:recipe, non_null(:recipe)) do
       resolve(dataloader(RecipeIngredient, :recipe))
     end
@@ -65,6 +67,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
       resolve(dataloader(RecipeIngredient, :ingredient))
     end
 
+    import_fields(:eatable_fields)
     interface(:eatable)
     is_type_of(:recipe_ingredient)
   end
@@ -74,22 +77,6 @@ defmodule ExDietWeb.GraphQL.Types.Food do
     field(:description, :string)
     field(:weight_cooked, :integer)
 
-    field(:protein, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:fat, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:carbonhydrate, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
-    field(:energy, non_null(:decimal)) do
-      resolve(&Resolver.nutrient_fact/3)
-    end
-
     field(:user, :user) do
       resolve(dataloader(Recipe, :user))
     end
@@ -98,6 +85,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
       resolve(dataloader(Recipe, :recipe_ingredients))
     end
 
+    import_fields(:eatable_fields)
     interface(:eatable)
     is_type_of(:recipe)
   end
