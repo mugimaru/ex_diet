@@ -46,6 +46,7 @@ defmodule ExDiet.Food.NutritionFacts do
     recipe = Repo.preload(recipe, recipe_ingredients: :ingredient)
 
     ingredients_weight = Enum.reduce(recipe.recipe_ingredients, 0, &(&1.weight + &2))
+
     new(
       Enum.reduce(@nutrients, sum_nutrition_facts(recipe.recipe_ingredients), fn key, struct ->
         %{struct | key => Decimal.mult(Map.get(struct, key), Decimal.new(ingredients_weight / recipe.weight_cooked))}

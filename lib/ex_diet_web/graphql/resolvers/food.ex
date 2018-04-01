@@ -57,6 +57,10 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     end
   end
 
+  def nutrient_fact(parent, _args, %{definition: %{name: field}}) do
+    {:ok, ExDiet.Food.NutritionFacts.calculate_one(parent, String.to_existing_atom(field))}
+  end
+
   defp add_persisted_recipe_ingredients(recipe, %{recipe_ingredients: list} = args) when is_list(list) do
     ids = list |> Enum.map(& &1[:id]) |> Enum.reject(&is_nil/1)
     ingredients = Enum.reject(recipe.recipe_ingredients, &(&1.id in ids))
