@@ -2,8 +2,10 @@ defmodule ExDiet.Food.NutritionFacts do
   @moduledoc """
   Calculates nutrition facts per 100g of product.
 
-  * `ExDiet.Food.Ingredient` - returns decimal values from corresponding fields.
-  * `ExDiet.Food.RecipeIngredient` - returns decimal values from corresponding fields.
+  * `ExDiet.Food.Ingredient`
+  * `ExDiet.Food.RecipeIngredient`
+  * `ExDiet.Food.Meal`
+  * `ExDiet.Food.Calendar`
   """
 
   @type t :: %__MODULE__{
@@ -16,7 +18,7 @@ defmodule ExDiet.Food.NutritionFacts do
   @nutrients [:protein, :fat, :carbonhydrate, :energy]
   defstruct(Enum.map(@nutrients, &{&1, Decimal.new(0)}))
 
-  alias ExDiet.Food.{Ingredient, Recipe, RecipeIngredient}
+  alias ExDiet.Food.{Ingredient, Recipe, RecipeIngredient, Meal, Calendar}
   alias ExDiet.Repo
 
   def new, do: new(%{})
@@ -38,6 +40,19 @@ defmodule ExDiet.Food.NutritionFacts do
     @nutrients
     |> Enum.map(&{&1, calculate_one(ri, &1)})
     |> new()
+  end
+
+  def calculate(%Meal{} = meal) do
+    meal = Repo.preload(meal, [:recipe, :ingredient])
+
+    Enum.reduce(@nutrients, calculate(entity(meal)), fn key, nf ->
+      %{nf | key => Decimal.mult(Map.get(nf, key), Decimal.new(meal.weight / 100))}
+    end)
+  end
+
+  def calculate(%Calendar{} = calendar) do
+    calendar = Repo.preload(calendar, meals: [:recipe, :ingredient])
+    sum_nutrition_facts(calendar.meals)
   end
 
   def calculate(%Recipe{weight_cooked: 0}), do: new()
@@ -74,5 +89,18 @@ defmodule ExDiet.Food.NutritionFacts do
         %{struct | key => Decimal.add(Map.get(struct, key), Map.get(ri_data, key))}
       end)
     end)
+  end
+
+  defp entity(%Meal{} = meal) do
+    cond do
+      meal.recipe_id != nil ->
+        meal.recipe
+
+      meal.ingredient_id != nil ->
+        meal.ingredient
+
+      true ->
+        raise ArgumentError
+    end
   end
 end

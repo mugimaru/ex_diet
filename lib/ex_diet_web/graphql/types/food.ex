@@ -5,7 +5,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
   use Absinthe.Relay.Schema.Notation, :modern
   import Absinthe.Resolution.Helpers, only: [dataloader: 2]
 
-  alias ExDiet.Food.{Ingredient, RecipeIngredient, Recipe, Calendar}
+  alias ExDiet.Food.{Ingredient, RecipeIngredient, Recipe, Calendar, Meal}
   alias ExDietWeb.GraphQL.Resolvers.Food, as: Resolver
 
   interface :eatable do
@@ -96,5 +96,33 @@ defmodule ExDietWeb.GraphQL.Types.Food do
     field(:user, :user) do
       resolve(dataloader(Calendar, :user))
     end
+
+    field(:meals, list_of(:meal)) do
+      resolve(dataloader(Calendar, :meals))
+    end
+
+    import_fields(:eatable_fields)
+    interface(:eatable)
+    is_type_of(:calendar)
+  end
+
+  node object(:meal) do
+    field(:weight, non_null(:integer))
+
+    field(:user, :user) do
+      resolve(dataloader(Meal, :user))
+    end
+
+    field(:recipe, :recipe) do
+      resolve(dataloader(Meal, :recipe))
+    end
+
+    field(:ingredient, :ingredient) do
+      resolve(dataloader(Meal, :ingredient))
+    end
+
+    import_fields(:eatable_fields)
+    interface(:eatable)
+    is_type_of(:meal)
   end
 end

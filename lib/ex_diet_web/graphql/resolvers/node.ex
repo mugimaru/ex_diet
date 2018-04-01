@@ -8,6 +8,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Node do
     ingredient: ExDiet.Food.Ingredient,
     recipe: ExDiet.Food.Recipe,
     calendar: ExDiet.Food.Calendar,
+    meal: ExDiet.Food.Meal,
     recipe_ingredient: ExDiet.Food.RecipeIngredient
   ]
 

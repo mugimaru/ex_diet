@@ -45,4 +45,26 @@ defmodule ExDiet.Food.NutritionFactsTest do
              energy: Decimal.mult(Decimal.new(1200), Decimal.new(3 / 2))
            }
   end
+
+  test "calculates nutrition facts for calendar" do
+    calendar = insert(:calendar)
+
+    ingredient = insert(:ingredient, protein: 10, fat: 20, carbonhydrate: 30, energy: 100)
+    ingredient2 = insert(:ingredient, protein: 5, fat: 10, carbonhydrate: 50, energy: 1000)
+
+    recipe =
+      :recipe
+      |> insert(weight_cooked: 200)
+      |> with_ingredient(ingredient, 200)
+      |> with_ingredient(ingredient2, 100)
+
+    insert(:recipe_meal, recipe: recipe, calendar: calendar, weight: 100)
+    insert(:ingredient_meal, ingredient: ingredient, calendar: calendar, weight: 200)
+
+    result = NF.calculate(calendar)
+    assert Decimal.to_float(result.protein) == 57.5
+    assert Decimal.to_float(result.fat) == 115
+    assert Decimal.to_float(result.carbonhydrate) == 225
+    assert Decimal.to_float(result.energy) == 2000
+  end
 end

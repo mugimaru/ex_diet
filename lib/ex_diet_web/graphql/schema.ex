@@ -54,5 +54,6 @@ defmodule ExDietWeb.GraphQL.Schema do
     |> Dataloader.add_source(ExDiet.Food.Recipe, ExDiet.Food.Loaders.Recipe.data())
     |> Dataloader.add_source(ExDiet.Food.RecipeIngredient, ExDiet.Food.Loaders.RecipeIngredient.data())
     |> Dataloader.add_source(ExDiet.Food.Calendar, ExDiet.Food.Loaders.Calendar.data())
+    |> Dataloader.add_source(ExDiet.Food.Meal, ExDiet.Food.Loaders.Meal.data())
   end
 end

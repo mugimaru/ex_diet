@@ -40,4 +40,29 @@ defmodule ExDiet.Factory do
       weight: Enum.random(1..300)
     }
   end
+
+  def calendar_factory do
+    %ExDiet.Food.Calendar{
+      day: sequence(:day, fn n -> Date.utc_today() |> Date.add(n * -1) end),
+      user: build(:user)
+    }
+  end
+
+  def ingredient_meal_factory do
+    user = build(:user)
+
+    %ExDiet.Food.Meal{
+      ingredient: build(:ingredient, user: user),
+      calendar: build(:calendar, user: user)
+    }
+  end
+
+  def recipe_meal_factory do
+    user = build(:user)
+
+    %ExDiet.Food.Meal{
+      recipe: build(:recipe, user: user),
+      calendar: build(:calendar, user: user)
+    }
+  end
 end

@@ -30,6 +30,13 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field(:ingredient_id, non_null(:id))
   end
 
+  input_object :meal_input do
+    field(:id, :id)
+    field(:weight, non_null(:integer))
+    field(:ingredient_id, :id)
+    field(:recipe_id, :id)
+  end
+
   input_object :create_recipe_input do
     field(:name, non_null(:string))
     field(:description, :string)
@@ -46,10 +53,12 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
 
   input_object :create_calendar_input do
     field(:day, non_null(:date))
+    field(:meals, list_of(:meal_input))
   end
 
   input_object :update_calendar_input do
     field(:day, :date)
+    field(:meals, list_of(:meal_input))
   end
 
   object :food_mutations do
@@ -116,6 +125,12 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field :create_calendar, :calendar do
       arg(:input, non_null(:create_calendar_input))
 
+      middleware(
+        ParseIDs,
+        id: :calendar,
+        input: [meals: [ingredient_id: :ingredient, recipe_id: :recipe, id: :meal]]
+      )
+
       resolve(&Resolver.create_calendar/3)
     end
 
@@ -123,7 +138,12 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
       arg(:id, non_null(:id))
       arg(:input, non_null(:update_calendar_input))
 
-      middleware(ParseIDs, id: :calendar)
+      middleware(
+        ParseIDs,
+        id: :calendar,
+        input: [meals: [ingredient_id: :ingredient, recipe_id: :recipe, id: :meal]]
+      )
+
       resolve(&Resolver.update_calendar/3)
     end
   end

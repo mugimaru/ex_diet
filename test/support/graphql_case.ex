@@ -53,6 +53,10 @@ defmodule ExDiet.GraphQLCase do
         conn
         |> put_req_header("authorization", "Bearer " <> token)
       end
+
+      def global_id(%ExDiet.Food.Calendar{id: id}), do: Absinthe.Relay.Node.to_global_id("Calendar", id)
+      def global_id(%ExDiet.Food.Recipe{id: id}), do: Absinthe.Relay.Node.to_global_id("Recipe", id)
+      def global_id(%ExDiet.Food.Ingredient{id: id}), do: Absinthe.Relay.Node.to_global_id("Ingredient", id)
     end
   end
 end
