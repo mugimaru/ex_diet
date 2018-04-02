@@ -1,0 +1,18 @@
+query listIngredients($cursor: String) {
+  listIngredients(first: 10, after: $cursor) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        name
+        protein
+        fat
+        carbonhydrate
+        energy
+      }
+    }
+  }
+}

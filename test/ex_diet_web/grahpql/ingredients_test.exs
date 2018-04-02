@@ -57,7 +57,7 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
     assert result[:fat] == "42"
 
     # list
-    conn = conn |> graphql_send(@list_query)
+    conn = build_conn() |> authenticate(user) |> graphql_send(@list_query)
     result = conn |> graphql_result(:listIngredients) |> graphql_unpack_connection()
     assert result == [%{id: id}]
 

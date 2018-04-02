@@ -37,6 +37,10 @@ defmodule ExDiet.Food.Ingredient do
     ingredient
     |> cast(attrs, [:name, :protein, :fat, :carbonhydrate, :energy, :user_id])
     |> foreign_key_constraint(:user_id)
+    |> validate_number(:protein, greater_than_or_equal_to: 0)
+    |> validate_number(:fat, greater_than_or_equal_to: 0)
+    |> validate_number(:carbonhydrate, greater_than_or_equal_to: 0)
+    |> validate_number(:energy, greater_than_or_equal_to: 0)
     |> validate_required([:name, :protein, :fat, :carbonhydrate, :energy])
     |> unique_constraint(:name, name: :ingredients_name_uniq_idx)
   end

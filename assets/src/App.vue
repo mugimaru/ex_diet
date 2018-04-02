@@ -5,6 +5,11 @@
       <router-link to="/" class="navbar-brand">ExDiet</router-link>
 
       <b-collapse is-nav id="nav_collapse">
+        <b-navbar-nav>
+          <li class="nav-item">
+            <router-link to="/ingredients" class="nav-link">Ingredients</router-link>
+          </li>
+        </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right v-if="userEmail">
@@ -19,7 +24,7 @@
     </b-navbar>
     <br>
 
-    <b-container>
+    <b-container fluid>
       <router-view></router-view>
     </b-container>
   </div>
