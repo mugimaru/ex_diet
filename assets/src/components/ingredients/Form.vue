@@ -5,9 +5,7 @@
     <span v-else>New ingredient</span>
   </h6>
 
-  <b-list-group flush :show="gqlErrors">
-    <b-list-group-item variant="danger" v-for="error in gqlErrors">{{ error }}</b-list-group-item>
-  </b-list-group>
+  <apollo-errors-view :error="error"></apollo-errors-view>
 
   <div class="card-body">
     <b-form @submit="onSubmit" @reset="onReset">
@@ -46,7 +44,6 @@
 <script>
 import createIngredientMutation from '../../graphql/mutations/createIngredient.graphql'
 import updateIngredientMutation from '../../graphql/mutations/updateIngredient.graphql'
-import * as h from '../../helpers/graphql.js'
 import { required, minValue } from "vuelidate/lib/validators"
 
 export default {
@@ -54,7 +51,7 @@ export default {
   props: ['ingredient'],
   data () {
     return {
-      gqlErrors: null
+      error: null
     }
   },
   validations: {
@@ -69,10 +66,12 @@ export default {
   methods: {
     onReset(event){
       event.preventDefault()
+      this.error = null
       this.$emit('reset')
     },
     onSubmit(event) {
       event.preventDefault()
+      this.error = null
       const { name, protein, fat, carbonhydrate, energy } = this.ingredient
 
       let variables = { input: { name, protein, fat, carbonhydrate, energy} }
@@ -86,15 +85,13 @@ export default {
       this.performMutation(mutation, variables)
     },
     performMutation(mutation, variables) {
-      this.gqlErrors = null
-
       this.$apollo.mutate({
         mutation: mutation,
         variables: variables,
       }).then((result) => {
         this.$emit('updated')
       }).catch((error) => {
-        this.gqlErrors = h.apolloErrorMessages(error)
+        this.error = error
       })
     }
   }

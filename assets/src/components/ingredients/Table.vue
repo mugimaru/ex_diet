@@ -1,5 +1,7 @@
 <template>
 <div>
+
+  <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
   <b-input-group v-if="searchEnabled">
     <b-form-input v-model="filter" placeholder="Search ingredients" />
     <b-input-group-append>
@@ -31,7 +33,7 @@ export default {
   },
   data () {
     return {
-      gqlErrors: null,
+      error: null,
       sortBy: 'name',
       filter: null,
       queryFilter: null,
@@ -62,7 +64,7 @@ export default {
       },
       update: data => data.listIngredients,
       error(e) {
-        console.dir(e)
+        this.error = e
       }
     }
   },
@@ -77,22 +79,25 @@ export default {
       this.refetch()
     },
     refetch() {
+      this.error = null
       this.$apollo.queries.allIngredients.refetch()
     },
     editIngredient (item) {
       this.$emit('edit', Object.assign({}, item))
     },
     deleteIngredient(item){
+      this.error = null
       this.$apollo.mutate({
         mutation: deleteIngredientMutation,
         variables: { id: item.id },
       }).then((result) => {
         this.refetch()
       }).catch((error) => {
-        console.dir(e)
+        this.error = error
       })
     },
     fetchMore() {
+      this.error = null
       this.$apollo.queries.allIngredients.fetchMore({
         variables: {
           first: this.perPage,

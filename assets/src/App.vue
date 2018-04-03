@@ -42,6 +42,7 @@ export default {
       localStorage.removeItem("userEmail")
       localStorage.removeItem("authToken")
       this.$root.$data.userEmail = localStorage.getItem("userEmail")
+      this.$router.push({path: '/login'})
     }
   },
   data () {

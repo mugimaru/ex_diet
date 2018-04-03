@@ -17,6 +17,9 @@ import router from './config/router.js';
 import {apolloProvider, VueApollo} from './config/apollo.js';
 Vue.use(VueApollo);
 
+import apolloErrorsView from './components/ApolloErrorsView.vue';
+Vue.component('apollo-errors-view', apolloErrorsView);
+
 new Vue({
   el: '#app',
   router,

@@ -3,9 +3,7 @@
   <b-col cols="4">
 
     <b-card no-body no-header>
-      <b-list-group flush :show="gqlErrors">
-        <b-list-group-item variant="danger" v-for="error in gqlErrors">{{ error }}</b-list-group-item>
-      </b-list-group>
+      <apollo-errors-view :error="error"></apollo-errors-view>
 
       <div class="card-body">
         <b-form @submit="confirm">
@@ -38,22 +36,17 @@ import createUserMutation from '../graphql/mutations/createUser.graphql'
 
 export default {
   name: "AppLogin",
-  computed: {
-    hasErrors() {
-      return this.gqlErrors != null
-    }
-  },
   data() {
     return {
       email: "",
       login: true,
       password: "",
-      gqlErrors: null
+      error: null
     };
   },
   methods: {
     confirm() {
-      this.errors = null
+      this.error = null
       const { email, password } = this.$data
 
       if (this.login) {
@@ -66,10 +59,9 @@ export default {
             }
           }
         }).then((result) => {
-          console.log(result)
           this.saveUserData(result.data.login.user, result.data.login.token)
         }).catch((error) => {
-          this.handleGraphqlError(error)
+          this.error = error
         })
       } else {
         this.$apollo.mutate({
@@ -83,15 +75,9 @@ export default {
         }).then((result) => {
           this.saveUserData(result.data.createUser.user, result.data.createUser.token)
         }).catch((error) => {
-          this.handleGraphqlError(error)
+          this.error = error
         })
       }
-    },
-    handleGraphqlError(error) {
-      console.dir(error)
-      this.gqlErrors = error.graphQLErrors.map(function(error) {
-        return error.message
-      })
     },
     saveUserData(user, token) {
       localStorage.setItem('authToken', token);
