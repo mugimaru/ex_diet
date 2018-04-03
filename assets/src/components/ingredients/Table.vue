@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-input-group>
+  <b-input-group v-if="searchEnabled">
     <b-form-input v-model="filter" placeholder="Type to Search" />
     <b-input-group-append>
       <b-btn variant="danger" :disabled="!filter" @click="filter = ''">Clear search</b-btn>
@@ -25,7 +25,8 @@ import deleteIngredientMutation from '../../graphql/mutations/deleteIngredient.g
 export default {
   name: 'ingredients-table',
   props: {
-    perPage: { default: 10, type: Number }
+    perPage: { default: 10, type: Number },
+    searchEnabled: { default: true, type: Boolean }
   },
   data () {
     return {
