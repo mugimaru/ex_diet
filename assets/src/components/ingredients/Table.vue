@@ -14,6 +14,7 @@
       </b-button-group>
     </template>
   </b-table>
+  <b-button v-if="fetchMoreEnabled" size="sm" id="fetchMore" class="float-right" variant="outline-primary" @click="fetchMore">Fetch more</b-button>
 </div>
 </template>
 
@@ -23,6 +24,9 @@ import deleteIngredientMutation from '../../graphql/mutations/deleteIngredient.g
 
 export default {
   name: 'ingredients-table',
+  props: {
+    perPage: { default: 10, type: Number }
+  },
   data () {
     return {
       gqlErrors: null,
@@ -36,17 +40,23 @@ export default {
         { key: 'energy', sortable: true },
         { key: 'actions', sortable: false }
       ],
-      allIngredients: []
+      allIngredients: null
     }
   },
   computed: {
+    fetchMoreEnabled() {
+      return this.allIngredients && this.allIngredients.pageInfo.hasNextPage
+    },
     nodes() {
-      return (this.allIngredients.length == 0) ? this.allIngredients : this.allIngredients.edges.map(edge => edge.node)
+      return (this.allIngredients) ? this.allIngredients.edges.map(edge => edge.node) : []
     }
   },
   apollo: {
     allIngredients: {
       query: allIngredientsQuery,
+      variables() {
+        return { first: this.perPage }
+      },
       update: data => data.listIngredients,
       error(e) {
         console.dir(e)
@@ -69,7 +79,33 @@ export default {
       }).catch((error) => {
         console.dir(e)
       })
+    },
+    fetchMore() {
+      this.$apollo.queries.allIngredients.fetchMore({
+        variables: {
+          first: this.perPage,
+          cursor: this.allIngredients.pageInfo.endCursor
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const prevRes = previousResult.listIngredients
+          const res = fetchMoreResult.listIngredients
+
+          return {
+            listIngredients: {
+              __typename: prevRes.__typename,
+              edges: [...prevRes.edges, ...res.edges],
+              pageInfo: res.pageInfo
+            }
+          }
+        }
+      })
     }
   }
 }
 </script>
+
+<style>
+  button#fetchMore {
+    margin-bottom: 12px;
+  }
+</style>
