@@ -6,6 +6,11 @@ defmodule ExDiet.Food.Queries.Ingredient do
     from q in query, where: is_nil(q.user_id)
   end
 
+  def search(query, %{filter: filter}) when not is_nil(filter) do
+    from q in query, where: ilike(q.name, ^"%#{filter}%")
+  end
+  def search(query, _), do: query
+
   def for_user_or_global(query, %ExDiet.Accounts.User{id: id}) do
     from q in query, where: is_nil(q.user_id) or q.user_id == ^id
   end

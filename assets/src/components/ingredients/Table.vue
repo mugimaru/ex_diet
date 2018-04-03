@@ -1,12 +1,13 @@
 <template>
 <div>
   <b-input-group v-if="searchEnabled">
-    <b-form-input v-model="filter" placeholder="Type to Search" />
+    <b-form-input v-model="filter" placeholder="Search ingredients" />
     <b-input-group-append>
-      <b-btn variant="danger" :disabled="!filter" @click="filter = ''">Clear search</b-btn>
+      <b-btn variant="success" :disabled="!filter || filter == queryFilter" @click="doSearch">Search</b-btn>
+      <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
     </b-input-group-append>
   </b-input-group>
-  <b-table bordered :items="nodes" :fields="fields" :sort-by="sortBy" :filter="filter">
+  <b-table bordered :items="nodes" :fields="fields" :sort-by="sortBy">
     <template slot="actions" slot-scope="row">
       <b-button-group size="sm">
         <b-button variant="outline-success" size="sm" @click.stop="editIngredient(row.item)"> Edit </b-button>
@@ -33,6 +34,7 @@ export default {
       gqlErrors: null,
       sortBy: 'name',
       filter: null,
+      queryFilter: null,
       fields: [
         { key: 'name', sortable: true },
         { key: 'protein', sortable: true },
@@ -56,7 +58,7 @@ export default {
     allIngredients: {
       query: allIngredientsQuery,
       variables() {
-        return { first: this.perPage }
+        return { first: this.perPage, filter: this.queryFilter }
       },
       update: data => data.listIngredients,
       error(e) {
@@ -65,6 +67,15 @@ export default {
     }
   },
   methods: {
+    doSearch() {
+      this.queryFilter = this.filter
+      this.refetch()
+    },
+    clearSearch() {
+      this.filter = null
+      this.queryFilter = null
+      this.refetch()
+    },
     refetch() {
       this.$apollo.queries.allIngredients.refetch()
     },
@@ -85,6 +96,7 @@ export default {
       this.$apollo.queries.allIngredients.fetchMore({
         variables: {
           first: this.perPage,
+          filter: this.queryFilter,
           cursor: this.allIngredients.pageInfo.endCursor
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {

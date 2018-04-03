@@ -1,7 +1,7 @@
 <template>
 <b-row>
   <b-col cols="8">
-    <ingredients-table :search-enabled="false" ref="ingredientsTable" @edit="editIngredient"></ingredients-table>
+    <ingredients-table :search-enabled="true" ref="ingredientsTable" @edit="editIngredient"></ingredients-table>
   </b-col>
   <b-col>
     <ingredient-form :ingredient="ingredient" @updated="resetAndRefetchIngredient" @reset="resetIngredient"></ingredient-form>

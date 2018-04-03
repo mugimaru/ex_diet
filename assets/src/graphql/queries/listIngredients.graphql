@@ -1,5 +1,5 @@
-query listIngredients($cursor: String, $first: Int!) {
-  listIngredients(first: $first, after: $cursor) {
+query listIngredients($cursor: String, $first: Int!, $filter: String) {
+  listIngredients(first: $first, after: $cursor, filter: $filter) {
     pageInfo {
       hasNextPage
       endCursor

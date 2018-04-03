@@ -8,6 +8,8 @@ defmodule ExDietWeb.GraphQL.Queries.Food do
 
   object :food_queries do
     connection field(:list_ingredients, node_type: :ingredient) do
+      arg(:filter, :string)
+
       resolve(&Resolver.list_ingredients/3)
     end
   end
