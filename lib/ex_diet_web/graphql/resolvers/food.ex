@@ -18,6 +18,16 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     |> Absinthe.Relay.Connection.from_query(&Repo.all/1, args)
   end
 
+  def list_calendars(_parent, args, %{context: %{user: user}}) do
+    {
+      :ok,
+      Food.Calendar
+      |> Food.Queries.Calendar.for_user(user)
+      |> Food.Queries.Calendar.search(args)
+      |> Repo.all
+    }
+  end
+
   def create_ingredient(_, %{input: args}, %{context: %{user: user}}) do
     args
     |> Map.put_new(:user_id, user.id)

@@ -6,11 +6,22 @@ defmodule ExDietWeb.GraphQL.Queries.Food do
 
   alias ExDietWeb.GraphQL.Resolvers.Food, as: Resolver
 
+  input_object :calendar_filter do
+    field :created_after, :datetime
+    field :created_before, :datetime
+  end
+
   object :food_queries do
     connection field(:list_ingredients, node_type: :ingredient) do
       arg(:filter, :string)
 
       resolve(&Resolver.list_ingredients/3)
+    end
+
+   field(:list_calendars, list_of(:calendar)) do
+      arg :filter, :calendar_filter
+
+      resolve(&Resolver.list_calendars/3)
     end
   end
 end
