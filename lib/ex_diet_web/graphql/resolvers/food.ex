@@ -3,19 +3,27 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
 
   alias ExDiet.Repo
   alias ExDiet.Food
+  alias Absinthe.Relay.Connection
 
   def list_ingredients(_parent, args, %{context: %{user: user}}) do
     Food.Ingredient
     |> Food.Queries.Ingredient.for_user_or_global(user)
     |> Food.Queries.Ingredient.search(args)
-    |> Absinthe.Relay.Connection.from_query(&Repo.all/1, args)
+    |> Connection.from_query(&Repo.all/1, args)
   end
 
   def list_ingredients(_parent, args, _res) do
     Food.Ingredient
     |> Food.Queries.Ingredient.global()
     |> Food.Queries.Ingredient.search(args)
-    |> Absinthe.Relay.Connection.from_query(&Repo.all/1, args)
+    |> Connection.from_query(&Repo.all/1, args)
+  end
+
+  def list_recipes(_parent, args, %{context: %{user: user}}) do
+    Food.Recipe
+    |> Food.Queries.Calendar.for_user(user)
+    |> Food.Queries.Recipe.search(args)
+    |> Connection.from_query(&Repo.all/1, args)
   end
 
   def list_calendars(_parent, args, %{context: %{user: user}}) do

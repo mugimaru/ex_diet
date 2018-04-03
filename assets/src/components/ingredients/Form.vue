@@ -15,19 +15,19 @@
       </b-form-group>
 
       <b-form-group label="Protein:">
-        <b-form-input type="number" v-model="ingredient.protein" :state="!$v.ingredient.protein.$invalid"></b-form-input>
+        <b-form-input type="text" v-model="ingredient.protein" :state="!$v.ingredient.protein.$invalid"></b-form-input>
       </b-form-group>
 
       <b-form-group label="Fat:">
-        <b-form-input type="number" v-model="ingredient.fat" :state="!$v.ingredient.fat.$invalid"></b-form-input>
+        <b-form-input type="text" v-model="ingredient.fat" :state="!$v.ingredient.fat.$invalid"></b-form-input>
       </b-form-group>
 
       <b-form-group label="Carbonhydrate:">
-        <b-form-input type="number" v-model="ingredient.carbonhydrate" :state="!$v.ingredient.carbonhydrate.$invalid"></b-form-input>
+        <b-form-input type="text" v-model="ingredient.carbonhydrate" :state="!$v.ingredient.carbonhydrate.$invalid"></b-form-input>
       </b-form-group>
 
       <b-form-group label="Energy:">
-        <b-form-input type="number" v-model="ingredient.energy" :state="!$v.ingredient.energy.$invalid"></b-form-input>
+        <b-form-input type="text" v-model="ingredient.energy" :state="!$v.ingredient.energy.$invalid"></b-form-input>
       </b-form-group>
 
       <b-button-group>

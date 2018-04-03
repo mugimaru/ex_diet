@@ -1,0 +1,32 @@
+query listRecipes($filter: String, $first: Int!, $cursor: String) {
+  listRecipes(filter: $filter, first: $first, after: $cursor) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      node {
+        id
+        weightCooked
+        name
+        description
+        protein
+        fat
+        carbonhydrate
+        energy
+        recipeIngredients {
+          id
+          weight
+          ingredient {
+            id
+            name
+            protein
+            fat
+            carbonhydrate
+            energy
+          }
+        }
+      }
+    }
+  }
+}

@@ -18,6 +18,12 @@ defmodule ExDietWeb.GraphQL.Queries.Food do
       resolve(&Resolver.list_ingredients/3)
     end
 
+    connection field(:list_recipes, node_type: :recipe) do
+      arg(:filter, :string)
+
+      resolve(&Resolver.list_recipes/3)
+    end
+
    field(:list_calendars, list_of(:calendar)) do
       arg :filter, :calendar_filter
 

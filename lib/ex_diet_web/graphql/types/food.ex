@@ -72,6 +72,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
     is_type_of(:recipe_ingredient)
   end
 
+  connection(node_type: :recipe)
   node object(:recipe) do
     field(:name, non_null(:string))
     field(:description, :string)

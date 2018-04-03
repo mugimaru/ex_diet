@@ -37,5 +37,6 @@ defmodule ExDiet.Food.Recipe do
     |> foreign_key_constraint(:user_id)
     |> cast_assoc(:recipe_ingredients)
     |> validate_required([:name, :user_id])
+    |> validate_number(:weight_cooked, greater_than_or_equal_to: 0)
   end
 end
