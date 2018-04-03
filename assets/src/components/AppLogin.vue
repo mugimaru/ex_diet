@@ -1,30 +1,35 @@
 <template>
-  <div>
-    <div>
-      <b-form @submit="confirm">
-        <b-list-group :show="hasErrors">
-          <b-list-group-item variant="danger" v-for="error in gqlErrors">{{ error }}</b-list-group-item>
-        </b-list-group>
-        <br>
+<b-row align-h="center">
+  <b-col cols="4">
 
-        <b-form-group label="Email address:">
-          <b-form-input type="email" v-model="email" required placeholder="Enter email"></b-form-input>
-        </b-form-group>
+    <b-card no-body no-header>
+      <b-list-group flush :show="gqlErrors">
+        <b-list-group-item variant="danger" v-for="error in gqlErrors">{{ error }}</b-list-group-item>
+      </b-list-group>
 
-        <b-form-group label="Password:">
-          <b-form-input type="password" v-model="password" required placeholder="Enter password"></b-form-input>
-        </b-form-group>
+      <div class="card-body">
+        <b-form @submit="confirm">
+          <b-form-group label="Email address:">
+            <b-form-input type="email" v-model="email" required placeholder="Enter email"></b-form-input>
+          </b-form-group>
 
-        <b-button type="submit" variant="primary">
-          {{login ? 'Login' : 'Register'}}
-        </b-button>
+          <b-form-group label="Password:">
+            <b-form-input type="password" v-model="password" required placeholder="Enter password"></b-form-input>
+          </b-form-group>
 
-        <b-button variant="link" @click="login = !login">
-          {{login ? 'need to create an account?' : 'already have an account?'}}
-        </b-button>
-      </b-form>
-    </div>
-  </div>
+          <b-button type="submit" variant="primary">
+            {{login ? 'Login' : 'Register'}}
+          </b-button>
+
+          <b-button variant="link" @click="login = !login">
+            {{login ? 'need to create an account?' : 'already have an account?'}}
+          </b-button>
+        </b-form>
+      </div>
+    </b-card>
+
+  </b-col>
+</b-row>
 </template>
 
 <script>
