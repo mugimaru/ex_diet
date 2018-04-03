@@ -3,6 +3,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 Vue.use(Router);
 
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
+
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
