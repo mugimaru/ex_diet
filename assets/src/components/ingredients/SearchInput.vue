@@ -21,7 +21,7 @@
       <button class="dropdown-item" role="menuitem" type="button" v-if="allowAddNew && queryFilter" @click="onAddIngredientSelected">
         Add ingredient "{{queryFilter}}"
       </button>
-      <b-dropdown-divider v-if="dropdownItems.length > 0 && queryFilter"></b-dropdown-divider>
+      <b-dropdown-divider v-if="allowAddNew && dropdownItems.length > 0 && queryFilter"></b-dropdown-divider>
       <b-dropdown-item-button v-for="item in dropdownItems" @click="onSelected(item)">
         {{item.title}}
       </b-dropdown-item-button>
@@ -96,6 +96,7 @@ export default {
     },
     onSelected(node) {
       this.disabled = true
+      this.queryFilter = node.item.name
       this.$emit('selected', node.item)
     },
     onAddIngredientSelected() {
