@@ -6,8 +6,8 @@
 
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <b-nav-item to="ingredients">Ingredients</b-nav-item>
-        <b-nav-item to="recipes">Recipes</b-nav-item>
+        <b-nav-item to="/ingredients">Ingredients</b-nav-item>
+        <b-nav-item to="/recipes">Recipes</b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto">

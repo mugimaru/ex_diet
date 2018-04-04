@@ -75,7 +75,8 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
   describe "`updateRecipe` mutation" do
     test "updates recipe with an ability to add ingredient", %{user: user} do
       ingredient = insert(:ingredient)
-      recipe = :recipe |> insert(description: "bar") |> with_ingredient(ingredient, 42)
+      recipe = insert(:recipe, description: "bar")
+      ri = insert(:recipe_ingredient, ingredient: ingredient, recipe: recipe)
 
       new_ingredient = insert(:ingredient)
 
@@ -83,7 +84,8 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
         name: "foo",
         weight_cooked: 100,
         recipe_ingredients: [
-          %{ingredient_id: global_id(new_ingredient), weight: 31}
+          %{ingredient_id: global_id(new_ingredient), weight: 31},
+          %{id: global_id(ri), ingredient_id: global_id(ingredient), weight: ri.weight }
         ]
       }
 
@@ -99,7 +101,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
                weight_cooked: 100,
                recipeIngredients: [
                  %{ingredient: %{name: new_ingredient.name}, weight: 31},
-                 %{ingredient: %{name: ingredient.name}, weight: 42}
+                 %{ingredient: %{name: ingredient.name}, weight: ri.weight}
                ]
              } == result
     end

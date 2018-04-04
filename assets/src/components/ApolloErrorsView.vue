@@ -37,7 +37,12 @@ export default {
         }).reduce((a, b) => a.concat(b), [])
       }
 
-      return [this.error.networkError.message]
+      const ne = this.error.networkError
+      if(ne.result && ne.result.errors && ne.result.errors.length > 0) {
+        return ne.result.errors.map((e) => e.message)
+      }
+
+      return [ne.message]
     }
   },
   data() {

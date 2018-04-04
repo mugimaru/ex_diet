@@ -11,6 +11,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 Vue.use(BootstrapVue);
 
+import VueLodash from 'vue-lodash';
+Vue.use(VueLodash);
+
 import App from './App.vue';
 import router from './config/router.js';
 

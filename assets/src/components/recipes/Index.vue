@@ -18,7 +18,7 @@
         <b-button variant="outline-secondary" size="sm" @click.stop="row.toggleDetails">
           {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
         </b-button>
-        <b-button variant="outline-success" size="sm" @click.stop="editRecipe(row.item)"> Edit </b-button>
+        <b-button variant="outline-success" size="sm" :to="'/recipes/' + row.item.id"> Edit </b-button>
         <b-button variant="outline-danger" size="sm" @click.stop="deleteRecipe(row.item)"> Delete </b-button>
       </b-button-group>
     </template>
@@ -110,10 +110,6 @@ export default {
     },
     showRecipe (item) {
       console.dir(item)
-    },
-    editRecipe (item) {
-      console.log(`Edit recipe ${item.name}`)
-      // this.$emit('edit', Object.assign({}, item))
     },
     deleteRecipe(item){
       this.error = null

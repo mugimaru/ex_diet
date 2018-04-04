@@ -22,7 +22,7 @@
         Add ingredient "{{queryFilter}}"
       </button>
       <b-dropdown-divider v-if="allowAddNew && dropdownItems.length > 0 && queryFilter"></b-dropdown-divider>
-      <b-dropdown-item-button v-for="item in dropdownItems" @click="onSelected(item)">
+      <b-dropdown-item-button v-for="(item, i) in dropdownItems" :key="i" @click="onSelected(item)">
         {{item.title}}
       </b-dropdown-item-button>
     </div>
@@ -38,17 +38,18 @@ export default {
   name: 'ingredient-search-input',
   data () {
     return {
-      queryFilter: null,
+      queryFilter: this.value ? this.value.name : null,
       error: null,
       allIngredients: null,
       focused: false,
-      disabled: false
+      disabled: !!this.value
     }
   },
   props: {
     perPage: { default: 15, type: Number },
     minInputLength: { default: 3, type: Number },
-    allowAddNew: { default: true, type: Boolean }
+    allowAddNew: { default: true, type: Boolean },
+    value: { type: Object }
   },
   computed: {
     searchable (){
@@ -84,24 +85,20 @@ export default {
       if(this.disabled) {
         this.disabled = false
         this.queryFilter = null
-        this.$emit('reset')
+        this.$emit('input', {})
       }
     },
     onFocusLost(e) {
       setTimeout(() => this.focused = false, 100)
     },
-    refetch() {
-      this.error = null
-      this.$apollo.queries.allIngredients.refetch()
-    },
     onSelected(node) {
       this.disabled = true
       this.queryFilter = node.item.name
-      this.$emit('selected', node.item)
+      this.$emit('input', node.item)
     },
     onAddIngredientSelected() {
       this.disabled = true
-      this.$emit('add-new-selected', this.queryFilter)
+      this.$emit('input', { name: this.queryFilter })
     }
   }
 }

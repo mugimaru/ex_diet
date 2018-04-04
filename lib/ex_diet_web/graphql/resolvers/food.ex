@@ -64,12 +64,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     with {:ok, recipe} <- Repo.fetch(Food.Recipe, id) do
       recipe = Repo.preload(recipe, :recipe_ingredients)
 
-      Food.update_recipe(
-        recipe,
-        add_persisted_items(recipe, args, :recipe_ingredients, fn ri ->
-          %{id: ri.id, recipe_id: ri.recipe_id, ingredient_id: ri.ingredient_id}
-        end)
-      )
+      Food.update_recipe(recipe, args)
     end
   end
 

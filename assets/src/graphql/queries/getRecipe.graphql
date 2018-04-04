@@ -1,0 +1,23 @@
+query recipe($id: ID!){
+  node(id: $id) {
+    id
+    ... on Recipe {
+      id
+      name
+      description
+      weightCooked
+      recipeIngredients {
+        id
+        weight
+        ingredient {
+          id
+          name
+          protein
+          fat
+          carbonhydrate
+          energy
+        }
+      }
+    }
+  }
+}
