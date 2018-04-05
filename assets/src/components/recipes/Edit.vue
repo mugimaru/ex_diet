@@ -18,9 +18,14 @@
 
       <b-col cols="10">
 
-        <b-form-group label="Description:">
-          <b-form-textarea rows="6" v-model="recipe.description"></b-form-textarea>
-        </b-form-group>
+        <b-row>
+          <b-col>
+            <b-form-group label="Description:">
+              <b-form-textarea rows="6" v-model="recipe.description"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+          <b-col v-html="compiledMarkdownDescription"></b-col>
+        </b-row>
       </b-col>
     </b-row>
 
@@ -60,6 +65,7 @@
 import getRecipe from '../../graphql/queries/getRecipe.graphql'
 import formRow from './form/Row.vue';
 import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
+import marked from 'marked'
 
 export default {
   name: 'recipes-edit',
@@ -74,6 +80,9 @@ export default {
     }
   },
   computed: {
+    compiledMarkdownDescription(){
+      return marked(this.recipe.description, { sanitize: true })
+    },
     updateRecipeInput(){
       return {
         name: this.recipe.name,
@@ -137,7 +146,7 @@ export default {
           id: this.$route.params['id']
         },
       }).then((result) => {
-        this.$apollo.queries.getRecipe.refetch()
+        this.recipe = this._.merge({}, result.data.node)
       }).catch((error) => {
         console.dir(error)
         this.error = error
