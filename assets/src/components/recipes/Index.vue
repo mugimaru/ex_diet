@@ -9,6 +9,9 @@
     </b-input-group-append>
   </b-input-group>
   <b-table responsive bordered :items="nodes" :fields="fields" :sort-by="sortBy">
+    <template slot="HEAD_actions" slot-scope="actions">
+      <b-button variant="outline-primary" block size="sm" @click.stop="addNewRecipe">Add new recipe</b-button>
+    </template>
     <template slot="protein" slot-scope="data"> {{Number.parseFloat(data.item.protein).toFixed(2)}} </template>
     <template slot="fat" slot-scope="data"> {{Number.parseFloat(data.item.fat).toFixed(2)}} </template>
     <template slot="carbonhydrate" slot-scope="data"> {{Number.parseFloat(data.item.carbonhydrate).toFixed(2)}} </template>
@@ -111,6 +114,9 @@ export default {
     showRecipe (item) {
       console.dir(item)
     },
+    addNewRecipe(){
+      this.$router.push({path: '/recipes/new'})
+    },
     deleteRecipe(item){
       this.error = null
       this.$apollo.mutate({
@@ -147,3 +153,10 @@ export default {
   }
 }
 </script>
+
+
+<style>
+  th:nth-child(7){
+    width: 220px !important;
+  }
+</style>

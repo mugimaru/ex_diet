@@ -65,17 +65,26 @@
 import getRecipe from '../../graphql/queries/getRecipe.graphql'
 import formRow from './form/Row.vue';
 import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
+import createRecipeMutation from '../../graphql/mutations/createRecipe.graphql'
 import marked from 'marked'
+function newRecipe(){
+  return {
+    weight: 0,
+    name: "",
+    description: "",
+    recipeIngredients: []
+  }
+}
 
 export default {
-  name: 'recipes-edit',
+  name: 'recipes-new-or-edit',
   components: {
     'form-row': formRow
   },
   data () {
     return {
       getRecipe: null,
-      recipe: null,
+      recipe: (this.$route.params['id'] == 'new') ? newRecipe() : null,
       error: null
     }
   },
@@ -132,21 +141,31 @@ export default {
       },
       result(result) {
         this.recipe = this._.merge({}, result.data.node)
+      },
+      skip () {
+        return this.$route.params['id'] == 'new'
       }
     }
   },
   methods: {
     onSubmit(e) {
       e.preventDefault()
-      console.dir(this.recipe)
+      let vars = { input: this.updateRecipeInput }
+      let mutations = { createRecipe: createRecipeMutation, updateRecipe: updateRecipeMutation }
+      let mutationName = null
+
+      if(this.$route.params['id'] == 'new') {
+        mutationName = 'createRecipe'
+      } else {
+        vars.id = this.$route.params['id']
+        mutationName = 'updateRecipe'
+      }
+
       this.$apollo.mutate({
-        mutation: updateRecipeMutation,
-        variables: {
-          input: this.updateRecipeInput,
-          id: this.$route.params['id']
-        },
+        mutation: mutations[mutationName],
+        variables: vars,
       }).then((result) => {
-        this.recipe = this._.merge({}, result.data.node)
+        this.recipe = this._.merge({}, result.data[mutationName])
       }).catch((error) => {
         console.dir(error)
         this.error = error
@@ -156,6 +175,16 @@ export default {
       this.recipe.recipeIngredients.push({
         ingredient: null
       })
+    }
+  },
+  beforeRouteUpdate (to, from, next) {
+    next()
+
+    if(this.$route.params.id == 'new') {
+      this.recipe = newRecipe()
+    } else {
+      this.recipe = null
+      this.$apollo.queries.getRecipe.refetch()
     }
   }
 }
