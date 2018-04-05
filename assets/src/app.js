@@ -23,6 +23,9 @@ Vue.use(VueApollo);
 import apolloErrorsView from './components/ApolloErrorsView.vue';
 Vue.component('apollo-errors-view', apolloErrorsView);
 
+import timedAlert from './components/TimedAlert.vue';
+Vue.component('timed-alert', timedAlert);
+
 new Vue({
   el: '#app',
   router,

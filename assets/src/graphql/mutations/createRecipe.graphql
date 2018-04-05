@@ -1,5 +1,5 @@
 mutation createRecipe($input: CreateRecipeInput!) {
-  updateRecipe(input: $input) {
+  createRecipe(input: $input) {
     id
     name
     description

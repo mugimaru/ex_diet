@@ -1,6 +1,7 @@
 <template>
 <div>
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
+  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
 
   <b-form v-if="recipe" @submit="onSubmit">
     <b-row>
@@ -86,12 +87,13 @@ export default {
     return {
       getRecipe: null,
       recipe: (this.$route.params['id'] == 'new') ? newRecipe() : null,
+      okMessage: null,
       error: null
     }
   },
   computed: {
     compiledMarkdownDescription(){
-      return marked(this.recipe.description, { sanitize: true })
+      return marked(this.recipe.description || "", { sanitize: true })
     },
     updateRecipeInput(){
       return {
@@ -153,7 +155,7 @@ export default {
         this.recipe = this._.merge({}, result.data.node)
       },
       skip () {
-        return this.$route.params['id'] == 'new'
+        return this.$route.params['id'] == 'new' || (this.recipe && this.recipe.id == this.$route.params.id)
       }
     }
   },
@@ -175,7 +177,13 @@ export default {
         mutation: mutations[mutationName],
         variables: vars,
       }).then((result) => {
+        const created = this.$route.params.id == 'new'
+        this.okMessage = `Recipe "${this.recipe.name}" has been successfully ${created ? 'created' : 'updated'}.`
         this.recipe = this._.merge({}, result.data[mutationName])
+
+        if(created) {
+          this.$router.push({path: `/recipes/${result.data[mutationName].id}`})
+        }
       }).catch((error) => {
         console.dir(error)
         this.error = error
@@ -194,8 +202,10 @@ export default {
     if(this.$route.params.id == 'new') {
       this.recipe = newRecipe()
     } else {
-      this.recipe = null
-      this.$apollo.queries.getRecipe.refetch()
+      if(this.recipe.id != this.$route.params.id) {
+        this.recipe = null
+        this.$apollo.queries.getRecipe.refetch()
+      }
     }
   }
 }

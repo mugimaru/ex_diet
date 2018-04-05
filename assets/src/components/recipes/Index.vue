@@ -1,6 +1,8 @@
 <template>
 <div>
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
+  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
+
   <b-input-group v-if="searchEnabled">
     <b-form-input v-model="filter" placeholder="Search recipes" />
     <b-input-group-append>
@@ -52,6 +54,7 @@ export default {
   },
   data () {
     return {
+      okMessage: null,
       error: null,
       sortBy: 'name',
       filter: null,
@@ -123,6 +126,7 @@ export default {
         mutation: deleteRecipeMutation,
         variables: { id: item.id },
       }).then((result) => {
+        this.okMessage = `Recipe "${item.name}" has been successfully deleted.`
         this.refetch()
       }).catch((error) => {
         this.error = error
