@@ -42,7 +42,7 @@ export default {
       error: null,
       allIngredients: null,
       focused: false,
-      disabled: !!this.value
+      disabled: !!this.value && this.value.id
     }
   },
   props: {
@@ -98,7 +98,7 @@ export default {
     },
     onAddIngredientSelected() {
       this.disabled = true
-      this.$emit('input', { name: this.queryFilter })
+      this.$emit('input', { name: this.queryFilter, weight: 0, carbonhydate: 0, protein: 0, fat: 0 })
     }
   }
 }

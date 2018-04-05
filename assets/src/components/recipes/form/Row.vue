@@ -1,7 +1,7 @@
 <template>
 <tr>
   <td>
-    <ingredients-search-input ref="ingredientSearchInput" :allow-add-new="false" v-model="value.ingredient"></ingredients-search-input>
+    <ingredients-search-input ref="ingredientSearchInput" :allow-add-new="true" v-model="value.ingredient"></ingredients-search-input>
   </td>
   <td> <b-input type="number" v-model="value.weight"></b-input> </td>
   <template v-if="value.ingredient && value.ingredient.id">
@@ -11,10 +11,18 @@
     <td>{{ energy }}</td>
   </template>
   <template v-if="value.ingredient && !value.ingredient.id">
-    <td>{{ protein }}</td>
-    <td>{{ fat }}</td>
-    <td>{{ carbonhydrate }}</td>
-    <td>{{ energy }}</td>
+    <td>
+      <b-input v-model="value.ingredient.protein" type="text"></b-input>
+    </td>
+    <td>
+      <b-input v-model="value.ingredient.fat" type="text"></b-input>
+    </td>
+    <td>
+      <b-input v-model="value.ingredient.carbonhydrate" type="text"></b-input>
+    </td>
+    <td>
+      <b-input v-model="value.ingredient.energy" type="text"></b-input>
+    </td>
   </template>
   <template v-if="!value.ingredient">
     <td></td>

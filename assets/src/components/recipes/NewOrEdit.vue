@@ -18,45 +18,46 @@
 
       <b-col cols="10">
 
-        <b-row>
-          <b-col>
-            <b-form-group label="Description:">
-              <b-form-textarea rows="6" v-model="recipe.description"></b-form-textarea>
-            </b-form-group>
-          </b-col>
-          <b-col v-html="compiledMarkdownDescription"></b-col>
-        </b-row>
+        <table class="table table-bordered" id="ri-form">
+          <thead>
+            <th>Ingredient</th>
+            <th>Weight</th>
+            <th>Protein</th>
+            <th>Fat</th>
+            <th>Carbonhydrate</th>
+            <th>Energy</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <form-row
+              v-for="(ri, index) in recipe.recipeIngredients"
+              :key="index"
+              @delete="recipe.recipeIngredients.splice(index, 1)"
+              v-model="recipe.recipeIngredients[index]">
+            </form-row>
+          </tbody>
+          <tfoot>
+            <th colspan="2">
+              <b-button variant="success" @click="addIngredient">Add ingredient</b-button>
+            </th>
+            <th>{{totals.protein}}</th>
+            <th>{{totals.fat}}</th>
+            <th>{{totals.carbonhydrate}}</th>
+            <th>{{totals.energy}}</th>
+          </tfoot>
+        </table>
       </b-col>
     </b-row>
 
-    <table class="table table-bordered" id="ri-form">
-      <thead>
-        <th>Ingredient</th>
-        <th>Weight</th>
-        <th>Protein</th>
-        <th>Fat</th>
-        <th>Carbonhydrate</th>
-        <th>Energy</th>
-        <th></th>
-      </thead>
-      <tbody>
-        <form-row
-          v-for="(ri, index) in recipe.recipeIngredients"
-          :key="index"
-          @delete="recipe.recipeIngredients.splice(index, 1)"
-          v-model="recipe.recipeIngredients[index]">
-        </form-row>
-      </tbody>
-      <tfoot>
-        <th colspan="2">
-          <b-button variant="success" @click="addIngredient">Add ingredient</b-button>
-        </th>
-        <th>{{totals.protein}}</th>
-        <th>{{totals.fat}}</th>
-        <th>{{totals.carbonhydrate}}</th>
-        <th>{{totals.energy}}</th>
-      </tfoot>
-    </table>
+
+    <b-card header="Recipe description">
+      <b-row>
+        <b-col>
+          <b-form-textarea rows="12" v-model="recipe.description"></b-form-textarea>
+        </b-col>
+        <b-col v-html="compiledMarkdownDescription"></b-col>
+      </b-row>
+    </b-card>
   </b-form>
 </div>
 </template>
@@ -95,10 +96,19 @@ export default {
     updateRecipeInput(){
       return {
         name: this.recipe.name,
-        weightCooked: this.recipe.weightCooked,
+        weightCooked: Number(this.recipe.weightCooked),
         description: this.recipe.description,
         recipeIngredients: this.recipe.recipeIngredients.map(function(ri) {
-          return { weight: Number(ri.weight), ingredientId: ri.ingredient.id, id: ri.id }
+          let riParams = { weight: Number(ri.weight) }
+          if(ri.id) { riParams.id = ri.id }
+
+          if(ri.ingredient.id) {
+            riParams.ingredientId = ri.ingredient.id
+          } else {
+            riParams.ingredient = _.pick(ri.ingredient, 'name', 'protein', 'fat', 'carbonhydrate', 'energy')
+          }
+
+          return riParams
         })
       }
     },
@@ -173,7 +183,8 @@ export default {
     },
     addIngredient(){
       this.recipe.recipeIngredients.push({
-        ingredient: null
+        weight: 0,
+        ingredient: { protein: 0, fat: 0, carbonhydrate: 0, energy: 0, name: "" }
       })
     }
   },

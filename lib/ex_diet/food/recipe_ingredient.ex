@@ -27,6 +27,7 @@ defmodule ExDiet.Food.RecipeIngredient do
     ingredient
     |> cast(attrs, [:weight, :recipe_id, :ingredient_id])
     |> validate_required([:weight])
+    |> cast_assoc(:ingredient)
     |> foreign_key_constraint(:recipe_id)
     |> foreign_key_constraint(:ingredient_id)
     |> unique_constraint(:ingredient_id, name: :recipe_ingredients_uniq_idx)
