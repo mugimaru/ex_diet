@@ -16,13 +16,13 @@
 - [x] setup token authentication
 - [x] build the core domain (ingredients, recipes, meals, calendar, etc)
 - [x] build graphql API
-- [ ] deployment
+- [x] deployment [gigalixir.com](https://gigalixir.com/)
 
 ### Frontend
 - [x] bootstrap an UI with vuejs
 - [x] implement authentication
-- [ ] add ingredients crud
-- [ ] add recipes
+- [x] add ingredients crud
+- [x] add recipes
 - [ ] add calendar dashboard
 
 ## Development
