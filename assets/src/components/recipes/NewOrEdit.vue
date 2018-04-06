@@ -1,8 +1,6 @@
 <template>
 <div>
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
-
   <b-form v-if="recipe" @submit="onSubmit">
     <b-row>
       <b-col cols="2">
@@ -70,6 +68,7 @@ import formRow from './form/Row.vue';
 import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
 import createRecipeMutation from '../../graphql/mutations/createRecipe.graphql'
 import marked from 'marked'
+import { EventBus } from '../../config/eventBus.js'
 import { required, minValue } from "vuelidate/lib/validators"
 
 function newRecipe(){
@@ -90,7 +89,6 @@ export default {
     return {
       getRecipe: null,
       recipe: (this.$route.params['id'] == 'new') ? newRecipe() : null,
-      okMessage: null,
       error: null
     }
   },
@@ -199,7 +197,8 @@ export default {
         variables: vars,
       }).then((result) => {
         const created = this.$route.params.id == 'new'
-        this.okMessage = `Recipe "${this.recipe.name}" has been successfully ${created ? 'created' : 'updated'}.`
+        EventBus.$emit('notification', `Recipe "${this.recipe.name}" has been successfully ${created ? 'created' : 'updated'}.`)
+
         this.recipe = this._.merge({}, result.data[mutationName])
 
         if(created) {

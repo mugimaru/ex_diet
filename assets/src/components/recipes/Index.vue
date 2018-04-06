@@ -1,7 +1,6 @@
 <template>
 <div>
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
 
   <b-input-group v-if="searchEnabled">
     <b-form-input v-model="filter" placeholder="Search recipes" />
@@ -45,6 +44,7 @@
 <script>
 import listRecipesQuery from '../../graphql/queries/listRecipes.graphql'
 import deleteRecipeMutation from '../../graphql/mutations/deleteRecipe.graphql'
+import { EventBus } from '../../config/eventBus.js'
 
 export default {
   name: 'recipes-index',
@@ -54,7 +54,6 @@ export default {
   },
   data () {
     return {
-      okMessage: null,
       error: null,
       sortBy: 'name',
       filter: null,
@@ -123,7 +122,7 @@ export default {
         mutation: deleteRecipeMutation,
         variables: { id: item.id },
       }).then((result) => {
-        this.okMessage = `Recipe "${item.name}" has been successfully deleted.`
+        EventBus.$emit('notification', `Recipe "${item.name}" has been successfully deleted.`)
         this.refetch()
       }).catch((error) => {
         this.error = error

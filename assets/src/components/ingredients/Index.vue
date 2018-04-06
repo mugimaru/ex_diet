@@ -1,6 +1,5 @@
 <template>
 <div>
-  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
   <b-row>
     <b-col cols="8">
       <ingredients-table :search-enabled="true" ref="ingredientsTable" @edit="editIngredient" @deleted="onIngredientDeleted"></ingredients-table>
@@ -15,6 +14,7 @@
 <script>
 import Form from './Form.vue'
 import Table from './Table.vue'
+import { EventBus } from '../../config/eventBus.js'
 
 export default {
   name: 'ingredients-index',
@@ -24,8 +24,7 @@ export default {
   },
   data () {
     return {
-      ingredient: this.emptyIngredient(),
-      okMessage: null
+      ingredient: this.emptyIngredient()
     }
   },
   methods: {
@@ -48,7 +47,7 @@ export default {
       this.publishOkMessage(item.name, 'deleted')
     },
     publishOkMessage(name, operation) {
-      this.okMessage = `"${name}" has been successfully ${operation}.`
+      EventBus.$emit('notification', `"${name}" has been successfully ${operation}.`)
     },
     resetIngredient () {
       this.ingredient = this.emptyIngredient()

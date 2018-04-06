@@ -24,13 +24,14 @@
   <br>
 
   <b-container fluid>
+    <timed-alert :message="message" @dismissed="message = null" variant="success"></timed-alert>
     <router-view></router-view>
   </b-container>
 </div>
 </template>
 
 <script>
-
+import { EventBus } from './config/eventBus.js'
 export default {
   name: 'app',
   computed: {
@@ -47,7 +48,12 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      message: null
+    }
+  },
+  created () {
+    EventBus.$on('notification', (msg) => this.message = msg)
   }
 }
 </script>
