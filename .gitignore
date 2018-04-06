@@ -7,4 +7,4 @@ erl_crash.dump
 /doc
 /assets/node_modules
 /cover
-priv/static/js/app.js
+priv/static/

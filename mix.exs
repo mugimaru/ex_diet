@@ -14,7 +14,7 @@ defmodule ExDiet.Mixfile do
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
       deps_path: System.get_env("DEPS_PATH") || Mix.Project.deps_path(),
-      build_path: System.get_env("BUILD_PATH") || Mix.Project.build_path()
+      build_path: build_path()
     ]
   end
 
@@ -54,6 +54,7 @@ defmodule ExDiet.Mixfile do
       {:absinthe_phoenix, ">= 0.0.0"},
       {:dataloader, "~> 1.0.0"},
       {:gettext, "~> 0.11"},
+      {:distillery, "~> 1.5.0", runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
@@ -75,5 +76,14 @@ defmodule ExDiet.Mixfile do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test"]
     ]
+  end
+
+  defp build_path do
+    System.get_env("BUILD_PATH") || default_build_path()
+  end
+
+  defp default_build_path do
+    Mix.Project.build_path()
+    |> String.replace("/#{Mix.env}", "")
   end
 end
