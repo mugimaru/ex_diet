@@ -17,6 +17,8 @@ Vue.use(VueLodash);
 import App from './App.vue';
 import router from './config/router.js';
 
+Vue.use(require('vue-moment'));
+
 import {apolloProvider, VueApollo} from './config/apollo.js';
 Vue.use(VueApollo);
 

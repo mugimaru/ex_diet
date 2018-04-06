@@ -1,0 +1,35 @@
+query listCalendars($filter: CalendarFilter) {
+  listCalendars(filter: $filter) {
+    id
+    day
+    meals {
+      id
+      weight
+      ingredient {
+        id
+        name
+        protein
+        fat
+        carbonhydrate
+        energy
+      }
+      recipe {
+        id
+        name
+        protein
+        fat
+        carbonhydrate
+        energy
+        recipeIngredients {
+          weight
+          ingredient {
+            fat
+            protein
+            carbonhydrate
+            energy
+          }
+        }
+      }
+    }
+  }
+}

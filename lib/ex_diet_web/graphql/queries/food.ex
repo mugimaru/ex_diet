@@ -9,6 +9,8 @@ defmodule ExDietWeb.GraphQL.Queries.Food do
   input_object :calendar_filter do
     field :created_after, :datetime
     field :created_before, :datetime
+    field :after, :datetime
+    field :before, :datetime
   end
 
   object :food_queries do

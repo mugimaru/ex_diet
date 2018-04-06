@@ -16,9 +16,13 @@ defmodule ExDiet.Food.Queries.Calendar do
   def filter(query, filter) do
     Enum.reduce(filter, query, fn
       {:created_before, date}, query ->
-        from q in query, where: q.created_at >= ^date
-      {:created_after, date}, query ->
         from q in query, where: q.created_at <= ^date
+      {:created_after, date}, query ->
+        from q in query, where: q.created_at >= ^date
+      {:before, date}, query ->
+        from q in query, where: q.day <= ^date
+      {:after, date}, query ->
+        from q in query, where: q.day >= ^date
     end)
   end
 end
