@@ -1,9 +1,9 @@
 <template>
 <tr>
   <td>
-    <ingredients-search-input ref="ingredientSearchInput" :allow-add-new="true" v-model="value.ingredient"></ingredients-search-input>
+    <ingredients-search-input ref="ingredientSearchInput" :allow-add-new="true" v-model="value.ingredient" :v="v.ingredient"></ingredients-search-input>
   </td>
-  <td> <b-input type="number" v-model="value.weight"></b-input> </td>
+  <td> <b-input type="number" v-model="value.weight" :state="!this.v.weight.$invalid"></b-input> </td>
   <template v-if="value.ingredient && value.ingredient.id">
     <td>{{ protein }}</td>
     <td>{{ fat }}</td>
@@ -12,16 +12,16 @@
   </template>
   <template v-if="value.ingredient && !value.ingredient.id">
     <td>
-      <b-input v-model="value.ingredient.protein" type="text"></b-input>
+      <b-input v-model="value.ingredient.protein" type="text" :state="vuelidate_ingredient('protein')"></b-input>
     </td>
     <td>
-      <b-input v-model="value.ingredient.fat" type="text"></b-input>
+      <b-input v-model="value.ingredient.fat" type="text" :state="vuelidate_ingredient('fat')"></b-input>
     </td>
     <td>
-      <b-input v-model="value.ingredient.carbonhydrate" type="text"></b-input>
+      <b-input v-model="value.ingredient.carbonhydrate" type="text" :state="vuelidate_ingredient('carbonhydrate')"></b-input>
     </td>
     <td>
-      <b-input v-model="value.ingredient.energy" type="text"></b-input>
+      <b-input v-model="value.ingredient.energy" type="text" :state="vuelidate_ingredient('energy')"></b-input>
     </td>
   </template>
   <template v-if="!value.ingredient">
@@ -54,7 +54,8 @@ export default {
     return {}
   },
   props: {
-    value: { type: Object }
+    value: { type: Object },
+    v: { required: true }
   },
   computed: {
     protein() {
@@ -68,6 +69,12 @@ export default {
     },
     energy() {
       return calculateNutritionFact(this.value, 'energy', 0)
+    }
+  },
+  methods: {
+    vuelidate_ingredient(attr) {
+      if(!this.v) { return true }
+      return !this.v.ingredient[attr].$invalid
     }
   }
 }

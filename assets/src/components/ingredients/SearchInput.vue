@@ -13,6 +13,7 @@
         @blur.native="onFocusLost"
         placeholder="Search an ingredient"
         :disabled="disabled"
+        :state="vuelidate('name')"
         autocomplete="off">
       </b-input>
     </b-input-group>
@@ -49,7 +50,8 @@ export default {
     perPage: { default: 15, type: Number },
     minInputLength: { default: 3, type: Number },
     allowAddNew: { default: true, type: Boolean },
-    value: { type: Object }
+    value: { type: Object },
+    v: {}
   },
   computed: {
     searchable (){
@@ -99,6 +101,10 @@ export default {
     onAddIngredientSelected() {
       this.disabled = true
       this.$emit('input', { name: this.queryFilter, weight: 0, carbonhydate: 0, protein: 0, fat: 0 })
+    },
+    vuelidate(attr) {
+      if(!this.v) { return true }
+      return !this.v[attr].$invalid
     }
   }
 }

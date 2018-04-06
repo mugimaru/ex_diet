@@ -27,7 +27,7 @@ export default {
     errorMessages () {
       if(!this.error) { return []}
 
-      if(this.error.graphQLErrors.length > 0) {
+      if(this.error.graphQLErrors && this.error.graphQLErrors.length > 0) {
         return this.error.graphQLErrors.map(function(e) {
           if(e.code == "validation_error") {
             return Object.keys(e.fields).map(key => `${key}: ${e.fields[key].join(', ')}`)
@@ -38,11 +38,11 @@ export default {
       }
 
       const ne = this.error.networkError
-      if(ne.result && ne.result.errors && ne.result.errors.length > 0) {
+      if(ne &&ne.result && ne.result.errors && ne.result.errors.length > 0) {
         return ne.result.errors.map((e) => e.message)
       }
 
-      return [ne.message]
+      return ne ? [ne.message] : [this.error.message]
     }
   },
   data() {

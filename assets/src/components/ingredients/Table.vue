@@ -91,6 +91,7 @@ export default {
         mutation: deleteIngredientMutation,
         variables: { id: item.id },
       }).then((result) => {
+        this.$emit('deleted', item)
         this.refetch()
       }).catch((error) => {
         this.error = error

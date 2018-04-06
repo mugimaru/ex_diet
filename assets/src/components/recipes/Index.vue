@@ -114,9 +114,6 @@ export default {
       this.error = null
       this.$apollo.queries.listRecipes.refetch()
     },
-    showRecipe (item) {
-      console.dir(item)
-    },
     addNewRecipe(){
       this.$router.push({path: '/recipes/new'})
     },

@@ -31,7 +31,7 @@
       </b-form-group>
 
       <b-button-group>
-        <b-button type="submit" variant="primary">
+        <b-button type="submit" variant="primary" :disabled="$v.ingredient.$invalid">
           {{ingredient.id ? "Update ingredient" : "Create ingredient"}}
         </b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
@@ -70,7 +70,6 @@ export default {
       this.$emit('reset')
     },
     onSubmit(event) {
-      event.preventDefault()
       this.error = null
       const { name, protein, fat, carbonhydrate, energy } = this.ingredient
 
@@ -89,7 +88,8 @@ export default {
         mutation: mutation,
         variables: variables,
       }).then((result) => {
-        this.$emit('updated')
+        const event = this.ingredient.id ? 'updated' : 'created'
+        this.$emit(event, this.ingredient)
       }).catch((error) => {
         this.error = error
       })

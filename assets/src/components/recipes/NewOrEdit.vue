@@ -7,14 +7,14 @@
     <b-row>
       <b-col cols="2">
         <b-form-group label="Name:">
-          <b-form-input type="text" v-model="recipe.name" required></b-form-input>
+          <b-form-input type="text" v-model="recipe.name" :state="!$v.recipe.name.$invalid" ></b-form-input>
         </b-form-group>
 
         <b-form-group label="Weight cooked:">
-          <b-form-input type="number" v-model="recipe.weightCooked" required></b-form-input>
+          <b-form-input type="number" v-model="recipe.weightCooked"  :state="!$v.recipe.weightCooked.$invalid"></b-form-input>
         </b-form-group>
 
-        <b-button type="submit" :block="true" variant="primary">Submit recipe</b-button>
+        <b-button type="submit" :block="true" variant="primary" :disabled="!!$v.recipe.$invalid">Submit recipe</b-button>
       </b-col>
 
       <b-col cols="10">
@@ -33,6 +33,7 @@
             <form-row
               v-for="(ri, index) in recipe.recipeIngredients"
               :key="index"
+              :v="$v.recipe.recipeIngredients.$each[index]"
               @delete="recipe.recipeIngredients.splice(index, 1)"
               v-model="recipe.recipeIngredients[index]">
             </form-row>
@@ -69,6 +70,8 @@ import formRow from './form/Row.vue';
 import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
 import createRecipeMutation from '../../graphql/mutations/createRecipe.graphql'
 import marked from 'marked'
+import { required, minValue } from "vuelidate/lib/validators"
+
 function newRecipe(){
   return {
     weight: 0,
@@ -89,6 +92,24 @@ export default {
       recipe: (this.$route.params['id'] == 'new') ? newRecipe() : null,
       okMessage: null,
       error: null
+    }
+  },
+  validations: {
+    recipe: {
+      weightCooked: { minValue: minValue(1) },
+      name: { required },
+      recipeIngredients: {
+        $each: {
+          weight: { minValue: minValue(1) },
+          ingredient: {
+            name: { required },
+            protein: { minValue: minValue(0) },
+            fat: { minValue: minValue(0) },
+            carbonhydrate: { minValue: minValue(0) },
+            energy: { minValue: minValue(0) }
+          }
+        }
+      }
     }
   },
   computed: {
@@ -185,7 +206,6 @@ export default {
           this.$router.push({path: `/recipes/${result.data[mutationName].id}`})
         }
       }).catch((error) => {
-        console.dir(error)
         this.error = error
       })
     },

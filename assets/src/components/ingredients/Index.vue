@@ -1,12 +1,15 @@
 <template>
-<b-row>
-  <b-col cols="8">
-    <ingredients-table :search-enabled="true" ref="ingredientsTable" @edit="editIngredient"></ingredients-table>
-  </b-col>
-  <b-col>
-    <ingredient-form :ingredient="ingredient" @updated="resetAndRefetchIngredient" @reset="resetIngredient"></ingredient-form>
-  </b-col>
-</b-row>
+<div>
+  <timed-alert :message="okMessage" @dismissed="okMessage = null" variant="success"></timed-alert>
+  <b-row>
+    <b-col cols="8">
+      <ingredients-table :search-enabled="true" ref="ingredientsTable" @edit="editIngredient" @deleted="onIngredientDeleted"></ingredients-table>
+    </b-col>
+    <b-col>
+      <ingredient-form :ingredient="ingredient" @updated="onUpdated" @created="onCreated" @reset="resetIngredient"></ingredient-form>
+    </b-col>
+  </b-row>
+</div>
 </template>
 
 <script>
@@ -21,7 +24,8 @@ export default {
   },
   data () {
     return {
-      ingredient: this.emptyIngredient()
+      ingredient: this.emptyIngredient(),
+      okMessage: null
     }
   },
   methods: {
@@ -31,6 +35,20 @@ export default {
     resetAndRefetchIngredient() {
       this.resetIngredient()
       this.$refs.ingredientsTable.refetch()
+    },
+    onUpdated(item) {
+      this.publishOkMessage(item.name, 'updated')
+      this.resetAndRefetchIngredient()
+    },
+    onCreated(item) {
+      this.publishOkMessage(item.name, 'created')
+      this.resetAndRefetchIngredient()
+    },
+    onIngredientDeleted(item) {
+      this.publishOkMessage(item.name, 'deleted')
+    },
+    publishOkMessage(name, operation) {
+      this.okMessage = `"${name}" has been successfully ${operation}.`
     },
     resetIngredient () {
       this.ingredient = this.emptyIngredient()
