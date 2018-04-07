@@ -3,6 +3,7 @@ query recipe($id: ID!){
     id
     ... on Recipe {
       id
+      eaten
       name
       description
       weightCooked

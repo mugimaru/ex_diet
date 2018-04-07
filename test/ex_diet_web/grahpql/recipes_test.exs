@@ -85,7 +85,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
         weight_cooked: 100,
         recipe_ingredients: [
           %{ingredient_id: global_id(new_ingredient), weight: 31},
-          %{id: global_id(ri), ingredient_id: global_id(ingredient), weight: ri.weight }
+          %{id: global_id(ri), ingredient_id: global_id(ingredient), weight: ri.weight}
         ]
       }
 

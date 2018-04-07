@@ -14,6 +14,7 @@ defmodule ExDiet.Food.Recipe do
           user: ExDiet.Accounts.User.t() | nil,
           recipe_ingredients: list(RecipeIngredient),
           weight_cooked: integer | nil,
+          eaten: boolean,
           inserted_at: %DateTime{},
           updated_at: %DateTime{}
         }
@@ -22,6 +23,7 @@ defmodule ExDiet.Food.Recipe do
     field(:name, :string)
     field(:description, :string)
     field(:weight_cooked, :integer)
+    field(:eaten, :boolean)
 
     belongs_to(:user, ExDiet.Accounts.User)
     has_many(:recipe_ingredients, RecipeIngredient, on_replace: :delete)
@@ -33,7 +35,7 @@ defmodule ExDiet.Food.Recipe do
   @doc false
   def changeset(ingredient, attrs) do
     ingredient
-    |> cast(attrs, [:name, :description, :user_id, :weight_cooked])
+    |> cast(attrs, [:name, :description, :user_id, :weight_cooked, :eaten])
     |> foreign_key_constraint(:user_id)
     |> cast_assoc(:recipe_ingredients)
     |> validate_required([:name, :user_id])

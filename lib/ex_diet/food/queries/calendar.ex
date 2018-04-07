@@ -3,7 +3,7 @@ defmodule ExDiet.Food.Queries.Calendar do
   import Ecto.Query
 
   def for_user(query, %ExDiet.Accounts.User{id: id}) do
-    from q in query, where: q.user_id == ^id
+    from(q in query, where: q.user_id == ^id)
   end
 
   def search(query, args) do
@@ -16,13 +16,16 @@ defmodule ExDiet.Food.Queries.Calendar do
   def filter(query, filter) do
     Enum.reduce(filter, query, fn
       {:created_before, date}, query ->
-        from q in query, where: q.created_at <= ^date
+        from(q in query, where: q.created_at <= ^date)
+
       {:created_after, date}, query ->
-        from q in query, where: q.created_at >= ^date
+        from(q in query, where: q.created_at >= ^date)
+
       {:before, date}, query ->
-        from q in query, where: q.day <= ^date
+        from(q in query, where: q.day <= ^date)
+
       {:after, date}, query ->
-        from q in query, where: q.day >= ^date
+        from(q in query, where: q.day >= ^date)
     end)
   end
 end

@@ -1,5 +1,5 @@
-query listRecipes($filter: String, $first: Int!, $cursor: String) {
-  listRecipes(filter: $filter, first: $first, after: $cursor) {
+query listRecipes($filter: String, $first: Int!, $eaten: Boolean, $cursor: String) {
+  listRecipes(filter: $filter, first: $first, after: $cursor, eaten: $eaten) {
     pageInfo {
       endCursor
       hasNextPage
@@ -7,6 +7,7 @@ query listRecipes($filter: String, $first: Int!, $cursor: String) {
     edges {
       node {
         id
+        eaten
         weightCooked
         name
         description

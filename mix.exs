@@ -84,6 +84,6 @@ defmodule ExDiet.Mixfile do
 
   defp default_build_path do
     Mix.Project.build_path()
-    |> String.replace("/#{Mix.env}", "")
+    |> String.replace("/#{Mix.env()}", "")
   end
 end

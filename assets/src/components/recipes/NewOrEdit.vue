@@ -12,7 +12,13 @@
           <b-form-input type="number" v-model="recipe.weightCooked"  :state="!$v.recipe.weightCooked.$invalid"></b-form-input>
         </b-form-group>
 
+
+        <fieldset class="b-form-group form-group">
+          <b-form-checkbox v-model="recipe.eaten" id="eaten"> Eaten </b-form-checkbox>
+        </fieldset>
+
         <b-button type="submit" :block="true" variant="primary" :disabled="!!$v.recipe.$invalid">Submit recipe</b-button>
+        <br/>
       </b-col>
 
       <b-col cols="10">
@@ -117,6 +123,7 @@ export default {
     updateRecipeInput(){
       return {
         name: this.recipe.name,
+        eaten: this.recipe.eaten,
         weightCooked: Number(this.recipe.weightCooked),
         description: this.recipe.description,
         recipeIngredients: this.recipe.recipeIngredients.map(function(ri) {

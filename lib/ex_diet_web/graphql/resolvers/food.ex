@@ -32,7 +32,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
       Food.Calendar
       |> Food.Queries.Calendar.for_user(user)
       |> Food.Queries.Calendar.search(args)
-      |> Repo.all
+      |> Repo.all()
     }
   end
 

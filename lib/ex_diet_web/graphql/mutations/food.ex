@@ -42,6 +42,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field(:name, non_null(:string))
     field(:description, :string)
     field(:weight_cooked, :integer)
+    field(:eaten, :boolean)
     field(:recipe_ingredients, list_of(:recipe_ingredient_input))
   end
 
@@ -49,6 +50,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
     field(:name, :string)
     field(:description, :string)
     field(:weight_cooked, :integer)
+    field(:eaten, :boolean)
     field(:recipe_ingredients, list_of(:recipe_ingredient_input))
   end
 

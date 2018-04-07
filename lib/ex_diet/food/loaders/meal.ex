@@ -8,7 +8,7 @@ defmodule ExDiet.Food.Loaders.Meal do
   end
 
   def query(ExDiet.Food.Recipe = queryable, _args) do
-    from q in queryable, preload: [recipe_ingredients: [:ingredient]]
+    from(q in queryable, preload: [recipe_ingredients: [:ingredient]])
   end
 
   def query(queryable, _args) do

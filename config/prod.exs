@@ -74,4 +74,5 @@ config :ex_diet, ExDiet.Repo,
   url: "${DATABASE_URL}",
   database: "ex_diet",
   ssl: true,
-  pool_size: 1 # Free tier db only allows 1 connection
+  # Free tier db only allows 1 connection
+  pool_size: 1

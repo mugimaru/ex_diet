@@ -1,7 +1,11 @@
 <template>
 <div>
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-
+  <b-row>
+    <b-col cols="2">
+      <b-form-checkbox v-model="excludeEaten"> Exclude eaten </b-form-checkbox>
+    </b-col>
+    <b-col>
   <b-input-group v-if="searchEnabled">
     <b-form-input v-model="filter" placeholder="Search recipes" />
     <b-input-group-append>
@@ -9,6 +13,8 @@
       <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
     </b-input-group-append>
   </b-input-group>
+    </b-col>
+  </b-row>
   <b-table responsive bordered :items="nodes" :fields="fields" :sort-by="sortBy">
     <template slot="HEAD_actions" slot-scope="actions">
       <b-button variant="outline-primary" block size="sm" @click.stop="addNewRecipe">Add new recipe</b-button>
@@ -57,6 +63,7 @@ export default {
       error: null,
       sortBy: 'name',
       filter: null,
+      excludeEaten: false,
       queryFilter: null,
       detailsFields: [
         { key: 'name', sortable: true },
@@ -92,6 +99,8 @@ export default {
       variables() {
         let params = { first: this.perPage }
         if(this.queryFilter) { params.filter = this.queryFilter }
+        if(this.excludeEaten) { params.eaten = false }
+
         return params
       },
       error(e) {
@@ -149,6 +158,11 @@ export default {
           }
         }
       })
+    }
+  },
+  watch: {
+    excludeEaten: function(n, o) {
+      if(n) { this.refetch() }
     }
   }
 }
