@@ -10,13 +10,19 @@
       <b-button variant="primary" @click="changeCalendarScope(+7)"> Next </b-button>
     </b-button-group>
   </div>
+
+  <div class="text-right">
+    <b-form-checkbox v-model="hideCalendarsBeforeToday">
+      Hide calendars before today
+    </b-form-checkbox>
+  </div>
   <br/>
 
   <b-row>
     <b-col cols="5"></b-col>
     <b-col cols="7">
       <calendar-widget
-        v-for="(cal, i) in calendars"
+        v-for="(cal, i) in calendarsForWeek"
         :key="i"
         :calendar="cal">
       </calendar-widget>
@@ -36,10 +42,31 @@ export default {
     'calendar-widget': calendarWidget
   },
   computed: {
+    calendarsForWeek() {
+      if(!this.calendars) { return null }
+      let startDate = this.startDate
+      let range = 7
+      const today = moment()
+
+      if(this.hideCalendarsBeforeToday) {
+        if(startDate.isAfter(today) || this.endDate.isBefore(today)) { return [] }
+        startDate = today
+        range = this.endDate.diff(today, 'days')
+      }
+
+      const comp = this
+      return this._.range(range).map(function(n) {
+        const date = n == 0 ? moment(startDate) : moment(startDate).add(n, 'days')
+        const cal = comp.calendars.find((cal) => date.isSame(cal.day, 'day'))
+
+        return cal ? cal : { day: date, meals: [] }
+      })
+    }
   },
   data() {
     return {
       calendars: null,
+      hideCalendarsBeforeToday: true,
       startDate: moment().startOf('isoWeek'),
       endDate: moment().endOf('isoWeek')
     }
@@ -66,12 +93,20 @@ export default {
       this.startDate = moment(this.startDate).add(days, 'days')
       this.endDate = moment(this.endDate).add(days, 'days')
       this.$apollo.queries.calendars.refetch()
+      this.hideCalendarsBeforeToday = false
     },
     returnToCurrentWeek(){
-      // do not refetch unless dates changed
-      this.startDate = moment().startOf('isoWeek')
-      this.endDate = moment().endOf('isoWeek')
+      const startOfCurrentWeek = moment().startOf('isoWeek')
+      const endOfCurrentWeek = moment().endOf('isoWeek')
+
+      if(moment(this.startDate).isSame(startOfCurrentWeek, 'day') && moment(this.endDate).isSame(endOfCurrentWeek, 'day')) {
+        return
+      }
+
+      this.startDate = startOfCurrentWeek
+      this.endDate = endOfCurrentWeek
       this.$apollo.queries.calendars.refetch()
+      this.hideCalendarsBeforeToday = true
     }
   }
 };

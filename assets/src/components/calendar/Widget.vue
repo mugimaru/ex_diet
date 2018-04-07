@@ -79,8 +79,8 @@ export default {
         return acc
       }, {})
     },
-    today(date) {
-      return moment().diff(moment(this.calendar.day), 'days') == 0
+    today() {
+      return moment().isSame(this.calendar.day, 'day')
     }
   },
   data() {
