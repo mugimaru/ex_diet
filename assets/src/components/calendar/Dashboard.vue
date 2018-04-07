@@ -13,7 +13,7 @@
 
   <div class="text-right">
     <b-form-checkbox v-model="hideCalendarsBeforeToday">
-      Hide calendars before today
+      Hide widgets before today
     </b-form-checkbox>
   </div>
   <br/>
@@ -51,7 +51,7 @@ export default {
       if(this.hideCalendarsBeforeToday) {
         if(startDate.isAfter(today) || this.endDate.isBefore(today)) { return [] }
         startDate = today
-        range = this.endDate.diff(today, 'days')
+        range = this.endDate.diff(today, 'days') + 1
       }
 
       const comp = this
