@@ -19,7 +19,16 @@
   <br/>
 
   <b-row>
-    <b-col cols="5"></b-col>
+    <b-col cols="5">
+
+      <b-card no-body header="Recipes">
+        <b-list-group flush>
+          <b-list-group-item v-for="recipe in recipes" class="d-flex justify-content-between align-items-center">
+            {{recipe.name}}
+        </b-list-group-item>
+      </b-list-group>
+    </b-card>
+    </b-col>
     <b-col cols="7">
       <calendar-widget
         v-for="(cal, i) in calendarsForWeek"
@@ -35,6 +44,7 @@
 
 import moment from 'moment'
 import listCalendarsQuery from '../../graphql/queries/listCalendars.graphql'
+import listRecipesQuery from '../../graphql/queries/listRecipes.graphql'
 import calendarWidget from './Widget.vue'
 export default {
   name: "calendar-dashboard",
@@ -42,6 +52,10 @@ export default {
     'calendar-widget': calendarWidget
   },
   computed: {
+    recipes(){
+      if(!this.notEatenRecipes) { return [] }
+      return this.notEatenRecipes.map((edge) => edge.node)
+    },
     calendarsForWeek() {
       if(!this.calendars) { return null }
       let startDate = this.startDate
@@ -65,6 +79,7 @@ export default {
   },
   data() {
     return {
+      notEatenRecipes: null,
       calendars: null,
       hideCalendarsBeforeToday: true,
       startDate: moment().startOf('isoWeek'),
@@ -72,6 +87,17 @@ export default {
     }
   },
   apollo: {
+    notEatenRecipes: {
+      query: listRecipesQuery,
+      variables: {
+        eaten: false,
+        first: 30
+      },
+      update: data => data.listRecipes.edges,
+      error(e) {
+        console.dir(e)
+      }
+    },
     calendars: {
       query: listCalendarsQuery,
       variables() {
