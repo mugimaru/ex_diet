@@ -23,8 +23,11 @@
 
       <b-card no-body header="Recipes">
         <b-list-group flush>
-          <b-list-group-item v-for="recipe in recipes" class="d-flex justify-content-between align-items-center">
+          <b-list-group-item v-for="(recipe, i) in recipes" :key="i" class="d-flex justify-content-between align-items-center">
             {{recipe.name}}
+            <b-button variant="outline-danger" size="sm">
+              <icon name="check" scale="1"></icon>
+            </b-button>
         </b-list-group-item>
       </b-list-group>
     </b-card>

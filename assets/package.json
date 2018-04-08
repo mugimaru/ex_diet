@@ -19,6 +19,7 @@
         "marked": "^0.3.19",
         "vue": "^2.5.16",
         "vue-apollo": "^3.0.0-beta.2",
+        "vue-awesome": "^3.0.0",
         "vue-lodash": "^2.0.0",
         "vue-moment": "^3.2.0",
         "vue-router": "^3.0.1",
