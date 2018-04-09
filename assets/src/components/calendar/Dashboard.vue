@@ -25,6 +25,7 @@
   <b-row>
     <b-col cols="5">
 
+      <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
       <b-card no-body header="Recipes">
         <b-list-group flush>
           <b-list-group-item :disabled="recipe.eaten" v-for="(recipe, i) in recipes" :key="recipe.id" class="d-flex justify-content-between align-items-center">
@@ -57,6 +58,7 @@
 import moment from 'moment'
 import listCalendarsQuery from '../../graphql/queries/listCalendars.graphql'
 import listRecipesQuery from '../../graphql/queries/listRecipes.graphql'
+import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
 import calendarWidget from './Widget.vue'
 export default {
   name: "calendar-dashboard",
@@ -68,10 +70,12 @@ export default {
       if(!this.calendars) { return [] }
 
       const notEatenRecipesId = this.notEatenRecipes.map((edge) => edge.node.id)
-      return this._.compact(
-        this._.flatMap(this.calendars, (cal) => (
-          cal.meals.map((meal) => meal.recipe)
-        ))
+      return this._.uniqBy(
+        this._.compact(
+          this._.flatMap(this.calendars, (cal) => (
+            cal.meals.map((meal) => meal.recipe)
+          ))
+        ), (recipe) => recipe.id
       ).filter((recipe) => !notEatenRecipesId.includes(recipe.id))
     },
     recipes(){
@@ -104,6 +108,7 @@ export default {
       notEatenRecipes: null,
       calendars: null,
       hideCalendarsBeforeToday: true,
+      error: null,
       startDate: moment().startOf('isoWeek'),
       endDate: moment().endOf('isoWeek')
     }
@@ -117,7 +122,7 @@ export default {
       },
       update: data => data.listRecipes.edges,
       error(e) {
-        console.dir(e)
+        this.error = e
       }
     },
     calendars: {
@@ -132,7 +137,7 @@ export default {
       },
       update: data => data.listCalendars,
       error(e) {
-        console.dir(e)
+        this.error = e
       }
     }
   },
@@ -157,7 +162,15 @@ export default {
       this.hideCalendarsBeforeToday = true
     },
     markAsEaten(recipeId) {
-      alert(`Mark "${recipeId}" as eaten`)
+      this.$apollo.mutate({
+        mutation: updateRecipeMutation,
+        variables: { id: recipeId, input: { eaten: true } },
+      }).then((result) => {
+        this.$apollo.queries.notEatenRecipes.refetch()
+        this.$apollo.queries.calendars.refetch()
+      }).catch((e) => {
+        this.error = e
+      })
     }
   },
   filters: {

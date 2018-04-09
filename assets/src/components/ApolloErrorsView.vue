@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="apollo-errors-view">
   <b-list-group flush v-if="variant == 'list'" :show="!!error">
     <b-list-group-item variant="danger" v-for="(error, i) in errorMessages" :key="i">{{ error }}</b-list-group-item>
   </b-list-group>
@@ -52,3 +52,9 @@ export default {
   }
 };
 </script>
+
+<style>
+  .apollo-errors-view .alert>ul {
+    margin-bottom: 0px;
+  }
+</style>
