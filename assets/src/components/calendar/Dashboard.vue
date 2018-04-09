@@ -23,14 +23,14 @@
 
       <b-card no-body header="Recipes">
         <b-list-group flush>
-          <b-list-group-item v-for="(recipe, i) in recipes" :key="i" class="d-flex justify-content-between align-items-center">
+          <b-list-group-item :disabled="recipe.eaten" v-for="(recipe, i) in recipes" :key="recipe.id" class="d-flex justify-content-between align-items-center">
             {{recipe.name}}
-            <b-button variant="outline-danger" size="sm">
+            <b-button variant="outline-danger" size="sm" v-if="!recipe.eaten">
               <icon name="check" scale="1"></icon>
             </b-button>
-        </b-list-group-item>
-      </b-list-group>
-    </b-card>
+          </b-list-group-item>
+        </b-list-group>
+      </b-card>
     </b-col>
     <b-col cols="7">
       <calendar-widget
@@ -55,9 +55,19 @@ export default {
     'calendar-widget': calendarWidget
   },
   computed: {
+    eatenRecipes(){
+      if(!this.calendars) { return [] }
+
+      const notEatenRecipesId = this.notEatenRecipes.map((edge) => edge.node.id)
+      return this._.compact(
+        this._.flatMap(this.calendars, (cal) => (
+          cal.meals.map((meal) => meal.recipe)
+        ))
+      ).filter((recipe) => !notEatenRecipesId.includes(recipe.id))
+    },
     recipes(){
       if(!this.notEatenRecipes) { return [] }
-      return this.notEatenRecipes.map((edge) => edge.node)
+      return [...this.notEatenRecipes.map((edge) => edge.node), ... this.eatenRecipes]
     },
     calendarsForWeek() {
       if(!this.calendars) { return null }

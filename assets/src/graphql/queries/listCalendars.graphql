@@ -20,6 +20,7 @@ query listCalendars($filter: CalendarFilter) {
         fat
         carbonhydrate
         energy
+        eaten
         recipeIngredients {
           weight
           ingredient {
