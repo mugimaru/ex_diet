@@ -3,11 +3,15 @@
   <div class="text-center">
 
     <b-button-group size="lg">
-      <b-button variant="primary" @click="changeCalendarScope(-7)">Prev</b-button>
+      <b-button variant="primary" @click="changeCalendarScope(-7)">
+        <icon name="chevron-left"></icon>
+      </b-button>
       <b-button variant="outline-primary" @click="returnToCurrentWeek">
         {{startDate | moment("MMMM Do YYYY")}} - {{endDate | moment("MMMM Do YYYY")}}
       </b-button>
-      <b-button variant="primary" @click="changeCalendarScope(+7)"> Next </b-button>
+      <b-button variant="primary" @click="changeCalendarScope(+7)">
+        <icon name="chevron-right"></icon>
+      </b-button>
     </b-button-group>
   </div>
 
@@ -24,8 +28,13 @@
       <b-card no-body header="Recipes">
         <b-list-group flush>
           <b-list-group-item :disabled="recipe.eaten" v-for="(recipe, i) in recipes" :key="recipe.id" class="d-flex justify-content-between align-items-center">
+            <span>
+            <b-badge variant="secondary">
+              {{recipe.protein | toFixed(0)}}/{{recipe.fat | toFixed(0)}}/{{recipe.carbonhydrate | toFixed(0)}} - {{recipe.energy | toFixed(0)}}kcal
+            </b-badge>
             {{recipe.name}}
-            <b-button variant="outline-danger" size="sm" v-if="!recipe.eaten">
+            </span>
+            <b-button variant="outline-danger" size="sm" v-if="!recipe.eaten" @click="markAsEaten(recipe.id)">
               <icon name="check" scale="1"></icon>
             </b-button>
           </b-list-group-item>
@@ -146,7 +155,13 @@ export default {
       this.endDate = endOfCurrentWeek
       this.$apollo.queries.calendars.refetch()
       this.hideCalendarsBeforeToday = true
+    },
+    markAsEaten(recipeId) {
+      alert(`Mark "${recipeId}" as eaten`)
     }
+  },
+  filters: {
+    toFixed: (value, prescision) => Number(value).toFixed(prescision)
   }
 };
 </script>
