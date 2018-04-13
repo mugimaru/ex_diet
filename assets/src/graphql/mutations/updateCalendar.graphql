@@ -1,0 +1,5 @@
+mutation updateCalendar($id: ID!, $input: UpdateCalendarInput!) {
+  updateCalendar(input: $input, id: $id) {
+    id
+  }
+}

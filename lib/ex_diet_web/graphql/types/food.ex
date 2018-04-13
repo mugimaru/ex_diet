@@ -7,6 +7,7 @@ defmodule ExDietWeb.GraphQL.Types.Food do
 
   alias ExDiet.Food.{Ingredient, RecipeIngredient, Recipe, Calendar, Meal}
   alias ExDietWeb.GraphQL.Resolvers.Food, as: Resolver
+  alias Absinthe.Relay.Node
 
   interface :eatable do
     field(:protein, non_null(:decimal))
@@ -116,8 +117,20 @@ defmodule ExDietWeb.GraphQL.Types.Food do
       resolve(dataloader(Meal, :user))
     end
 
+    field(:recipe_id, :id) do
+      resolve(fn meal, _, _ ->
+        {:ok, Node.to_global_id("Recipe", meal.recipe_id)}
+      end)
+    end
+
     field(:recipe, :recipe) do
       resolve(dataloader(Meal, :recipe))
+    end
+
+    field(:ingredient_id, :id) do
+      resolve(fn meal, _, _ ->
+        {:ok, Node.to_global_id("Ingredient", meal.ingredient_id)}
+      end)
     end
 
     field(:ingredient, :ingredient) do

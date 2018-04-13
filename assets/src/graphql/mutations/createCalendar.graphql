@@ -1,0 +1,5 @@
+mutation createCalendar($input: CreateCalendarInput!) {
+  createCalendar(input: $input) {
+    id
+  }
+}

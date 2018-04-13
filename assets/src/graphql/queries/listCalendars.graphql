@@ -5,6 +5,8 @@ query listCalendars($filter: CalendarFilter) {
     meals {
       id
       weight
+      recipeId
+      ingredientId
       ingredient {
         id
         name

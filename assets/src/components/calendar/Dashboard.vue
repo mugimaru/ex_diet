@@ -23,7 +23,7 @@
   <br/>
 
   <b-row>
-    <b-col cols="5">
+    <b-col cols="4">
 
       <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
       <b-card no-body header="Recipes">
@@ -42,13 +42,13 @@
         </b-list-group>
       </b-card>
     </b-col>
-    <b-col cols="7">
+    <b-col cols="8">
       <calendar-widget
         v-for="(cal, i) in calendarsForWeek"
         :key="i"
         :calendar="cal"
-        @update="this.$apollo.queries.calendars.refetch()">
-      </calendar-widget>
+        :allRecipes="recipes"
+        @updated="$apollo.queries.calendars.refetch()" />
     </b-col>
   </b-row>
 </div>
@@ -100,7 +100,7 @@ export default {
         const date = n == 0 ? moment(startDate) : moment(startDate).add(n, 'days')
         const cal = comp.calendars.find((cal) => date.isSame(cal.day, 'day'))
 
-        return cal ? cal : { day: date, meals: [] }
+        return cal ? cal : { day: date.format("YYYY-MM-DD"), meals: [] }
       })
     }
   },

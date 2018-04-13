@@ -2,6 +2,7 @@
 <div>
   <b-card
     no-body
+
     :border-variant="today ? 'info' : 'default'"
     class="calendar-widget">
 
@@ -9,7 +10,7 @@
       {{calendar.day | moment("dddd, MMMM Do YYYY") }}
 
       <b-button-group class="float-right" size="sm">
-        <b-button v-if="!edit" size="sm" variant="outline-secondary" @click="editCalendar">
+        <b-button v-if="!editCalendar" size="sm" variant="outline-secondary" @click="startEditCalendar">
           <icon name="edit"></icon>
         </b-button>
         <template v-else>
@@ -23,7 +24,7 @@
       </b-button-group>
     </div>
 
-    <table class="table table-bordered" v-if="calendar && calendar.meals.length > 0">
+    <table fixed class="table table-bordered" v-if="showTable">
       <thead>
         <th>Meal</th>
         <th>Weight</th>
@@ -31,12 +32,32 @@
         <th>Fat</th>
         <th>Carbonhydrate</th>
         <th>Energy</th>
-        <th v-if="edit"></th>
+        <th v-if="editCalendar">
+          <b-button-group size="sm" v-if="editCalendar">
+            <b-button variant="outline-primary" @click="addRecipeMeal">
+              <icon name="plus"></icon> Recipe
+            </b-button>
+            <b-button variant="outline-success" @click="addIngredientMeal">
+              <icon name="plus"></icon> Ingredient
+            </b-button>
+          </b-button-group>
+        </th>
       </thead>
       <tbody>
-        <tr v-for="(meal, i) in calendar.meals" :key="i">
-          <template v-if="edit">
-            <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
+        <template v-if="editCalendar">
+          <tr v-for="(meal, i) in editCalendar.meals" :key="i">
+            <td v-if="meal.ingredient">
+              <ingredients-search-input
+                :allow-add-new="false"
+                v-model="meal.ingredient"
+                @input="meal.ingredientId = meal.ingredient.id" />
+            </td>
+            <td v-else>
+              <recipes-select
+                :recipes="allRecipes"
+                v-model="meal.recipe"
+                @input="meal.recipeId = meal.recipe.id" />
+            </td>
             <td>
               <b-input type="number" v-model="meal.weight"></b-input>
             </td>
@@ -44,17 +65,21 @@
             <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
             <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
             <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
-            <td></td>
-          </template>
-          <template v-else>
+            <td>
+              <b-button variant="outline-danger" size="sm" @click="removeMeal(meal)">Remove</b-button>
+            </td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr v-for="(meal, i) in calendar.meals" :key="i">
             <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
             <td>{{meal.weight | toFixed(0)}}</td>
             <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
             <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
             <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
             <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
-          </template>
-        </tr>
+          </tr>
+        </template>
       </tbody>
       <tfoot>
         <th colspan="2"></th>
@@ -62,16 +87,28 @@
         <th>{{totalNutritionFacts.fat | toFixed(2)}}</th>
         <th>{{totalNutritionFacts.carbonhydrate | toFixed(2)}}</th>
         <th>{{totalNutritionFacts.energy | toFixed(0)}}</th>
-        <th v-if="edit"></th>
+        <th v-if="editCalendar"></th>
       </tfoot>
     </table>
-    <div class="card-body text-center" v-else> Empty </div>
+    <div class="card-body text-center" v-else>
+      <b-button-group v-if="editCalendar">
+        <b-button variant="outline-primary" @click="addRecipeMeal"> Add recipe </b-button>
+        <b-button variant="outline-success" @click="addIngredientMeal"> Add ingredient </b-button>
+      </b-button-group>
+      <span v-else> Empty </span>
+    </div>
   </b-card>
   <br/>
 </div>
 </template>
 
 <script>
+
+import createCalendarMutation from '@/graphql/mutations/createCalendar.graphql'
+import updateCalendarMutation from '@/graphql/mutations/updateCalendar.graphql'
+
+import ingredientsSearchInput from '@/components/ingredients/SearchInput.vue';
+import recipesSelect from './RecipesSelect.vue';
 
 import moment from 'moment';
 const nfKeys = ['protein', 'fat', 'carbonhydrate', 'energy']
@@ -82,12 +119,39 @@ const emptyNfData = () => nfKeys.reduce(function(acc, key){
 
 export default {
   name: "calendar-widget",
+  components: {
+    'ingredients-search-input': ingredientsSearchInput,
+    'recipes-select': recipesSelect
+  },
   props: {
+    allRecipes: { required: true },
     calendar: { required: true }
   },
   computed: {
+    showTable(){
+      return (this.editCalendar && this.editCalendar.meals.length > 0) || (this.calendar && this.calendar.meals.length > 0)
+    },
+    calendarMutationParams(){
+      if(!this.editCalendar) { return {} }
+
+      return {
+        day: this.calendar.day,
+        meals: this.editCalendar.meals.map(function(meal) {
+          let mealParams = {
+            weight: Number(meal.weight),
+            ingredientId: meal.ingredientId,
+            recipeId: meal.recipeId
+          }
+          if(meal.id) { mealParams.id = meal.id }
+
+          return mealParams
+        })
+      }
+    },
     mealsNutritionFacts(){
-      return this.calendar.meals.map(function(meal) {
+      const calendar = this.editCalendar || this.calendar
+
+      return calendar.meals.map(function(meal) {
         const eatable = meal.recipe || meal.ingredient
         const weight = meal.weight
         return nfKeys.reduce(function(acc, n) {
@@ -110,23 +174,38 @@ export default {
   },
   data() {
     return {
-      edit: false,
-      backup: null
+      editCalendar: null
     }
   },
   methods: {
-    editCalendar(){
-      this.backup = this._.merge({}, this.calendar)
-      this.edit = true
+    addRecipeMeal(){
+      this.editCalendar.meals.push({weight: 0, recipeId: null, recipe: {}})
+    },
+    addIngredientMeal(){
+      this.editCalendar.meals.push({weight: 0, ingredientId: null, ingredient: {}})
+    },
+    removeMeal(meal){
+      this.editCalendar.meals.splice(this.editCalendar.meals.indexOf(meal), 1)
+    },
+    startEditCalendar(){
+      this.editCalendar = this._.merge({}, this.calendar)
     },
     cancelEdit(){
-      this.calendar = this.backup
-      this.backup = null
-      this.edit = false
+      this.editCalendar = null
     },
     confirmEdit(){
-      this.backup = null
-      this.edit = false
+      let vars = { input: this.calendarMutationParams }
+      if(this.calendar.id) { vars.id = this.calendar.id }
+
+      this.$apollo.mutate({
+        mutation: this.editCalendar.id ? updateCalendarMutation : createCalendarMutation,
+        variables: vars
+      }).then((result) => {
+        this.$emit('updated', this.editCalendar)
+        this.editCalendar = null
+      }).catch((e) => {
+        console.dir(e)
+      })
     }
   },
   filters: {
