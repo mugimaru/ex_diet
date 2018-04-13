@@ -38,7 +38,7 @@
 
 <script>
 
-import ingredientsSearchInput from '../../ingredients/SearchInput.vue';
+import ingredientsSearchInput from '@/components/ingredients/SearchInput.vue';
 
 function calculateNutritionFact(item, field, prescision) {
   if(!item.ingredient || !item.ingredient[field]) { return null }

@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import listRecipesQuery from '../../graphql/queries/listRecipes.graphql'
-import deleteRecipeMutation from '../../graphql/mutations/deleteRecipe.graphql'
-import { EventBus } from '../../config/eventBus.js'
+import listRecipesQuery from '@/graphql/queries/listRecipes.graphql'
+import deleteRecipeMutation from '@/graphql/mutations/deleteRecipe.graphql'
+import { EventBus } from '@/config/eventBus.js'
 
 export default {
   name: 'recipes-index',

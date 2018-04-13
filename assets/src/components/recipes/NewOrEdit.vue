@@ -69,12 +69,12 @@
 </template>
 
 <script>
-import getRecipe from '../../graphql/queries/getRecipe.graphql'
+import getRecipe from '@/graphql/queries/getRecipe.graphql'
 import formRow from './form/Row.vue';
-import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
-import createRecipeMutation from '../../graphql/mutations/createRecipe.graphql'
+import updateRecipeMutation from '@/graphql/mutations/updateRecipe.graphql'
+import createRecipeMutation from '@/graphql/mutations/createRecipe.graphql'
 import marked from 'marked'
-import { EventBus } from '../../config/eventBus.js'
+import { EventBus } from '@/config/eventBus.js'
 import { required, minValue } from "vuelidate/lib/validators"
 
 function newRecipe(){

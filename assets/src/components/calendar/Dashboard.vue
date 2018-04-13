@@ -46,7 +46,8 @@
       <calendar-widget
         v-for="(cal, i) in calendarsForWeek"
         :key="i"
-        :calendar="cal">
+        :calendar="cal"
+        @update="this.$apollo.queries.calendars.refetch()">
       </calendar-widget>
     </b-col>
   </b-row>
@@ -56,9 +57,9 @@
 <script>
 
 import moment from 'moment'
-import listCalendarsQuery from '../../graphql/queries/listCalendars.graphql'
-import listRecipesQuery from '../../graphql/queries/listRecipes.graphql'
-import updateRecipeMutation from '../../graphql/mutations/updateRecipe.graphql'
+import listCalendarsQuery from '@/graphql/queries/listCalendars.graphql'
+import listRecipesQuery from '@/graphql/queries/listRecipes.graphql'
+import updateRecipeMutation from '@/graphql/mutations/updateRecipe.graphql'
 import calendarWidget from './Widget.vue'
 export default {
   name: "calendar-dashboard",

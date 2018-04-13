@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import allIngredientsQuery from '../../graphql/queries/listIngredients.graphql'
-import deleteIngredientMutation from '../../graphql/mutations/deleteIngredient.graphql'
+import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql'
+import deleteIngredientMutation from '@/graphql/mutations/deleteIngredient.graphql'
 
 export default {
   name: 'ingredients-table',

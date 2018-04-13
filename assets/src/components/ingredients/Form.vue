@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import createIngredientMutation from '../../graphql/mutations/createIngredient.graphql'
-import updateIngredientMutation from '../../graphql/mutations/updateIngredient.graphql'
+import createIngredientMutation from '@/graphql/mutations/createIngredient.graphql'
+import updateIngredientMutation from '@/graphql/mutations/updateIngredient.graphql'
 import { required, minValue } from "vuelidate/lib/validators"
 
 export default {

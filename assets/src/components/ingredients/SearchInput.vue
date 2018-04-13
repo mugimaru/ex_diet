@@ -33,7 +33,7 @@
 
 <script>
 
-import allIngredientsQuery from '../../graphql/queries/listIngredients.graphql'
+import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql'
 
 export default {
   name: 'ingredient-search-input',
@@ -43,7 +43,7 @@ export default {
       error: null,
       allIngredients: null,
       focused: false,
-      disabled: !!this.value && this.value.id
+      disabled: !!this.value && !!this.value.id
     }
   },
   props: {

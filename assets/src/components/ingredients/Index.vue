@@ -14,7 +14,7 @@
 <script>
 import Form from './Form.vue'
 import Table from './Table.vue'
-import { EventBus } from '../../config/eventBus.js'
+import { EventBus } from '@/config/eventBus.js'
 
 export default {
   name: 'ingredients-index',

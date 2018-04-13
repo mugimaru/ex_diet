@@ -2,16 +2,28 @@
 <div>
   <b-card
     no-body
-    border-variant="info"
-    :header-bg-variant="today ? 'info' : 'default'"
-    :header-text-variant="today ? 'white' : 'black'"
+    :border-variant="today ? 'info' : 'default'"
     class="calendar-widget">
 
     <div slot="header">
       {{calendar.day | moment("dddd, MMMM Do YYYY") }}
+
+      <b-button-group class="float-right" size="sm">
+        <b-button v-if="!edit" size="sm" variant="outline-secondary" @click="editCalendar">
+          <icon name="edit"></icon>
+        </b-button>
+        <template v-else>
+          <b-button variant="outline-success" size="sm" @click="confirmEdit">
+            <icon name="check"></icon>
+          </b-button>
+          <b-button variant="outline-danger" size="sm" @click="cancelEdit">
+            <icon name="times"></icon>
+          </b-button>
+        </template>
+      </b-button-group>
     </div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered" v-if="calendar && calendar.meals.length > 0">
       <thead>
         <th>Meal</th>
         <th>Weight</th>
@@ -19,17 +31,29 @@
         <th>Fat</th>
         <th>Carbonhydrate</th>
         <th>Energy</th>
-        <th></th>
+        <th v-if="edit"></th>
       </thead>
       <tbody>
         <tr v-for="(meal, i) in calendar.meals" :key="i">
-          <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
-          <td>{{meal.weight | toFixed(0)}}</td>
-          <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
-          <td></td>
+          <template v-if="edit">
+            <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
+            <td>
+              <b-input type="number" v-model="meal.weight"></b-input>
+            </td>
+            <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
+            <td></td>
+          </template>
+          <template v-else>
+            <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
+            <td>{{meal.weight | toFixed(0)}}</td>
+            <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+            <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
+          </template>
         </tr>
       </tbody>
       <tfoot>
@@ -38,9 +62,10 @@
         <th>{{totalNutritionFacts.fat | toFixed(2)}}</th>
         <th>{{totalNutritionFacts.carbonhydrate | toFixed(2)}}</th>
         <th>{{totalNutritionFacts.energy | toFixed(0)}}</th>
-        <th></th>
+        <th v-if="edit"></th>
       </tfoot>
     </table>
+    <div class="card-body text-center" v-else> Empty </div>
   </b-card>
   <br/>
 </div>
@@ -84,9 +109,25 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      edit: false,
+      backup: null
+    }
   },
   methods: {
+    editCalendar(){
+      this.backup = this._.merge({}, this.calendar)
+      this.edit = true
+    },
+    cancelEdit(){
+      this.calendar = this.backup
+      this.backup = null
+      this.edit = false
+    },
+    confirmEdit(){
+      this.backup = null
+      this.edit = false
+    }
   },
   filters: {
     toFixed: (value, prescision) => Number(value).toFixed(prescision)
