@@ -44,8 +44,8 @@ defmodule ExDietWeb.GraphQL.CalendarTest do
       params = %{
         day: "2018-01-01",
         meals: [
-          %{ingredient_id: global_id(ingredient), weight: 100},
-          %{recipe_id: global_id(recipe), weight: 42}
+          %{ingredient_id: global_id(ingredient), weight: 100, position: 0},
+          %{recipe_id: global_id(recipe), weight: 42, position: 1}
         ]
       }
 
@@ -81,8 +81,8 @@ defmodule ExDietWeb.GraphQL.CalendarTest do
 
       params = %{
         meals: [
-          %{ingredient_id: global_id(ingredient), weight: 100},
-          %{recipe_id: global_id(recipe), weight: 42}
+          %{ingredient_id: global_id(ingredient), weight: 100, position: 0},
+          %{recipe_id: global_id(recipe), weight: 42, position: 1}
         ]
       }
 

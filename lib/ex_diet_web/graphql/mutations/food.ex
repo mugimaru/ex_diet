@@ -33,6 +33,7 @@ defmodule ExDietWeb.GraphQL.Mutations.Food do
 
   input_object :meal_input do
     field(:id, :id)
+    field(:position, non_null(:integer))
     field(:weight, non_null(:integer))
     field(:ingredient_id, :id)
     field(:recipe_id, :id)

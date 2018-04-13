@@ -32,6 +32,9 @@ Vue.component('apollo-errors-view', apolloErrorsView);
 import timedAlert from './components/TimedAlert.vue';
 Vue.component('timed-alert', timedAlert);
 
+import draggable from 'vuedraggable';
+Vue.component('draggable', draggable);
+
 new Vue({
   el: '#app',
   router,

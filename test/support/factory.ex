@@ -52,6 +52,7 @@ defmodule ExDiet.Factory do
     user = build(:user)
 
     %ExDiet.Food.Meal{
+      position: sequence(:position, fn n -> n end),
       ingredient: build(:ingredient, user: user),
       calendar: build(:calendar, user: user)
     }

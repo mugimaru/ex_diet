@@ -82,8 +82,6 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
 
   def update_calendar(_, %{id: id, input: args}, _) do
     with {:ok, calendar} <- Repo.fetch(Food.Calendar, id) do
-      calendar = Repo.preload(calendar, meals: [:recipe, :ingredient])
-
       Food.update_calendar(calendar, args)
     end
   end

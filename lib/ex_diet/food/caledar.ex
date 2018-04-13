@@ -18,7 +18,7 @@ defmodule ExDiet.Food.Calendar do
     field(:day, :date)
 
     belongs_to(:user, ExDiet.Accounts.User)
-    has_many(:meals, ExDiet.Food.Meal, on_replace: :delete)
+    has_many(:meals, ExDiet.Food.Meal, on_replace: :raise)
     timestamps()
   end
 

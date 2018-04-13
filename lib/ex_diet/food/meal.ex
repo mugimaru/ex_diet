@@ -7,6 +7,7 @@ defmodule ExDiet.Food.Meal do
 
   @type t :: %__MODULE__{
           id: String.t(),
+          position: integer,
           recipe_id: integer | nil,
           recipe: Recipe.t() | nil,
           ingredient_id: integer | nil,
@@ -18,6 +19,7 @@ defmodule ExDiet.Food.Meal do
 
   schema "meals" do
     field(:weight, :integer)
+    field(:position, :integer)
     belongs_to(:calendar, Calendar)
     belongs_to(:recipe, Recipe)
     belongs_to(:ingredient, Ingredient)
@@ -28,10 +30,11 @@ defmodule ExDiet.Food.Meal do
   @doc false
   def changeset(ingredient, attrs) do
     ingredient
-    |> cast(attrs, [:weight, :recipe_id, :ingredient_id])
+    |> cast(attrs, [:weight, :recipe_id, :ingredient_id, :position])
     |> foreign_key_constraint(:recipe_id)
     |> foreign_key_constraint(:ingredient_id)
     |> validate_required([:weight])
     |> unique_constraint(:name, name: :ingredients_name_uniq_idx)
+    |> unique_constraint(:position, name: :meals_position_uniq_idx)
   end
 end

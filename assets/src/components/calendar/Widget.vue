@@ -43,43 +43,41 @@
           </b-button-group>
         </th>
       </thead>
-      <tbody>
-        <template v-if="editCalendar">
-          <tr v-for="(meal, i) in editCalendar.meals" :key="i">
-            <td v-if="meal.ingredient">
-              <ingredients-search-input
-                :allow-add-new="false"
-                v-model="meal.ingredient"
-                @input="meal.ingredientId = meal.ingredient.id" />
-            </td>
-            <td v-else>
-              <recipes-select
-                :recipes="allRecipes"
-                v-model="meal.recipe"
-                @input="meal.recipeId = meal.recipe.id" />
-            </td>
-            <td>
-              <b-input type="number" v-model="meal.weight"></b-input>
-            </td>
-            <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
-            <td>
-              <b-button variant="outline-danger" size="sm" @click="removeMeal(meal)">Remove</b-button>
-            </td>
-          </tr>
-        </template>
-        <template v-else>
-          <tr v-for="(meal, i) in calendar.meals" :key="i">
-            <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
-            <td>{{meal.weight | toFixed(0)}}</td>
-            <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
-            <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
-          </tr>
-        </template>
+      <draggable v-if="editCalendar" v-model="editCalendar.meals" :element="'tbody'">
+        <tr v-for="(meal, i) in editCalendar.meals" :key="i">
+          <td v-if="meal.ingredient">
+            <ingredients-search-input
+              :allow-add-new="false"
+              v-model="meal.ingredient"
+              @input="meal.ingredientId = meal.ingredient.id" />
+          </td>
+          <td v-else>
+            <recipes-select
+              :recipes="allRecipes"
+              v-model="meal.recipe"
+              @input="meal.recipeId = meal.recipe.id" />
+          </td>
+          <td>
+            <b-input type="number" v-model="meal.weight"></b-input>
+          </td>
+          <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
+          <td>
+            <b-button variant="outline-danger" size="sm" @click="removeMeal(meal)">Remove</b-button>
+          </td>
+        </tr>
+      </draggable>
+      <tbody v-else>
+        <tr v-for="(meal, i) in calendar.meals" :key="i">
+          <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
+          <td>{{meal.weight | toFixed(0)}}</td>
+          <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+          <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
+        </tr>
       </tbody>
       <tfoot>
         <th colspan="2"></th>
@@ -136,15 +134,13 @@ export default {
 
       return {
         day: this.calendar.day,
-        meals: this.editCalendar.meals.map(function(meal) {
-          let mealParams = {
+        meals: this.editCalendar.meals.map(function(meal, i) {
+          return {
+            position: i,
             weight: Number(meal.weight),
             ingredientId: meal.ingredientId,
             recipeId: meal.recipeId
           }
-          if(meal.id) { mealParams.id = meal.id }
-
-          return mealParams
         })
       }
     },
