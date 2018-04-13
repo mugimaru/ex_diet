@@ -84,31 +84,11 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     with {:ok, calendar} <- Repo.fetch(Food.Calendar, id) do
       calendar = Repo.preload(calendar, meals: [:recipe, :ingredient])
 
-      Food.update_calendar(
-        calendar,
-        add_persisted_items(calendar, args, :meals, fn m ->
-          %{id: m.id, recipe_id: m.recipe_id, ingredient_id: m.ingredient_id, weight: m.weight}
-        end)
-      )
+      Food.update_calendar(calendar, args)
     end
   end
 
   def nutrient_fact(parent, _args, %{definition: %{name: field}}) do
     {:ok, ExDiet.Food.NutritionFacts.calculate_one(parent, String.to_existing_atom(field))}
-  end
-
-  defp add_persisted_items(entity, args, assoc_name, fun) do
-    case args[assoc_name] do
-      nil ->
-        args
-
-      [] ->
-        args
-
-      list ->
-        ids = list |> Enum.map(& &1[:id]) |> Enum.reject(&is_nil/1)
-        persisted = Enum.reject(Map.get(entity, assoc_name), &(&1.id in ids))
-        Map.put(args, assoc_name, list ++ Enum.map(persisted, fun))
-    end
   end
 end

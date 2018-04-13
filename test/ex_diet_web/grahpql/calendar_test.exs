@@ -65,7 +65,7 @@ defmodule ExDietWeb.GraphQL.CalendarTest do
   end
 
   describe "`updateCalendar` mutation" do
-    test "creates calendar with meals preserving existing meals", %{user: user} do
+    test "creates calendar with meals", %{user: user} do
       calendar = insert(:calendar, user: user)
 
       insert(
@@ -96,8 +96,7 @@ defmodule ExDietWeb.GraphQL.CalendarTest do
 
       assert result[:meals] == [
                %{ingredient: %{name: ingredient.name}, recipe: nil, weight: 100},
-               %{recipe: %{name: recipe.name}, ingredient: nil, weight: 42},
-               %{ingredient: %{name: "foo"}, recipe: nil, weight: 200}
+               %{recipe: %{name: recipe.name}, ingredient: nil, weight: 42}
              ]
     end
   end
