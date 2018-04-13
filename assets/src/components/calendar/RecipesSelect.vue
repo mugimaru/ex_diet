@@ -28,7 +28,10 @@ export default {
     }
   },
   created() {
-    this.selected = this.value
+    const recipe = this.recipes.find((rec) => rec.id == this.value.id)
+    if(recipe) {
+      this.selected = recipe
+    }
   }
 }
 </script>
