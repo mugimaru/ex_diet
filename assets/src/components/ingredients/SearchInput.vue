@@ -32,19 +32,18 @@
 </template>
 
 <script>
-
-import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql'
+import allIngredientsQuery from "@/graphql/queries/listIngredients.graphql";
 
 export default {
-  name: 'ingredient-search-input',
-  data () {
+  name: "ingredient-search-input",
+  data() {
     return {
       queryFilter: this.value ? this.value.name : null,
       error: null,
       allIngredients: null,
       focused: false,
       disabled: !!this.value && !!this.value.id
-    }
+    };
   },
   props: {
     perPage: { default: 15, type: Number },
@@ -54,64 +53,76 @@ export default {
     v: {}
   },
   computed: {
-    searchable (){
-      return this.queryFilter && this.queryFilter.length >= this.minInputLength
+    searchable() {
+      return this.queryFilter && this.queryFilter.length >= this.minInputLength;
     },
     dropdownItems() {
-      if(!this.allIngredients) { return [] }
+      if (!this.allIngredients) {
+        return [];
+      }
 
       return this.allIngredients.edges.map(function(edge) {
-        return { item: edge.node, title: edge.node.name }
-      })
+        return { item: edge.node, title: edge.node.name };
+      });
     }
   },
   apollo: {
     allIngredients: {
       query: allIngredientsQuery,
       variables() {
-        let vars =  { first: this.perPage }
-        if(this.queryFilter) { vars['filter'] = this.queryFilter }
-        return vars
+        let vars = { first: this.perPage };
+        if (this.queryFilter) {
+          vars["filter"] = this.queryFilter;
+        }
+        return vars;
       },
       update: data => data.listIngredients,
       error(e) {
-        this.error = e
+        this.error = e;
       },
-      skip () {
-        return !this.searchable
+      skip() {
+        return !this.searchable;
       }
     }
   },
   methods: {
-    startNewSearch(){
-      if(this.disabled) {
-        this.disabled = false
-        this.queryFilter = null
-        this.$emit('input', {})
+    startNewSearch() {
+      if (this.disabled) {
+        this.disabled = false;
+        this.queryFilter = null;
+        this.$emit("input", {});
       }
     },
     onFocusLost(e) {
-      setTimeout(() => this.focused = false, 100)
+      setTimeout(() => (this.focused = false), 100);
     },
     onSelected(node) {
-      this.disabled = true
-      this.queryFilter = node.item.name
-      this.$emit('input', node.item)
+      this.disabled = true;
+      this.queryFilter = node.item.name;
+      this.$emit("input", node.item);
     },
     onAddIngredientSelected() {
-      this.disabled = true
-      this.$emit('input', { name: this.queryFilter, weight: 0, carbonhydate: 0, protein: 0, fat: 0 })
+      this.disabled = true;
+      this.$emit("input", {
+        name: this.queryFilter,
+        weight: 0,
+        carbonhydate: 0,
+        protein: 0,
+        fat: 0
+      });
     },
     vuelidate(attr) {
-      if(!this.v) { return true }
-      return !this.v[attr].$invalid
+      if (!this.v) {
+        return true;
+      }
+      return !this.v[attr].$invalid;
     }
   }
-}
+};
 </script>
 
 <style>
-  #ingredients-search-dropdown>.dropdown-menu {
-    width: 100%;
-  }
+#ingredients-search-dropdown > .dropdown-menu {
+  width: 100%;
+}
 </style>

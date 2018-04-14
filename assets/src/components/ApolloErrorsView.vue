@@ -17,44 +17,49 @@ export default {
   name: "apollo-errors-view",
   props: {
     variant: {
-      default: 'list',
+      default: "list",
       type: String,
-      validator: (v) => ['list', 'dismissible-alert'].includes(v)
+      validator: v => ["list", "dismissible-alert"].includes(v)
     },
     error: Error
   },
   computed: {
-    errorMessages () {
-      if(!this.error) { return []}
-
-      if(this.error.graphQLErrors && this.error.graphQLErrors.length > 0) {
-        return this.error.graphQLErrors.map(function(e) {
-          if(e.code == "validation_error") {
-            return Object.keys(e.fields).map(key => `${key}: ${e.fields[key].join(', ')}`)
-          } else {
-            return [e.message]
-          }
-        }).reduce((a, b) => a.concat(b), [])
+    errorMessages() {
+      if (!this.error) {
+        return [];
       }
 
-      const ne = this.error.networkError
-      if(ne &&ne.result && ne.result.errors && ne.result.errors.length > 0) {
-        return ne.result.errors.map((e) => e.message)
+      if (this.error.graphQLErrors && this.error.graphQLErrors.length > 0) {
+        return this.error.graphQLErrors
+          .map(function(e) {
+            if (e.code == "validation_error") {
+              return Object.keys(e.fields).map(
+                key => `${key}: ${e.fields[key].join(", ")}`
+              );
+            } else {
+              return [e.message];
+            }
+          })
+          .reduce((a, b) => a.concat(b), []);
       }
 
-      return ne ? [ne.message] : [this.error.message]
+      const ne = this.error.networkError;
+      if (ne && ne.result && ne.result.errors && ne.result.errors.length > 0) {
+        return ne.result.errors.map(e => e.message);
+      }
+
+      return ne ? [ne.message] : [this.error.message];
     }
   },
   data() {
-    return {}
+    return {};
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 
 <style>
-  .apollo-errors-view .alert>ul {
-    margin-bottom: 0px;
-  }
+.apollo-errors-view .alert > ul {
+  margin-bottom: 0px;
+}
 </style>

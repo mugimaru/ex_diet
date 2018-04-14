@@ -10,9 +10,9 @@
 </template>
 
 <script>
-function isObject (value) {
-  return value && typeof value === 'object' && value.constructor === Object;
-};
+function isObject(value) {
+  return value && typeof value === "object" && value.constructor === Object;
+}
 
 export default {
   name: "apollo-errors-view",
@@ -22,41 +22,41 @@ export default {
     message: {}
   },
   watch: {
-    message: function(newMessage, oldMessage) {
-      this.cd = this.dismissTime
+    message: function() {
+      this.cd = this.dismissTime;
     }
   },
   computed: {
-    alertVariant(){
+    alertVariant() {
       if (isObject(this.message) && this.message.variant) {
-        return this.message.variant
+        return this.message.variant;
       } else {
-        return this.variant
+        return this.variant;
       }
     },
     msg() {
       if (isObject(this.message) && this.message.message) {
-        return this.message.message
+        return this.message.message;
       } else {
-        return this.message
+        return this.message;
       }
     },
-    dismissTime(){
+    dismissTime() {
       if (isObject(this.message) && this.message.dismissAfter) {
-        return this.message.dismissAfter
+        return this.message.dismissAfter;
       } else {
-        return this.dismissAfter
+        return this.dismissAfter;
       }
     }
   },
   data() {
     return {
       cd: 0
-    }
+    };
   },
   methods: {
     onCountDownChanged(newCd) {
-      this.cd = newCd
+      this.cd = newCd;
     }
   }
 };

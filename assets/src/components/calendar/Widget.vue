@@ -101,36 +101,41 @@
 </template>
 
 <script>
+import createCalendarMutation from "@/graphql/mutations/createCalendar.graphql";
+import updateCalendarMutation from "@/graphql/mutations/updateCalendar.graphql";
 
-import createCalendarMutation from '@/graphql/mutations/createCalendar.graphql'
-import updateCalendarMutation from '@/graphql/mutations/updateCalendar.graphql'
+import ingredientsSearchInput from "@/components/ingredients/SearchInput.vue";
+import recipesSelect from "./RecipesSelect.vue";
 
-import ingredientsSearchInput from '@/components/ingredients/SearchInput.vue';
-import recipesSelect from './RecipesSelect.vue';
-
-import moment from 'moment';
-const nfKeys = ['protein', 'fat', 'carbonhydrate', 'energy']
-const emptyNfData = () => nfKeys.reduce(function(acc, key){
-  acc[key] = 0
-  return acc
-}, {})
+import moment from "moment";
+const nfKeys = ["protein", "fat", "carbonhydrate", "energy"];
+const emptyNfData = () =>
+  nfKeys.reduce(function(acc, key) {
+    acc[key] = 0;
+    return acc;
+  }, {});
 
 export default {
   name: "calendar-widget",
   components: {
-    'ingredients-search-input': ingredientsSearchInput,
-    'recipes-select': recipesSelect
+    "ingredients-search-input": ingredientsSearchInput,
+    "recipes-select": recipesSelect
   },
   props: {
     allRecipes: { required: true },
     calendar: { required: true }
   },
   computed: {
-    showTable(){
-      return (this.editCalendar && this.editCalendar.meals.length > 0) || (this.calendar && this.calendar.meals.length > 0)
+    showTable() {
+      return (
+        (this.editCalendar && this.editCalendar.meals.length > 0) ||
+        (this.calendar && this.calendar.meals.length > 0)
+      );
     },
-    calendarMutationParams(){
-      if(!this.editCalendar) { return {} }
+    calendarMutationParams() {
+      if (!this.editCalendar) {
+        return {};
+      }
 
       return {
         day: this.calendar.day,
@@ -140,68 +145,81 @@ export default {
             weight: Number(meal.weight),
             ingredientId: meal.ingredientId,
             recipeId: meal.recipeId
-          }
+          };
         })
-      }
+      };
     },
-    mealsNutritionFacts(){
-      const calendar = this.editCalendar || this.calendar
+    mealsNutritionFacts() {
+      const calendar = this.editCalendar || this.calendar;
 
       return calendar.meals.map(function(meal) {
-        const eatable = meal.recipe || meal.ingredient
-        const weight = meal.weight
+        const eatable = meal.recipe || meal.ingredient;
+        const weight = meal.weight;
         return nfKeys.reduce(function(acc, n) {
-          acc[n] = Number(eatable[n]) * weight / 100
-          return acc
-        }, {})
-      })
+          acc[n] = Number(eatable[n]) * weight / 100;
+          return acc;
+        }, {});
+      });
     },
     totalNutritionFacts() {
-      if(this.mealsNutritionFacts.length == 0) { return emptyNfData() }
+      if (this.mealsNutritionFacts.length == 0) {
+        return emptyNfData();
+      }
 
       return this.mealsNutritionFacts.reduce(function(acc, item) {
-        Object.keys(item).forEach((k) => acc[k] = (acc[k] || 0) + item[k])
-        return acc
-      }, {})
+        Object.keys(item).forEach(k => (acc[k] = (acc[k] || 0) + item[k]));
+        return acc;
+      }, {});
     },
     today() {
-      return moment().isSame(this.calendar.day, 'day')
+      return moment().isSame(this.calendar.day, "day");
     }
   },
   data() {
     return {
       editCalendar: null
-    }
+    };
   },
   methods: {
-    addRecipeMeal(){
-      this.editCalendar.meals.push({weight: 0, recipeId: null, recipe: {}})
+    addRecipeMeal() {
+      this.editCalendar.meals.push({ weight: 0, recipeId: null, recipe: {} });
     },
-    addIngredientMeal(){
-      this.editCalendar.meals.push({weight: 0, ingredientId: null, ingredient: {}})
+    addIngredientMeal() {
+      this.editCalendar.meals.push({
+        weight: 0,
+        ingredientId: null,
+        ingredient: {}
+      });
     },
-    removeMeal(meal){
-      this.editCalendar.meals.splice(this.editCalendar.meals.indexOf(meal), 1)
+    removeMeal(meal) {
+      this.editCalendar.meals.splice(this.editCalendar.meals.indexOf(meal), 1);
     },
-    startEditCalendar(){
-      this.editCalendar = this._.merge({}, this.calendar)
+    startEditCalendar() {
+      this.editCalendar = this._.merge({}, this.calendar);
     },
-    cancelEdit(){
-      this.editCalendar = null
+    cancelEdit() {
+      this.editCalendar = null;
     },
-    confirmEdit(){
-      let vars = { input: this.calendarMutationParams }
-      if(this.calendar.id) { vars.id = this.calendar.id }
+    confirmEdit() {
+      let vars = { input: this.calendarMutationParams };
+      if (this.calendar.id) {
+        vars.id = this.calendar.id;
+      }
 
-      this.$apollo.mutate({
-        mutation: this.editCalendar.id ? updateCalendarMutation : createCalendarMutation,
-        variables: vars
-      }).then((result) => {
-        this.$emit('updated', this.editCalendar)
-        this.editCalendar = null
-      }).catch((e) => {
-        console.dir(e)
-      })
+      this.$apollo
+        .mutate({
+          mutation: this.editCalendar.id
+            ? updateCalendarMutation
+            : createCalendarMutation,
+          variables: vars
+        })
+        .then(result => {
+          this.$emit("updated", this.editCalendar);
+          this.editCalendar = null;
+        })
+        .catch(e => {
+          console.dir(e);
+        });
     }
   },
   filters: {
@@ -211,7 +229,6 @@ export default {
 </script>
 
 <style>
-
 .calendar-widget table {
   margin: 0px;
 }

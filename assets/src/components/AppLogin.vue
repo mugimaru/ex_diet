@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import loginMutation from '../graphql/mutations/login.graphql'
-import createUserMutation from '../graphql/mutations/createUser.graphql'
+import loginMutation from "../graphql/mutations/login.graphql";
+import createUserMutation from "../graphql/mutations/createUser.graphql";
 
 export default {
   name: "AppLogin",
@@ -46,44 +46,53 @@ export default {
   },
   methods: {
     confirm() {
-      this.error = null
-      const { email, password } = this.$data
+      this.error = null;
+      const { email, password } = this.$data;
 
       if (this.login) {
-        this.$apollo.mutate({
-          mutation: loginMutation,
-          variables: {
-            input: {
-              email,
-              password
+        this.$apollo
+          .mutate({
+            mutation: loginMutation,
+            variables: {
+              input: {
+                email,
+                password
+              }
             }
-          }
-        }).then((result) => {
-          this.saveUserData(result.data.login.user, result.data.login.token)
-        }).catch((error) => {
-          this.error = error
-        })
+          })
+          .then(result => {
+            this.saveUserData(result.data.login.user, result.data.login.token);
+          })
+          .catch(error => {
+            this.error = error;
+          });
       } else {
-        this.$apollo.mutate({
-          mutation: createUserMutation,
-          variables: {
-            input: {
-              email,
-              password
+        this.$apollo
+          .mutate({
+            mutation: createUserMutation,
+            variables: {
+              input: {
+                email,
+                password
+              }
             }
-          }
-        }).then((result) => {
-          this.saveUserData(result.data.createUser.user, result.data.createUser.token)
-        }).catch((error) => {
-          this.error = error
-        })
+          })
+          .then(result => {
+            this.saveUserData(
+              result.data.createUser.user,
+              result.data.createUser.token
+            );
+          })
+          .catch(error => {
+            this.error = error;
+          });
       }
     },
     saveUserData(user, token) {
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userEmail', user.email);
-      this.$root.$data.userEmail = localStorage.getItem('userEmail');
-      this.$router.push({path: '/'})
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userEmail", user.email);
+      this.$root.$data.userEmail = localStorage.getItem("userEmail");
+      this.$router.push({ path: "/" });
     }
   }
 };

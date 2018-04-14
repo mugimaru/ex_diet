@@ -14,13 +14,12 @@
 </template>
 
 <script>
-
-import ingredientsSearchInput from './ingredients/SearchInput.vue';
+import ingredientsSearchInput from "./ingredients/SearchInput.vue";
 export default {
-  name: 'index',
-  data () {
-    return {}
+  name: "index",
+  data() {
+    return {};
   },
   methods: {}
-}
+};
 </script>

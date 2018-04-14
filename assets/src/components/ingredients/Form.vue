@@ -42,17 +42,17 @@
 </template>
 
 <script>
-import createIngredientMutation from '@/graphql/mutations/createIngredient.graphql'
-import updateIngredientMutation from '@/graphql/mutations/updateIngredient.graphql'
-import { required, minValue } from "vuelidate/lib/validators"
+import createIngredientMutation from "@/graphql/mutations/createIngredient.graphql";
+import updateIngredientMutation from "@/graphql/mutations/updateIngredient.graphql";
+import { required, minValue } from "vuelidate/lib/validators";
 
 export default {
-  name: 'ingredient-form',
-  props: ['ingredient'],
-  data () {
+  name: "ingredient-form",
+  props: ["ingredient"],
+  data() {
     return {
       error: null
-    }
+    };
   },
   validations: {
     ingredient: {
@@ -64,36 +64,39 @@ export default {
     }
   },
   methods: {
-    onReset(event){
-      event.preventDefault()
-      this.error = null
-      this.$emit('reset')
+    onReset(event) {
+      event.preventDefault();
+      this.error = null;
+      this.$emit("reset");
     },
     onSubmit(event) {
-      this.error = null
-      const { name, protein, fat, carbonhydrate, energy } = this.ingredient
+      this.error = null;
+      const { name, protein, fat, carbonhydrate, energy } = this.ingredient;
 
-      let variables = { input: { name, protein, fat, carbonhydrate, energy} }
-      let mutation = createIngredientMutation
+      let variables = { input: { name, protein, fat, carbonhydrate, energy } };
+      let mutation = createIngredientMutation;
 
-      if(this.ingredient.id) {
-        variables['id'] = this.ingredient.id
-        mutation = updateIngredientMutation
+      if (this.ingredient.id) {
+        variables["id"] = this.ingredient.id;
+        mutation = updateIngredientMutation;
       }
 
-      this.performMutation(mutation, variables)
+      this.performMutation(mutation, variables);
     },
     performMutation(mutation, variables) {
-      this.$apollo.mutate({
-        mutation: mutation,
-        variables: variables,
-      }).then((result) => {
-        const event = this.ingredient.id ? 'updated' : 'created'
-        this.$emit(event, this.ingredient)
-      }).catch((error) => {
-        this.error = error
-      })
+      this.$apollo
+        .mutate({
+          mutation: mutation,
+          variables: variables
+        })
+        .then(result => {
+          const event = this.ingredient.id ? "updated" : "created";
+          this.$emit(event, this.ingredient);
+        })
+        .catch(error => {
+          this.error = error;
+        });
     }
   }
-}
+};
 </script>

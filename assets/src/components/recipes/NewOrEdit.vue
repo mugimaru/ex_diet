@@ -69,34 +69,34 @@
 </template>
 
 <script>
-import getRecipe from '@/graphql/queries/getRecipe.graphql'
-import formRow from './form/Row.vue';
-import updateRecipeMutation from '@/graphql/mutations/updateRecipe.graphql'
-import createRecipeMutation from '@/graphql/mutations/createRecipe.graphql'
-import marked from 'marked'
-import { EventBus } from '@/config/eventBus.js'
-import { required, minValue } from "vuelidate/lib/validators"
+import getRecipe from "@/graphql/queries/getRecipe.graphql";
+import formRow from "./form/Row.vue";
+import updateRecipeMutation from "@/graphql/mutations/updateRecipe.graphql";
+import createRecipeMutation from "@/graphql/mutations/createRecipe.graphql";
+import marked from "marked";
+import { EventBus } from "@/config/eventBus.js";
+import { required, minValue } from "vuelidate/lib/validators";
 
-function newRecipe(){
+function newRecipe() {
   return {
     weight: 0,
     name: "",
     description: "",
     recipeIngredients: []
-  }
+  };
 }
 
 export default {
-  name: 'recipes-new-or-edit',
+  name: "recipes-new-or-edit",
   components: {
-    'form-row': formRow
+    "form-row": formRow
   },
-  data () {
+  data() {
     return {
       getRecipe: null,
-      recipe: (this.$route.params['id'] == 'new') ? newRecipe() : null,
+      recipe: this.$route.params["id"] == "new" ? newRecipe() : null,
       error: null
-    }
+    };
   },
   validations: {
     recipe: {
@@ -117,122 +117,157 @@ export default {
     }
   },
   computed: {
-    compiledMarkdownDescription(){
-      return marked(this.recipe.description || "", { sanitize: true })
+    compiledMarkdownDescription() {
+      return marked(this.recipe.description || "", { sanitize: true });
     },
-    updateRecipeInput(){
+    updateRecipeInput() {
       return {
         name: this.recipe.name,
         eaten: this.recipe.eaten,
         weightCooked: Number(this.recipe.weightCooked),
         description: this.recipe.description,
         recipeIngredients: this.recipe.recipeIngredients.map(function(ri) {
-          let riParams = { weight: Number(ri.weight) }
-          if(ri.id) { riParams.id = ri.id }
-
-          if(ri.ingredient.id) {
-            riParams.ingredientId = ri.ingredient.id
-          } else {
-            riParams.ingredient = _.pick(ri.ingredient, 'name', 'protein', 'fat', 'carbonhydrate', 'energy')
+          let riParams = { weight: Number(ri.weight) };
+          if (ri.id) {
+            riParams.id = ri.id;
           }
 
-          return riParams
+          if (ri.ingredient.id) {
+            riParams.ingredientId = ri.ingredient.id;
+          } else {
+            riParams.ingredient = _.pick(
+              ri.ingredient,
+              "name",
+              "protein",
+              "fat",
+              "carbonhydrate",
+              "energy"
+            );
+          }
+
+          return riParams;
         })
-      }
+      };
     },
-    totals () {
-      let data = {protein: 0, fat: 0, carbonhydrate: 0, energy: 0}
-      if(!this.recipe || this.recipe.weightCooked == 0) { return data }
-      const weightCooked = this.recipe.weightCooked
-      let ingredientsWeight = 0
+    totals() {
+      let data = { protein: 0, fat: 0, carbonhydrate: 0, energy: 0 };
+      if (!this.recipe || this.recipe.weightCooked == 0) {
+        return data;
+      }
+      const weightCooked = this.recipe.weightCooked;
+      let ingredientsWeight = 0;
 
       this.recipe.recipeIngredients.forEach(function(ri) {
-        const weight = Number(ri.weight)
+        const weight = Number(ri.weight);
 
-        if(weight > 0) {
+        if (weight > 0) {
           Object.keys(data).forEach(function(key) {
-            data[key] += Number(ri.ingredient[key]) * weight / 100
-          })
-          ingredientsWeight += weight
+            data[key] += Number(ri.ingredient[key]) * weight / 100;
+          });
+          ingredientsWeight += weight;
         }
-      })
+      });
 
-      if(ingredientsWeight > 0) {
+      if (ingredientsWeight > 0) {
         Object.keys(data).forEach(function(key) {
-          const prescision = key == 'energy' ? 0 : 2
-          data[key] = (data[key] * weightCooked / ingredientsWeight).toFixed(prescision)
-        })
+          const prescision = key == "energy" ? 0 : 2;
+          data[key] = (data[key] * weightCooked / ingredientsWeight).toFixed(
+            prescision
+          );
+        });
       }
 
-      return data
+      return data;
     }
   },
   apollo: {
     getRecipe: {
       query: getRecipe,
       variables() {
-        return { id: this.$route.params['id'] }
+        return { id: this.$route.params["id"] };
       },
       update: data => data.node,
       error(e) {
-        this.error = error
+        this.error = e;
       },
       result(result) {
-        this.recipe = this._.merge({}, result.data.node)
+        this.recipe = this._.merge({}, result.data.node);
       },
-      skip () {
-        return this.$route.params['id'] == 'new' || (this.recipe && this.recipe.id == this.$route.params.id)
+      skip() {
+        return (
+          this.$route.params["id"] == "new" ||
+          (this.recipe && this.recipe.id == this.$route.params.id)
+        );
       }
     }
   },
   methods: {
     onSubmit(e) {
-      e.preventDefault()
-      let vars = { input: this.updateRecipeInput }
-      let mutations = { createRecipe: createRecipeMutation, updateRecipe: updateRecipeMutation }
-      let mutationName = null
+      e.preventDefault();
+      let vars = { input: this.updateRecipeInput };
+      let mutations = {
+        createRecipe: createRecipeMutation,
+        updateRecipe: updateRecipeMutation
+      };
+      let mutationName = null;
 
-      if(this.$route.params['id'] == 'new') {
-        mutationName = 'createRecipe'
+      if (this.$route.params["id"] == "new") {
+        mutationName = "createRecipe";
       } else {
-        vars.id = this.$route.params['id']
-        mutationName = 'updateRecipe'
+        vars.id = this.$route.params["id"];
+        mutationName = "updateRecipe";
       }
 
-      this.$apollo.mutate({
-        mutation: mutations[mutationName],
-        variables: vars,
-      }).then((result) => {
-        const created = this.$route.params.id == 'new'
-        EventBus.$emit('notification', `Recipe "${this.recipe.name}" has been successfully ${created ? 'created' : 'updated'}.`)
+      this.$apollo
+        .mutate({
+          mutation: mutations[mutationName],
+          variables: vars
+        })
+        .then(result => {
+          const created = this.$route.params.id == "new";
+          EventBus.$emit(
+            "notification",
+            `Recipe "${this.recipe.name}" has been successfully ${
+              created ? "created" : "updated"
+            }.`
+          );
 
-        this.recipe = this._.merge({}, result.data[mutationName])
+          this.recipe = this._.merge({}, result.data[mutationName]);
 
-        if(created) {
-          this.$router.push({path: `/recipes/${result.data[mutationName].id}`})
-        }
-      }).catch((error) => {
-        this.error = error
-      })
+          if (created) {
+            this.$router.push({
+              path: `/recipes/${result.data[mutationName].id}`
+            });
+          }
+        })
+        .catch(error => {
+          this.error = error;
+        });
     },
-    addIngredient(){
+    addIngredient() {
       this.recipe.recipeIngredients.push({
         weight: 0,
-        ingredient: { protein: 0, fat: 0, carbonhydrate: 0, energy: 0, name: "" }
-      })
+        ingredient: {
+          protein: 0,
+          fat: 0,
+          carbonhydrate: 0,
+          energy: 0,
+          name: ""
+        }
+      });
     }
   },
-  beforeRouteUpdate (to, from, next) {
-    next()
+  beforeRouteUpdate(to, from, next) {
+    next();
 
-    if(this.$route.params.id == 'new') {
-      this.recipe = newRecipe()
+    if (this.$route.params.id == "new") {
+      this.recipe = newRecipe();
     } else {
-      if(this.recipe.id != this.$route.params.id) {
-        this.recipe = null
-        this.$apollo.queries.getRecipe.refetch()
+      if (this.recipe.id != this.$route.params.id) {
+        this.recipe = null;
+        this.$apollo.queries.getRecipe.refetch();
       }
     }
   }
-}
+};
 </script>

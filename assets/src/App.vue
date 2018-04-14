@@ -32,31 +32,31 @@
 </template>
 
 <script>
-import { EventBus } from './config/eventBus.js'
+import { EventBus } from "./config/eventBus.js";
 export default {
-  name: 'app',
+  name: "app",
   computed: {
-    userEmail () {
-      return this.$root.$data.userEmail
+    userEmail() {
+      return this.$root.$data.userEmail;
     }
   },
   methods: {
-    logout () {
-      localStorage.removeItem("userEmail")
-      localStorage.removeItem("authToken")
-      this.$root.$data.userEmail = localStorage.getItem("userEmail")
-      this.$router.push({path: '/login'})
+    logout() {
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("authToken");
+      this.$root.$data.userEmail = localStorage.getItem("userEmail");
+      this.$router.push({ path: "/login" });
     }
   },
-  data () {
+  data() {
     return {
       message: null
-    }
+    };
   },
-  created () {
-    EventBus.$on('notification', (msg) => this.message = msg)
+  created() {
+    EventBus.$on("notification", msg => (this.message = msg));
   }
-}
+};
 </script>
 
 <style lang="scss">

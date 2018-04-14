@@ -22,83 +22,88 @@
 </template>
 
 <script>
-import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql'
-import deleteIngredientMutation from '@/graphql/mutations/deleteIngredient.graphql'
+import allIngredientsQuery from "@/graphql/queries/listIngredients.graphql";
+import deleteIngredientMutation from "@/graphql/mutations/deleteIngredient.graphql";
 
 export default {
-  name: 'ingredients-table',
+  name: "ingredients-table",
   props: {
     perPage: { default: 10, type: Number },
     searchEnabled: { default: true, type: Boolean }
   },
-  data () {
+  data() {
     return {
       error: null,
-      sortBy: 'name',
+      sortBy: "name",
       filter: null,
       queryFilter: null,
       fields: [
-        { key: 'name', sortable: true },
-        { key: 'protein', sortable: true },
-        { key: 'fat', sortable: true },
-        { key: 'carbonhydrate', sortable: true },
-        { key: 'energy', sortable: true },
-        { key: 'actions', sortable: false }
+        { key: "name", sortable: true },
+        { key: "protein", sortable: true },
+        { key: "fat", sortable: true },
+        { key: "carbonhydrate", sortable: true },
+        { key: "energy", sortable: true },
+        { key: "actions", sortable: false }
       ],
       allIngredients: null
-    }
+    };
   },
   computed: {
     fetchMoreEnabled() {
-      return this.allIngredients && this.allIngredients.pageInfo.hasNextPage
+      return this.allIngredients && this.allIngredients.pageInfo.hasNextPage;
     },
     nodes() {
-      return (this.allIngredients) ? this.allIngredients.edges.map(edge => edge.node) : []
+      return this.allIngredients
+        ? this.allIngredients.edges.map(edge => edge.node)
+        : [];
     }
   },
   apollo: {
     allIngredients: {
       query: allIngredientsQuery,
       variables() {
-        return { first: this.perPage, filter: this.queryFilter }
+        return { first: this.perPage, filter: this.queryFilter };
       },
       update: data => data.listIngredients,
       error(e) {
-        this.error = e
+        this.error = e;
       }
     }
   },
   methods: {
     doSearch() {
-      this.queryFilter = this.filter
-      this.refetch()
+      this.queryFilter = this.filter;
+      this.refetch();
     },
     clearSearch() {
-      this.filter = null
-      this.queryFilter = null
-      this.refetch()
+      this.filter = null;
+      this.queryFilter = null;
+      this.refetch();
     },
     refetch() {
-      this.error = null
-      this.$apollo.queries.allIngredients.refetch()
+      this.error = null;
+      this.$apollo.queries.allIngredients.refetch();
     },
-    editIngredient (item) {
-      this.$emit('edit', Object.assign({}, item))
+    editIngredient(item) {
+      this.$emit("edit", Object.assign({}, item));
     },
-    deleteIngredient(item){
-      this.error = null
-      this.$apollo.mutate({
-        mutation: deleteIngredientMutation,
-        variables: { id: item.id },
-      }).then((result) => {
-        this.$emit('deleted', item)
-        this.refetch()
-      }).catch((error) => {
-        this.error = error
-      })
+    deleteIngredient(item) {
+      this.error = null;
+      this.$apollo
+        .mutate({
+          mutation: deleteIngredientMutation,
+          variables: { id: item.id }
+        })
+        .then(result => {
+          this.$emit("deleted", item);
+          this.refetch();
+        })
+        .catch(error => {
+          this.error = error;
+        });
     },
     fetchMore() {
-      this.error = null
+      this.error = null;
       this.$apollo.queries.allIngredients.fetchMore({
         variables: {
           first: this.perPage,
@@ -106,8 +111,8 @@ export default {
           cursor: this.allIngredients.pageInfo.endCursor
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
-          const prevRes = previousResult.listIngredients
-          const res = fetchMoreResult.listIngredients
+          const prevRes = previousResult.listIngredients;
+          const res = fetchMoreResult.listIngredients;
 
           return {
             listIngredients: {
@@ -115,16 +120,16 @@ export default {
               edges: [...prevRes.edges, ...res.edges],
               pageInfo: res.pageInfo
             }
-          }
+          };
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style>
-  button#fetchMore {
-    margin-bottom: 12px;
-  }
+button#fetchMore {
+  margin-bottom: 12px;
+}
 </style>

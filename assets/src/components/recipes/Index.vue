@@ -48,97 +48,111 @@
 </template>
 
 <script>
-import listRecipesQuery from '@/graphql/queries/listRecipes.graphql'
-import deleteRecipeMutation from '@/graphql/mutations/deleteRecipe.graphql'
-import { EventBus } from '@/config/eventBus.js'
+import listRecipesQuery from "@/graphql/queries/listRecipes.graphql";
+import deleteRecipeMutation from "@/graphql/mutations/deleteRecipe.graphql";
+import { EventBus } from "@/config/eventBus.js";
 
 export default {
-  name: 'recipes-index',
+  name: "recipes-index",
   props: {
     perPage: { default: 10, type: Number },
     searchEnabled: { default: true, type: Boolean }
   },
-  data () {
+  data() {
     return {
       error: null,
-      sortBy: 'name',
+      sortBy: "name",
       filter: null,
       excludeEaten: false,
       queryFilter: null,
       detailsFields: [
-        { key: 'name', sortable: true },
-        { key: 'weight', sortable: true },
-        { key: 'protein', sortable: true },
-        { key: 'fat', sortable: true },
-        { key: 'carbonhydrate', sortable: true },
-        { key: 'energy', sortable: true }
+        { key: "name", sortable: true },
+        { key: "weight", sortable: true },
+        { key: "protein", sortable: true },
+        { key: "fat", sortable: true },
+        { key: "carbonhydrate", sortable: true },
+        { key: "energy", sortable: true }
       ],
       fields: [
-        { key: 'name', sortable: true },
-        { key: 'weightCooked', sortable: true },
-        { key: 'protein', sortable: true },
-        { key: 'fat', sortable: true },
-        { key: 'carbonhydrate', sortable: true },
-        { key: 'energy', sortable: true },
-        { key: 'actions', sortable: false }
+        { key: "name", sortable: true },
+        { key: "weightCooked", sortable: true },
+        { key: "protein", sortable: true },
+        { key: "fat", sortable: true },
+        { key: "carbonhydrate", sortable: true },
+        { key: "energy", sortable: true },
+        { key: "actions", sortable: false }
       ],
       listRecipes: null
-    }
+    };
   },
   computed: {
     fetchMoreEnabled() {
-      return this.listRecipes && this.listRecipes.pageInfo.hasNextPage
+      return this.listRecipes && this.listRecipes.pageInfo.hasNextPage;
     },
     nodes() {
-      return (this.listRecipes) ? this.listRecipes.edges.map(edge => Object.assign({_showDetails: false}, edge.node)) : []
+      return this.listRecipes
+        ? this.listRecipes.edges.map(edge =>
+            Object.assign({ _showDetails: false }, edge.node)
+          )
+        : [];
     }
   },
   apollo: {
     listRecipes: {
       query: listRecipesQuery,
       variables() {
-        let params = { first: this.perPage }
-        if(this.queryFilter) { params.filter = this.queryFilter }
-        if(this.excludeEaten) { params.eaten = false }
+        let params = { first: this.perPage };
+        if (this.queryFilter) {
+          params.filter = this.queryFilter;
+        }
+        if (this.excludeEaten) {
+          params.eaten = false;
+        }
 
-        return params
+        return params;
       },
       error(e) {
-        this.error = e
+        this.error = e;
       }
     }
   },
   methods: {
     doSearch() {
-      this.queryFilter = this.filter
-      this.refetch()
+      this.queryFilter = this.filter;
+      this.refetch();
     },
     clearSearch() {
-      this.filter = null
-      this.queryFilter = null
-      this.refetch()
+      this.filter = null;
+      this.queryFilter = null;
+      this.refetch();
     },
     refetch() {
-      this.error = null
-      this.$apollo.queries.listRecipes.refetch()
+      this.error = null;
+      this.$apollo.queries.listRecipes.refetch();
     },
-    addNewRecipe(){
-      this.$router.push({path: '/recipes/new'})
+    addNewRecipe() {
+      this.$router.push({ path: "/recipes/new" });
     },
-    deleteRecipe(item){
-      this.error = null
-      this.$apollo.mutate({
-        mutation: deleteRecipeMutation,
-        variables: { id: item.id },
-      }).then((result) => {
-        EventBus.$emit('notification', `Recipe "${item.name}" has been successfully deleted.`)
-        this.refetch()
-      }).catch((error) => {
-        this.error = error
-      })
+    deleteRecipe(item) {
+      this.error = null;
+      this.$apollo
+        .mutate({
+          mutation: deleteRecipeMutation,
+          variables: { id: item.id }
+        })
+        .then(result => {
+          EventBus.$emit(
+            "notification",
+            `Recipe "${item.name}" has been successfully deleted.`
+          );
+          this.refetch();
+        })
+        .catch(error => {
+          this.error = error;
+        });
     },
     fetchMore() {
-      this.error = null
+      this.error = null;
       this.$apollo.queries.listRecipes.fetchMore({
         variables: {
           first: this.perPage,
@@ -146,8 +160,8 @@ export default {
           cursor: this.listRecipes.pageInfo.endCursor
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
-          const prevRes = previousResult.listRecipes
-          const res = fetchMoreResult.listRecipes
+          const prevRes = previousResult.listRecipes;
+          const res = fetchMoreResult.listRecipes;
 
           return {
             listIngredients: {
@@ -155,22 +169,24 @@ export default {
               edges: [...prevRes.edges, ...res.edges],
               pageInfo: res.pageInfo
             }
-          }
+          };
         }
-      })
+      });
     }
   },
   watch: {
-    excludeEaten: function(n, o) {
-      if(n) { this.refetch() }
+    excludeEaten: function(n) {
+      if (n) {
+        this.refetch();
+      }
     }
   }
-}
+};
 </script>
 
 
 <style>
-  th:nth-child(7){
-    width: 220px !important;
-  }
+th:nth-child(7) {
+  width: 220px !important;
+}
 </style>

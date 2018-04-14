@@ -37,21 +37,24 @@
 </template>
 
 <script>
-
-import ingredientsSearchInput from '@/components/ingredients/SearchInput.vue';
+import ingredientsSearchInput from "@/components/ingredients/SearchInput.vue";
 
 function calculateNutritionFact(item, field, prescision) {
-  if(!item.ingredient || !item.ingredient[field]) { return null }
-  if(item.weight == 0) { return 0 }
-  return (item.ingredient[field] * item.weight / 100).toFixed(prescision)
+  if (!item.ingredient || !item.ingredient[field]) {
+    return null;
+  }
+  if (item.weight == 0) {
+    return 0;
+  }
+  return (item.ingredient[field] * item.weight / 100).toFixed(prescision);
 }
 export default {
-  name: 'ingredients-form-row',
+  name: "ingredients-form-row",
   components: {
-    'ingredients-search-input': ingredientsSearchInput
+    "ingredients-search-input": ingredientsSearchInput
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   props: {
     value: { type: Object },
@@ -59,23 +62,25 @@ export default {
   },
   computed: {
     protein() {
-      return calculateNutritionFact(this.value, 'protein', 2)
+      return calculateNutritionFact(this.value, "protein", 2);
     },
     fat() {
-      return calculateNutritionFact(this.value, 'fat', 2)
+      return calculateNutritionFact(this.value, "fat", 2);
     },
     carbonhydrate() {
-      return calculateNutritionFact(this.value, 'carbonhydrate', 2)
+      return calculateNutritionFact(this.value, "carbonhydrate", 2);
     },
     energy() {
-      return calculateNutritionFact(this.value, 'energy', 0)
+      return calculateNutritionFact(this.value, "energy", 0);
     }
   },
   methods: {
     vuelidate_ingredient(attr) {
-      if(!this.v) { return true }
-      return !this.v.ingredient[attr].$invalid
+      if (!this.v) {
+        return true;
+      }
+      return !this.v.ingredient[attr].$invalid;
     }
   }
-}
+};
 </script>

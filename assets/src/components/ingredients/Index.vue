@@ -12,49 +12,59 @@
 </template>
 
 <script>
-import Form from './Form.vue'
-import Table from './Table.vue'
-import { EventBus } from '@/config/eventBus.js'
+import Form from "./Form.vue";
+import Table from "./Table.vue";
+import { EventBus } from "@/config/eventBus.js";
 
 export default {
-  name: 'ingredients-index',
+  name: "ingredients-index",
   components: {
-    'ingredient-form': Form,
-    'ingredients-table': Table
+    "ingredient-form": Form,
+    "ingredients-table": Table
   },
-  data () {
+  data() {
     return {
       ingredient: this.emptyIngredient()
-    }
+    };
   },
   methods: {
     emptyIngredient() {
-      return {id: null, name: '', protein: 0, fat: 0, carbonhydrate: 0, energy: 0}
+      return {
+        id: null,
+        name: "",
+        protein: 0,
+        fat: 0,
+        carbonhydrate: 0,
+        energy: 0
+      };
     },
     resetAndRefetchIngredient() {
-      this.resetIngredient()
-      this.$refs.ingredientsTable.refetch()
+      this.resetIngredient();
+      this.$refs.ingredientsTable.refetch();
     },
     onUpdated(item) {
-      this.publishOkMessage(item.name, 'updated')
-      this.resetAndRefetchIngredient()
+      this.publishOkMessage(item.name, "updated");
+      this.resetAndRefetchIngredient();
     },
     onCreated(item) {
-      this.publishOkMessage(item.name, 'created')
-      this.resetAndRefetchIngredient()
+      this.publishOkMessage(item.name, "created");
+      this.resetAndRefetchIngredient();
     },
     onIngredientDeleted(item) {
-      this.publishOkMessage(item.name, 'deleted')
+      this.publishOkMessage(item.name, "deleted");
     },
     publishOkMessage(name, operation) {
-      EventBus.$emit('notification', `"${name}" has been successfully ${operation}.`)
+      EventBus.$emit(
+        "notification",
+        `"${name}" has been successfully ${operation}.`
+      );
     },
-    resetIngredient () {
-      this.ingredient = this.emptyIngredient()
+    resetIngredient() {
+      this.ingredient = this.emptyIngredient();
     },
-    editIngredient (item) {
-      this.ingredient = item
+    editIngredient(item) {
+      this.ingredient = item;
     }
   }
-}
+};
 </script>

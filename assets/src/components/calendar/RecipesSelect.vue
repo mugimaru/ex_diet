@@ -6,32 +6,31 @@
 </template>
 
 <script>
-
 export default {
-  name: 'recipes-search',
-  props: ['value', 'recipes'],
-  data () {
+  name: "recipes-search",
+  props: ["value", "recipes"],
+  data() {
     return {
       selected: null
-    }
+    };
   },
   computed: {
-    options () {
+    options() {
       return this.recipes.map(function(recipe) {
-        return { value: recipe, text: recipe.name }
-      })
+        return { value: recipe, text: recipe.name };
+      });
     }
   },
   methods: {
-    onChange(selected){
-      this.$emit('input', selected)
+    onChange(selected) {
+      this.$emit("input", selected);
     }
   },
   created() {
-    const recipe = this.recipes.find((rec) => rec.id == this.value.id)
-    if(recipe) {
-      this.selected = recipe
+    const recipe = this.recipes.find(rec => rec.id == this.value.id);
+    if (recipe) {
+      this.selected = recipe;
     }
   }
-}
+};
 </script>
