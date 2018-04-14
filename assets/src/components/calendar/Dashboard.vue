@@ -146,8 +146,11 @@ export default {
     changeCalendarScope(days) {
       this.startDate = moment(this.startDate).add(days, 'days')
       this.endDate = moment(this.endDate).add(days, 'days')
+      this.changeSetHideCalendarsBeforeToday()
       this.$apollo.queries.calendars.refetch()
-      this.hideCalendarsBeforeToday = false
+    },
+    changeSetHideCalendarsBeforeToday(){
+      this.hideCalendarsBeforeToday = moment(this.startDate).isSame(moment().startOf('isoweek'), 'day') && moment(this.endDate).isSame(moment().endOf('isoWeek'), 'day')
     },
     returnToCurrentWeek(){
       const startOfCurrentWeek = moment().startOf('isoWeek')
@@ -159,8 +162,8 @@ export default {
 
       this.startDate = startOfCurrentWeek
       this.endDate = endOfCurrentWeek
+      this.changeSetHideCalendarsBeforeToday()
       this.$apollo.queries.calendars.refetch()
-      this.hideCalendarsBeforeToday = true
     },
     markAsEaten(recipeId) {
       this.$apollo.mutate({
