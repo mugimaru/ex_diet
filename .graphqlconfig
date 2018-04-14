@@ -4,7 +4,8 @@
       "schemaPath": "schema.graphql",
       "extensions": {
         "endpoints": {
-          "dev": "http://localhost:4000/api/graphql"
+          "dev": "http://localhost:4000/api/graphql",
+          "prod": "https://personal-loud-azurevase.gigalixirapp.com/api/graphql"
         }
       }
     }
