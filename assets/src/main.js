@@ -36,6 +36,9 @@ Vue.component("timed-alert", timedAlert);
 import draggable from "vuedraggable";
 Vue.component("draggable", draggable);
 
+import VueChartkick from 'vue-chartkick';
+Vue.use(VueChartkick);
+
 new Vue({
   router,
   data: {

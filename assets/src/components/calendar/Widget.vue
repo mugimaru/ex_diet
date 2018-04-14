@@ -10,6 +10,9 @@
       {{calendar.day | moment("dddd, MMMM Do YYYY") }}
 
       <b-button-group class="float-right" size="sm">
+        <b-button v-if="!editCalendar" size="sm" variant="outline-primary" @click="toggleChartMode">
+          <icon name="chart-pie"></icon>
+        </b-button>
         <b-button v-if="!editCalendar" size="sm" variant="outline-secondary" @click="startEditCalendar">
           <icon name="edit"></icon>
         </b-button>
@@ -24,7 +27,19 @@
       </b-button-group>
     </div>
 
-    <table fixed class="table table-bordered" v-if="showTable">
+    <b-row id="chart-view" v-show="hasAnyData && chartMode" class="float-left">
+      <b-col cols="6">
+        <pie-chart :library="{ title: `Total energy - ${totalNutritionFacts.energy.toFixed(0)}kcal` }" :data="chartData"></pie-chart>
+      </b-col>
+    </b-row>
+    <div class="card-body text-center" v-show="!hasAnyData">
+      <b-button-group v-if="editCalendar">
+        <b-button variant="outline-primary" @click="addRecipeMeal"> Add recipe </b-button>
+        <b-button variant="outline-success" @click="addIngredientMeal"> Add ingredient </b-button>
+      </b-button-group>
+      <span v-if="!editCalendar"> Empty </span>
+    </div>
+    <table fixed class="table table-bordered" v-if="hasAnyData && !chartMode">
       <thead>
         <th>Meal</th>
         <th>Weight</th>
@@ -88,13 +103,6 @@
         <th v-if="editCalendar"></th>
       </tfoot>
     </table>
-    <div class="card-body text-center" v-else>
-      <b-button-group v-if="editCalendar">
-        <b-button variant="outline-primary" @click="addRecipeMeal"> Add recipe </b-button>
-        <b-button variant="outline-success" @click="addIngredientMeal"> Add ingredient </b-button>
-      </b-button-group>
-      <span v-else> Empty </span>
-    </div>
   </b-card>
   <br/>
 </div>
@@ -110,10 +118,10 @@ import recipesSelect from "./RecipesSelect.vue";
 import moment from "moment";
 const nfKeys = ["protein", "fat", "carbonhydrate", "energy"];
 const emptyNfData = () =>
-  nfKeys.reduce(function(acc, key) {
-    acc[key] = 0;
-    return acc;
-  }, {});
+      nfKeys.reduce(function(acc, key) {
+        acc[key] = 0;
+        return acc;
+      }, {});
 
 export default {
   name: "calendar-widget",
@@ -125,11 +133,24 @@ export default {
     allRecipes: { required: true },
     calendar: { required: true }
   },
+  data() {
+    return {
+      editCalendar: null,
+      chartMode: false
+    };
+  },
   computed: {
-    showTable() {
+    chartData() {
+      return [
+        ["Protein", this.totalNutritionFacts.protein],
+        ["Fat", this.totalNutritionFacts.fat],
+        ["Carbonhydrate", this.totalNutritionFacts.carbonhydrate]
+      ]
+    },
+    hasAnyData() {
       return (
         (this.editCalendar && this.editCalendar.meals.length > 0) ||
-        (this.calendar && this.calendar.meals.length > 0)
+          (this.calendar && this.calendar.meals.length > 0)
       );
     },
     calendarMutationParams() {
@@ -175,11 +196,6 @@ export default {
       return moment().isSame(this.calendar.day, "day");
     }
   },
-  data() {
-    return {
-      editCalendar: null
-    };
-  },
   methods: {
     addRecipeMeal() {
       this.editCalendar.meals.push({ weight: 0, recipeId: null, recipe: {} });
@@ -220,6 +236,10 @@ export default {
         .catch(e => {
           console.dir(e);
         });
+    },
+    toggleChartMode() {
+      this.chartMode = !this.chartMode
+      console.log(this.chartMode)
     }
   },
   filters: {
@@ -231,5 +251,9 @@ export default {
 <style>
 .calendar-widget table {
   margin: 0px;
+}
+
+#chart-view {
+  margin-top: 1.25rem;
 }
 </style>
