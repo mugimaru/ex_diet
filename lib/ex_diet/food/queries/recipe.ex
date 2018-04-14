@@ -7,6 +7,7 @@ defmodule ExDiet.Food.Queries.Recipe do
       {:filter, filter}, query ->
         from(
           q in query,
+          distinct: true,
           left_join: i in assoc(q, :ingredients),
           where: ilike(q.name, ^"%#{filter}%") or ilike(i.name, ^"%#{filter}%")
         )

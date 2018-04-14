@@ -3,9 +3,8 @@
 
   <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
   <b-input-group v-if="searchEnabled">
-    <b-form-input v-model="filter" placeholder="Search ingredients" />
+    <b-form-input v-model="filter" placeholder="Search ingredients" @input="onSearchInput" @keyup.esc.native="clearSearch"  />
     <b-input-group-append>
-      <b-btn variant="success" :disabled="!filter || filter == queryFilter" @click="doSearch">Search</b-btn>
       <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
     </b-input-group-append>
   </b-input-group>
@@ -71,10 +70,10 @@ export default {
     }
   },
   methods: {
-    doSearch() {
+    onSearchInput: _.debounce(function (){
       this.queryFilter = this.filter;
       this.refetch();
-    },
+    }, 600),
     clearSearch() {
       this.filter = null;
       this.queryFilter = null;

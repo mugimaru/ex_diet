@@ -7,15 +7,14 @@
     </b-col>
     <b-col>
   <b-input-group v-if="searchEnabled">
-    <b-form-input v-model="filter" placeholder="Search recipes" />
+    <b-form-input v-model="filter" placeholder="Search recipes" @input="onSearchInput" @keyup.esc.native="clearSearch" />
     <b-input-group-append>
-      <b-btn variant="success" :disabled="!filter || filter == queryFilter" @click="doSearch">Search</b-btn>
       <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
     </b-input-group-append>
   </b-input-group>
     </b-col>
   </b-row>
-  <b-table responsive bordered :items="nodes" :fields="fields" :sort-by="sortBy">
+  <b-table responsive bordered :items="tableItems" :fields="fields" :sort-by="sortBy">
     <template slot="HEAD_actions" slot-scope="actions">
       <b-button variant="outline-primary" block size="sm" @click.stop="addNewRecipe">Add new recipe</b-button>
     </template>
@@ -92,9 +91,16 @@ export default {
     nodes() {
       return this.listRecipes
         ? this.listRecipes.edges.map(edge =>
-            Object.assign({ _showDetails: false }, edge.node)
-          )
-        : [];
+                                     Object.assign({ _showDetails: false }, edge.node)
+                                    )
+      : [];
+    },
+    tableItems() {
+      const excludeEaten = this.excludeEaten
+      return this.nodes.map(function(node) {
+        node._rowVariant = !excludeEaten && !node.eaten ? 'active' : null
+        return node
+      })
     }
   },
   apollo: {
@@ -117,10 +123,10 @@ export default {
     }
   },
   methods: {
-    doSearch() {
+    onSearchInput: _.debounce(function() {
       this.queryFilter = this.filter;
       this.refetch();
-    },
+    }, 600),
     clearSearch() {
       this.filter = null;
       this.queryFilter = null;

@@ -26,6 +26,9 @@
       <b-dropdown-item-button v-for="(item, i) in dropdownItems" :key="i" @click="onSelected(item)">
         {{item.title}}
       </b-dropdown-item-button>
+      <b-dropdown-item-button v-if="!allowAddNew && dropdownItems.length == 0">
+        Nothing found
+      </b-dropdown-item-button>
     </div>
   </div>
 </div>
