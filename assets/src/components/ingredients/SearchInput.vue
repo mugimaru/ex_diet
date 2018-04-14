@@ -84,7 +84,7 @@ export default {
         this.error = e;
       },
       skip() {
-        return !this.searchable;
+        return !this.searchable || this.disabled;
       }
     }
   },

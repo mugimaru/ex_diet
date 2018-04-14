@@ -33,7 +33,7 @@ const apolloClient = new ApolloClient({
 import { EventBus } from "./eventBus.js";
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
-  watchLoading (state, mod) {
+  watchLoading(state) {
     EventBus.$emit("apollo-global-loading-state", state);
   }
 });

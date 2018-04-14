@@ -91,10 +91,30 @@ export default {
   components: {
     "form-row": formRow
   },
+  props: ["copyFrom", "id", "editRecipe"],
+  created() {
+    if (this.copyFrom) {
+      this.recipe = {
+        weightCooked: this.copyFrom.weightCooked,
+        name: this.copyFrom.name,
+        description: this.copyFrom.description,
+        recipeIngredients: this.copyFrom.recipeIngredients.map(function(ri) {
+          return {
+            weight: ri.weight,
+            ingredient: Object.assign({}, ri.ingredient)
+          };
+        })
+      };
+    }
+
+    if (this.editRecipe) {
+      this.recipe = this.editRecipe;
+    }
+  },
   data() {
     return {
       getRecipe: null,
-      recipe: this.$route.params["id"] == "new" ? newRecipe() : null,
+      recipe: this.id == "new" ? newRecipe() : null,
       error: null
     };
   },
@@ -184,7 +204,7 @@ export default {
     getRecipe: {
       query: getRecipe,
       variables() {
-        return { id: this.$route.params["id"] };
+        return { id: this.id };
       },
       update: data => data.node,
       error(e) {
@@ -195,8 +215,9 @@ export default {
       },
       skip() {
         return (
-          this.$route.params["id"] == "new" ||
-          (this.recipe && this.recipe.id == this.$route.params.id)
+          this.id == "new" ||
+          this.editRecipe ||
+          (this.recipe && this.recipe.id == this.id)
         );
       }
     }
@@ -211,10 +232,10 @@ export default {
       };
       let mutationName = null;
 
-      if (this.$route.params["id"] == "new") {
+      if (this.id == "new") {
         mutationName = "createRecipe";
       } else {
-        vars.id = this.$route.params["id"];
+        vars.id = this.id;
         mutationName = "updateRecipe";
       }
 
@@ -224,7 +245,7 @@ export default {
           variables: vars
         })
         .then(result => {
-          const created = this.$route.params.id == "new";
+          const created = this.id == "new";
           EventBus.$emit(
             "notification",
             `Recipe "${this.recipe.name}" has been successfully ${
@@ -236,7 +257,8 @@ export default {
 
           if (created) {
             this.$router.push({
-              path: `/recipes/${result.data[mutationName].id}`
+              name: "recipe",
+              params: { id: result.data[mutationName].id }
             });
           }
         })
@@ -260,10 +282,10 @@ export default {
   beforeRouteUpdate(to, from, next) {
     next();
 
-    if (this.$route.params.id == "new") {
+    if (this.id == "new") {
       this.recipe = newRecipe();
     } else {
-      if (this.recipe.id != this.$route.params.id) {
+      if (this.recipe.id != this.id) {
         this.recipe = null;
         this.$apollo.queries.getRecipe.refetch();
       }

@@ -70,7 +70,7 @@ export default {
     }
   },
   methods: {
-    onSearchInput: _.debounce(function (){
+    onSearchInput: _.debounce(function() {
       this.queryFilter = this.filter;
       this.refetch();
     }, 600),

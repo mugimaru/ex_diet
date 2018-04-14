@@ -36,7 +36,7 @@
 
 <script>
 import { EventBus } from "./config/eventBus.js";
-import { SemipolarSpinner } from 'epic-spinners';
+import { SemipolarSpinner } from "epic-spinners";
 
 export default {
   name: "app",
@@ -64,7 +64,10 @@ export default {
   },
   created() {
     EventBus.$on("notification", msg => (this.message = msg));
-    EventBus.$on("apollo-global-loading-state", state => (this.loading += state ? 1 : -1));
+    EventBus.$on(
+      "apollo-global-loading-state",
+      state => (this.loading += state ? 1 : -1)
+    );
   }
 };
 </script>

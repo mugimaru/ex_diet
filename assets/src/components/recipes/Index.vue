@@ -27,7 +27,8 @@
         <b-button variant="outline-secondary" size="sm" @click.stop="row.toggleDetails">
           {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
         </b-button>
-        <b-button variant="outline-success" size="sm" :to="'/recipes/' + row.item.id"> Edit </b-button>
+        <b-button variant="outline-primary" size="sm" @click.stop="copyRecipe(row.item)"> Copy </b-button>
+        <b-button variant="outline-success" size="sm" @click.stop="editRecipe(row.item)"> Edit </b-button>
         <b-button variant="outline-danger" size="sm" @click.stop="deleteRecipe(row.item)"> Delete </b-button>
       </b-button-group>
     </template>
@@ -91,16 +92,16 @@ export default {
     nodes() {
       return this.listRecipes
         ? this.listRecipes.edges.map(edge =>
-                                     Object.assign({ _showDetails: false }, edge.node)
-                                    )
-      : [];
+            Object.assign({ _showDetails: false }, edge.node)
+          )
+        : [];
     },
     tableItems() {
-      const excludeEaten = this.excludeEaten
+      const excludeEaten = this.excludeEaten;
       return this.nodes.map(function(node) {
-        node._rowVariant = !excludeEaten && !node.eaten ? 'active' : null
-        return node
-      })
+        node._rowVariant = !excludeEaten && !node.eaten ? "active" : null;
+        return node;
+      });
     }
   },
   apollo: {
@@ -137,7 +138,19 @@ export default {
       this.$apollo.queries.listRecipes.refetch();
     },
     addNewRecipe() {
-      this.$router.push({ path: "/recipes/new" });
+      this.$router.push({ name: "recipe", params: { id: "new" } });
+    },
+    copyRecipe(recipe) {
+      this.$router.push({
+        name: "recipe",
+        params: { id: "new", copyFrom: recipe }
+      });
+    },
+    editRecipe(recipe) {
+      this.$router.push({
+        name: "recipe",
+        params: { id: recipe.id, editRecipe: recipe }
+      });
     },
     deleteRecipe(item) {
       this.error = null;

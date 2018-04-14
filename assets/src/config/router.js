@@ -18,6 +18,12 @@ export default new Router({
       beforeEnter: Guard.auth
     },
     { path: "/recipes", component: Recipes, beforeEnter: Guard.auth },
-    { path: "/recipes/:id", component: EditRecipe, beforeEnter: Guard.auth }
+    {
+      path: "/recipes/:id",
+      component: EditRecipe,
+      name: "recipe",
+      beforeEnter: Guard.auth,
+      props: true
+    }
   ]
 });
