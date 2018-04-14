@@ -2,7 +2,10 @@
 <div id="app">
   <b-navbar toggleable="md" variant="info" type="dark">
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-    <router-link to="/" class="navbar-brand">ExDiet</router-link>
+    <router-link to="/" class="navbar-brand">
+      <semipolar-spinner v-if="loading > 0" :animation-duration="2000" :size="30" color="#fff" />
+      <template v-else> ExDiet </template>
+    </router-link>
 
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
@@ -33,8 +36,13 @@
 
 <script>
 import { EventBus } from "./config/eventBus.js";
+import { SemipolarSpinner } from 'epic-spinners';
+
 export default {
   name: "app",
+  components: {
+    SemipolarSpinner
+  },
   computed: {
     userEmail() {
       return this.$root.$data.userEmail;
@@ -50,11 +58,13 @@ export default {
   },
   data() {
     return {
-      message: null
+      message: null,
+      loading: 0
     };
   },
   created() {
     EventBus.$on("notification", msg => (this.message = msg));
+    EventBus.$on("apollo-global-loading-state", state => (this.loading += state ? 1 : -1));
   }
 };
 </script>
