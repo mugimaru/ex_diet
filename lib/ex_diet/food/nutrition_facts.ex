@@ -64,7 +64,12 @@ defmodule ExDiet.Food.NutritionFacts do
 
     new(
       Enum.reduce(@nutrients, sum_nutrition_facts(recipe.recipe_ingredients), fn key, struct ->
-        %{struct | key => Decimal.mult(Map.get(struct, key), Decimal.new(ingredients_weight / recipe.weight_cooked))}
+        value =
+          struct
+          |> Map.get(key)
+          |> Decimal.div(Decimal.new(recipe.weight_cooked))
+          |> Decimal.mult(100)
+        %{struct | key => value}
       end)
     )
   end

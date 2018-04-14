@@ -39,10 +39,10 @@ defmodule ExDiet.Food.NutritionFactsTest do
       |> with_ingredient(ingredient2, 100)
 
     assert NF.calculate(recipe) == %NF{
-             protein: Decimal.new(25 * 3 / 2),
-             fat: Decimal.new(50 * 3 / 2),
-             carbonhydrate: Decimal.new(110 * 3 / 2),
-             energy: Decimal.mult(Decimal.new(1200), Decimal.new(3 / 2))
+             protein: Decimal.new("12.500"),
+             fat: Decimal.new("25.00"),
+             carbonhydrate: Decimal.new("55.00"),
+             energy: Decimal.new(600)
            }
   end
 
@@ -62,9 +62,9 @@ defmodule ExDiet.Food.NutritionFactsTest do
     insert(:ingredient_meal, ingredient: ingredient, calendar: calendar, weight: 200)
 
     result = NF.calculate(calendar)
-    assert Decimal.to_float(result.protein) == 57.5
-    assert Decimal.to_float(result.fat) == 115
-    assert Decimal.to_float(result.carbonhydrate) == 225
-    assert Decimal.to_float(result.energy) == 2000
+    assert Decimal.to_float(result.protein) == 32.5
+    assert Decimal.to_float(result.fat) == 65.0
+    assert Decimal.to_float(result.carbonhydrate) == 115.0
+    assert Decimal.to_float(result.energy) == 800.0
   end
 end
