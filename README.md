@@ -42,16 +42,16 @@ docker-compose up web
 ### Localhost
 
 ```
+# prepare backend
 mix deps.get
 mix ecto.prepare
-mix phx.server
-cd assets && ./node_modules/.bin/vue-cli-service serve
-```
 
-### Assets
-
-```
+# prepare frontend
 cd assets && npm install && cd -
+
+# start everything with foreman
+gem install foreman
+foremant start
 ```
 
 ### Graphql tools
