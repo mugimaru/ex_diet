@@ -17,13 +17,25 @@
 - [x] build the core domain (ingredients, recipes, meals, calendar, etc)
 - [x] build graphql API
 - [x] deployment [gigalixir.com](https://gigalixir.com/)
+- [ ] docs & test coverage
+- [ ] fix SQL n+1 on recipe/calendar eatable attributes
 
 ### Frontend
 - [x] bootstrap an UI with vuejs
 - [x] implement authentication
 - [x] add ingredients crud
 - [x] add recipes
-- [ ] add calendar dashboard
+- [x] add calendar dashboard
+- [ ] dashboard forms validation
+- [ ] replace font-awesome with something that fits twbs better
+- [ ] write tests
+- [ ] improve UX
+
+### Global
+- [ ] Implement user profile (energy/macronutrients thresholds & body params)
+- [ ] Find better way to serve static assets on production (proxy / -> /index.html)
+- [ ] Consider having multiple profiles per account or connected accounts with shared recipes pool (several people, same fridge)
+- [ ] I18n
 
 ## Development
 
