@@ -6,5 +6,6 @@ erl_crash.dump
 /config/*.secret.exs
 /doc
 /assets/node_modules
+/assets.old/node_modules
 /cover
 priv/static/

@@ -5,7 +5,7 @@ import { HttpLink } from 'apollo-link-http';
 import VueApollo from 'vue-apollo';
 
 const httpLink = new HttpLink({
-  uri: process.env.APOLLO_URL || 'http://localhost:4000/api/graphql'
+  uri: process.env.NODE_ENV == 'production' ? 'https://personal-loud-azurevase.gigalixirapp.com/api/graphql' : 'http://localhost:4000/api/graphql'
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {

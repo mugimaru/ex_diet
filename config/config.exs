@@ -33,7 +33,7 @@ config :guardian, Guardian.DB,
   sweep_interval: 60
 
 config :cors_plug,
-  origin: ["http://localhost:3000"],
+  origin: ["*"],
   headers: ["X-Apollo-Tracing", "Content-Type", "Authorization"],
   max_age: 86400,
   methods: ["GET", "POST"]

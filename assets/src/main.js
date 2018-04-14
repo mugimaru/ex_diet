@@ -1,4 +1,5 @@
-import Vue from 'vue';
+import Vue from "vue";
+Vue.config.productionTip = false;
 
 import 'vue-awesome/icons';
 import Icon from 'vue-awesome/components/Icon';
@@ -36,11 +37,10 @@ import draggable from 'vuedraggable';
 Vue.component('draggable', draggable);
 
 new Vue({
-  el: '#app',
   router,
   data: {
     userEmail: localStorage.getItem("userEmail")
   },
   provide: apolloProvider.provide(),
   render: h => h(App)
-});
+}).$mount("#app");
