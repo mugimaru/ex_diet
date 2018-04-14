@@ -109,9 +109,10 @@ export default {
       this.$emit("input", {
         name: this.queryFilter,
         weight: 0,
-        carbonhydate: 0,
+        carbonhydrate: 0,
         protein: 0,
-        fat: 0
+        fat: 0,
+        energy: 0
       });
     },
     vuelidate(attr) {

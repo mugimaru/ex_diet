@@ -131,4 +131,8 @@ export default {
 button#fetchMore {
   margin-bottom: 12px;
 }
+
+th:nth-child(n + 2) {
+  width: 110px !important;
+}
 </style>

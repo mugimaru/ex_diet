@@ -86,6 +86,22 @@ function newRecipe() {
   };
 }
 
+function copyRecipe(r) {
+  return {
+    id: r.id,
+    weightCooked: r.weightCooked,
+    name: r.name,
+    description: r.description,
+    recipeIngredients: r.recipeIngredients.map(function(ri) {
+      return {
+        id: ri.id,
+        weight: ri.weight,
+        ingredient: Object.assign({}, ri.ingredient)
+      };
+    })
+  };
+}
+
 export default {
   name: "recipes-new-or-edit",
   components: {
@@ -94,21 +110,11 @@ export default {
   props: ["copyFrom", "id", "editRecipe"],
   created() {
     if (this.copyFrom) {
-      this.recipe = {
-        weightCooked: this.copyFrom.weightCooked,
-        name: this.copyFrom.name,
-        description: this.copyFrom.description,
-        recipeIngredients: this.copyFrom.recipeIngredients.map(function(ri) {
-          return {
-            weight: ri.weight,
-            ingredient: Object.assign({}, ri.ingredient)
-          };
-        })
-      };
+      this.recipe = copyRecipe(this.copyFrom);
     }
 
     if (this.editRecipe) {
-      this.recipe = this.editRecipe;
+      this.recipe = copyRecipe(this.editRecipe);
     }
   },
   data() {

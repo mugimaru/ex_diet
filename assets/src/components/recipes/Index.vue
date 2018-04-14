@@ -6,17 +6,20 @@
       <b-form-checkbox v-model="excludeEaten"> Exclude eaten </b-form-checkbox>
     </b-col>
     <b-col>
-  <b-input-group v-if="searchEnabled">
-    <b-form-input v-model="filter" placeholder="Search recipes" @input="onSearchInput" @keyup.esc.native="clearSearch" />
-    <b-input-group-append>
-      <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
-    </b-input-group-append>
-  </b-input-group>
+      <b-input-group v-if="searchEnabled">
+        <b-form-input v-model="filter" placeholder="Search recipes" @input="onSearchInput" @keyup.esc.native="clearSearch" />
+        <b-input-group-append>
+          <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
+        </b-input-group-append>
+      </b-input-group>
     </b-col>
   </b-row>
-  <b-table responsive bordered :items="tableItems" :fields="fields" :sort-by="sortBy">
+  <b-table responsive bordered :items="nodes" :fields="fields" :sort-by="sortBy">
     <template slot="HEAD_actions" slot-scope="actions">
       <b-button variant="outline-primary" block size="sm" @click.stop="addNewRecipe">Add new recipe</b-button>
+    </template>
+    <template slot="name" slot-scope="data">
+      <span :class="{'text-muted': data.item.eaten}">{{data.item.name}}</span>
     </template>
     <template slot="protein" slot-scope="data"> {{Number.parseFloat(data.item.protein).toFixed(2)}} </template>
     <template slot="fat" slot-scope="data"> {{Number.parseFloat(data.item.fat).toFixed(2)}} </template>
@@ -95,13 +98,6 @@ export default {
             Object.assign({ _showDetails: false }, edge.node)
           )
         : [];
-    },
-    tableItems() {
-      const excludeEaten = this.excludeEaten;
-      return this.nodes.map(function(node) {
-        node._rowVariant = !excludeEaten && !node.eaten ? "active" : null;
-        return node;
-      });
     }
   },
   apollo: {
@@ -205,7 +201,8 @@ export default {
 
 
 <style>
-th:nth-child(7) {
-  width: 220px !important;
+th:nth-child(n + 2) {
+  width: 110px !important;
+  white-space: nowrap;
 }
 </style>
