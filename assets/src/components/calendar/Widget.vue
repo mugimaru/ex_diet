@@ -59,7 +59,7 @@
         </th>
       </thead>
       <draggable v-if="editCalendar" v-model="editCalendar.meals" :element="'tbody'">
-        <tr v-for="(meal, i) in editCalendar.meals" :key="i">
+        <tr v-for="(meal, i) in editCalendar.meals" :key="meal.id || `${meal.name}-${i}`">
           <td v-if="meal.ingredient">
             <ingredients-search-input
               :allow-add-new="false"
