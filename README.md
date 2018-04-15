@@ -27,7 +27,7 @@
 - [x] add recipes
 - [x] add calendar dashboard
 - [ ] dashboard forms validation
-- [ ] replace font-awesome with something that fits twbs better
+- [x] replace font-awesome with something that fits twbs better
 - [ ] write tests
 - [ ] improve UX
 

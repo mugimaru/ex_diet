@@ -4,13 +4,13 @@
 
     <b-button-group size="lg">
       <b-button variant="primary" @click="changeCalendarScope(-7)">
-        <icon name="chevron-left"></icon>
+        <span class="oi oi-chevron-left" aria-hidden="true" />
       </b-button>
       <b-button variant="outline-primary" @click="returnToCurrentWeek">
         {{startDate | moment("MMMM Do YYYY")}} - {{endDate | moment("MMMM Do YYYY")}}
       </b-button>
       <b-button variant="primary" @click="changeCalendarScope(+7)">
-        <icon name="chevron-right"></icon>
+        <span class="oi oi-chevron-right" aria-hidden="true" />
       </b-button>
     </b-button-group>
   </div>
@@ -36,7 +36,7 @@
             {{recipe.name}}
             </span>
             <b-button variant="outline-danger" size="sm" v-if="!recipe.eaten" @click="markAsEaten(recipe.id)">
-              <icon name="check" scale="1"></icon>
+               <span class="oi oi-check" aria-hidden="true" />
             </b-button>
           </b-list-group-item>
         </b-list-group>

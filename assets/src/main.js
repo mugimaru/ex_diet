@@ -1,9 +1,7 @@
+/* global require */
+
 import Vue from "vue";
 Vue.config.productionTip = false;
-
-import "vue-awesome/icons";
-import Icon from "vue-awesome/components/Icon";
-Vue.component("icon", Icon);
 
 import Router from "vue-router";
 Vue.use(Router);
@@ -36,8 +34,10 @@ Vue.component("timed-alert", timedAlert);
 import draggable from "vuedraggable";
 Vue.component("draggable", draggable);
 
-import VueChartkick from 'vue-chartkick';
+import VueChartkick from "vue-chartkick";
 Vue.use(VueChartkick);
+
+require("open-iconic/font/css/open-iconic-bootstrap.css");
 
 new Vue({
   router,

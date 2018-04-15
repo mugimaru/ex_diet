@@ -11,17 +11,17 @@
 
       <b-button-group class="float-right" size="sm">
         <b-button v-if="!editCalendar" size="sm" variant="outline-primary" @click="toggleChartMode">
-          <icon name="chart-pie"></icon>
+          <span class="oi oi-pie-chart" aria-hidden="true" />
         </b-button>
         <b-button v-if="!editCalendar" size="sm" variant="outline-secondary" @click="startEditCalendar">
-          <icon name="edit"></icon>
+          <span class="oi oi-pencil" aria-hidden="true" />
         </b-button>
         <template v-else>
           <b-button variant="outline-success" size="sm" @click="confirmEdit">
-            <icon name="check"></icon>
+            <span class="oi oi-check" aria-hidden="true" />
           </b-button>
           <b-button variant="outline-danger" size="sm" @click="cancelEdit">
-            <icon name="times"></icon>
+            <span class="oi oi-circle-x" aria-hidden="true" />
           </b-button>
         </template>
       </b-button-group>
@@ -50,10 +50,10 @@
         <th v-if="editCalendar">
           <b-button-group size="sm" v-if="editCalendar">
             <b-button variant="outline-primary" @click="addRecipeMeal">
-              <icon name="plus"></icon> Recipe
+              <span class="oi oi-plus" aria-hidden="true" /> Recipe
             </b-button>
             <b-button variant="outline-success" @click="addIngredientMeal">
-              <icon name="plus"></icon> Ingredient
+              <span class="oi oi-plus" aria-hidden="true" /> Ingredient
             </b-button>
           </b-button-group>
         </th>
@@ -118,10 +118,10 @@ import recipesSelect from "./RecipesSelect.vue";
 import moment from "moment";
 const nfKeys = ["protein", "fat", "carbonhydrate", "energy"];
 const emptyNfData = () =>
-      nfKeys.reduce(function(acc, key) {
-        acc[key] = 0;
-        return acc;
-      }, {});
+  nfKeys.reduce(function(acc, key) {
+    acc[key] = 0;
+    return acc;
+  }, {});
 
 export default {
   name: "calendar-widget",
@@ -145,12 +145,12 @@ export default {
         ["Protein", this.totalNutritionFacts.protein],
         ["Fat", this.totalNutritionFacts.fat],
         ["Carbonhydrate", this.totalNutritionFacts.carbonhydrate]
-      ]
+      ];
     },
     hasAnyData() {
       return (
         (this.editCalendar && this.editCalendar.meals.length > 0) ||
-          (this.calendar && this.calendar.meals.length > 0)
+        (this.calendar && this.calendar.meals.length > 0)
       );
     },
     calendarMutationParams() {
@@ -238,8 +238,8 @@ export default {
         });
     },
     toggleChartMode() {
-      this.chartMode = !this.chartMode
-      console.log(this.chartMode)
+      this.chartMode = !this.chartMode;
+      console.log(this.chartMode);
     }
   },
   filters: {
