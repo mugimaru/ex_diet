@@ -16,7 +16,7 @@
 - [x] setup token authentication
 - [x] build the core domain (ingredients, recipes, meals, calendar, etc)
 - [x] build graphql API
-- [x] deployment [gigalixir.com](https://gigalixir.com/)
+- [x] deployment
 - [ ] docs & test coverage
 - [ ] fix SQL n+1 on recipe/calendar eatable attributes
 

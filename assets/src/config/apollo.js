@@ -7,7 +7,7 @@ import VueApollo from "vue-apollo";
 const httpLink = new HttpLink({
   uri:
     process.env.NODE_ENV == "production"
-      ? "https://personal-loud-azurevase.gigalixirapp.com/api/graphql"
+      ? "http://exdiet.tk/api/graphql"
       : "http://localhost:4000/api/graphql"
 });
 
