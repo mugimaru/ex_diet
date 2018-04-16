@@ -1,7 +1,11 @@
 <template>
 <tr>
   <td>
-    <ingredients-search-input ref="ingredientSearchInput" :allow-add-new="true" v-model="value.ingredient" :v="v.ingredient"></ingredients-search-input>
+    <ingredients-search-input
+      ref="ingredientSearchInput"
+      :allow-add-new="true"
+      v-model="value.ingredient"
+      :state="!this.v.ingredient.name.$invalid" />
   </td>
   <td> <b-input type="number" v-model="value.weight" :state="!this.v.weight.$invalid"></b-input> </td>
   <template v-if="value.ingredient && value.ingredient.id">

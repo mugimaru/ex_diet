@@ -17,7 +17,7 @@
           <span class="oi oi-pencil" aria-hidden="true" />
         </b-button>
         <template v-else>
-          <b-button variant="outline-success" size="sm" @click="confirmEdit">
+          <b-button variant="outline-success" size="sm" @click="confirmEdit" :disabled="!!$v.editCalendar.$invalid">
             <span class="oi oi-check" aria-hidden="true" />
           </b-button>
           <b-button variant="outline-danger" size="sm" @click="cancelEdit">
@@ -64,16 +64,18 @@
             <ingredients-search-input
               :allow-add-new="false"
               v-model="meal.ingredient"
-              @input="meal.ingredientId = meal.ingredient.id" />
+              @input="meal.ingredientId = meal.ingredient.id"
+              :state="!$v.editCalendar.meals.$each[i].ingredientId.$invalid" />
           </td>
           <td v-else>
             <recipes-select
               :recipes="allRecipes"
               v-model="meal.recipe"
-              @input="meal.recipeId = meal.recipe.id" />
+              @input="meal.recipeId = meal.recipe.id"
+              :state="!$v.editCalendar.meals.$each[i].recipeId.$invalid" />
           </td>
           <td>
-            <b-input type="number" v-model="meal.weight"></b-input>
+            <b-input type="number" v-model="meal.weight" :state="!$v.editCalendar.meals.$each[i].weight.$invalid" />
           </td>
           <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
           <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
@@ -114,6 +116,12 @@ import updateCalendarMutation from "@/graphql/mutations/updateCalendar.graphql";
 
 import ingredientsSearchInput from "@/components/ingredients/SearchInput.vue";
 import recipesSelect from "./RecipesSelect.vue";
+import {
+  required,
+  requiredIf,
+  minValue,
+  minLength
+} from "vuelidate/lib/validators";
 
 import moment from "moment";
 const nfKeys = ["protein", "fat", "carbonhydrate", "energy"];
@@ -241,6 +249,23 @@ export default {
       this.chartMode = !this.chartMode;
       console.log(this.chartMode);
     }
+  },
+  validations() {
+    return {
+      editCalendar: {
+        meals: {
+          $each: {
+            weight: { required: required, minValue: minValue(1) },
+            ingredientId: {
+              required: requiredIf(meal => !meal.recipe)
+            },
+            recipeId: {
+              required: requiredIf(meal => !meal.ingredient)
+            }
+          }
+        }
+      }
+    };
   },
   filters: {
     toFixed: (value, prescision) => Number(value).toFixed(prescision)

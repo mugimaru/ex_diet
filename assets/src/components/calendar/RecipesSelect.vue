@@ -2,13 +2,14 @@
   <b-form-select
     v-model="selected"
     :options="options"
-    @change="onChange" />
+    @change="onChange"
+    :state="state" />
 </template>
 
 <script>
 export default {
   name: "recipes-search",
-  props: ["value", "recipes"],
+  props: ["value", "recipes", "state"],
   data() {
     return {
       selected: null
