@@ -1,11 +1,11 @@
 APP="ex_diet"
 
 BUILD_HOST="do"
-BUILD_USER="root"
-BUILD_AT="/home/root/builds/ex_diet"
+BUILD_USER="service"
+BUILD_AT="/srv/projects/builds/ex_diet"
 
 PRODUCTION_HOSTS="do"
-PRODUCTION_USER="root"
+PRODUCTION_USER="service"
 DELIVER_TO="/srv/projects"
 
 pre_erlang_clean_compile() {
@@ -29,7 +29,7 @@ pre_erlang_clean_compile() {
 pre_erlang_get_and_update_deps() {
   status "Copying prod.secret.exs"
 
-  local _prod_secret_path="/home/root/app_config/ex_diet/prod.secret.exs"
+  local _prod_secret_path="/srv/projects/secrets/ex_diet/prod.secret.exs"
   if [ "$TARGET_MIX_ENV" = "prod" ]; then
     __sync_remote "
       ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
