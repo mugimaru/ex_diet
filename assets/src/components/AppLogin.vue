@@ -1,6 +1,6 @@
 <template>
 <b-row align-h="center">
-  <b-col cols="4">
+  <b-col cols="12" md="4">
 
     <b-card no-body no-header>
       <apollo-errors-view :error="error"></apollo-errors-view>

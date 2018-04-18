@@ -10,10 +10,10 @@
       {{calendar.day | moment("dddd, MMMM Do YYYY") }}
 
       <b-button-group class="float-right" size="sm">
-        <b-button v-if="!editCalendar" size="sm" variant="outline-primary" @click="toggleChartMode">
+        <b-button v-if="!editCalendar" variant="outline-primary" @click="toggleChartMode">
           <span class="oi oi-pie-chart" aria-hidden="true" />
         </b-button>
-        <b-button v-if="!editCalendar" size="sm" variant="outline-secondary" @click="startEditCalendar">
+        <b-button v-if="!editCalendar" variant="outline-secondary" @click="startEditCalendar">
           <span class="oi oi-pencil" aria-hidden="true" />
         </b-button>
         <template v-else>
@@ -28,7 +28,7 @@
     </div>
 
     <b-row id="chart-view" v-show="hasAnyData && chartMode" class="float-left">
-      <b-col cols="6">
+      <b-col cols="12" md="6">
         <pie-chart :library="{ title: `Total energy - ${totalNutritionFacts.energy.toFixed(0)}kcal` }" :data="chartData"></pie-chart>
       </b-col>
     </b-row>
@@ -39,29 +39,40 @@
       </b-button-group>
       <span v-if="!editCalendar"> Empty </span>
     </div>
-    <table fixed class="table table-bordered" v-if="hasAnyData && !chartMode">
+    <table class="table table-bordered widget-table" v-if="hasAnyData && !chartMode">
       <thead>
         <th>Meal</th>
         <th>Weight</th>
-        <th>Protein</th>
-        <th>Fat</th>
-        <th>Carbonhydrate</th>
+        <th class="d-none d-md-table-cell">Protein</th>
+        <th class="d-none d-md-table-cell">Fat</th>
+        <th class="d-none d-md-table-cell">Carbonhydrate</th>
         <th>Energy</th>
-        <th v-if="editCalendar">
-          <b-button-group size="sm" v-if="editCalendar">
-            <b-button variant="outline-primary" @click="addRecipeMeal">
-              <span class="oi oi-plus" aria-hidden="true" /> Recipe
-            </b-button>
-            <b-button variant="outline-success" @click="addIngredientMeal">
-              <span class="oi oi-plus" aria-hidden="true" /> Ingredient
-            </b-button>
-          </b-button-group>
-        </th>
+        <template v-if="editCalendar">
+          <th class="d-block d-md-none">
+            <b-dropdown variant="outline-primary" size="sm" right >
+              <template slot="button-content"> <span class="oi oi-plus" aria-hidden="true" /> </template>
+              <b-dropdown-item @click="addRecipeMeal"> Recipe </b-dropdown-item>
+              <b-dropdown-item @click="addIngredientMeal"> Ingredient </b-dropdown-item>
+            </b-dropdown>
+          </th>
+
+          <th class="d-none d-md-table-cell">
+            <b-button-group size="sm" v-if="editCalendar">
+              <b-button variant="outline-primary" @click="addRecipeMeal">
+                <span class="oi oi-plus" aria-hidden="true" /> Recipe
+              </b-button>
+              <b-button variant="outline-success" @click="addIngredientMeal">
+                <span class="oi oi-plus" aria-hidden="true" /> Ingredient
+              </b-button>
+            </b-button-group>
+          </th>
+        </template>
       </thead>
       <draggable v-if="editCalendar" v-model="editCalendar.meals" :element="'tbody'">
         <tr v-for="(meal, i) in editCalendar.meals" :key="meal.id || `${meal.name}-${i}`">
           <td v-if="meal.ingredient">
             <ingredients-search-input
+              size="sm"
               :allow-add-new="false"
               v-model="meal.ingredient"
               @input="meal.ingredientId = meal.ingredient.id"
@@ -69,20 +80,23 @@
           </td>
           <td v-else>
             <recipes-select
+              size="sm"
               :recipes="allRecipes"
               v-model="meal.recipe"
               @input="meal.recipeId = meal.recipe.id"
               :state="!$v.editCalendar.meals.$each[i].recipeId.$invalid" />
           </td>
           <td>
-            <b-input type="number" v-model="meal.weight" :state="!$v.editCalendar.meals.$each[i].weight.$invalid" />
+            <b-input type="number" v-model="meal.weight" size="sm" :state="!$v.editCalendar.meals.$each[i].weight.$invalid" />
           </td>
-          <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
           <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
           <td>
-            <b-button variant="outline-danger" size="sm" @click="removeMeal(meal)">Remove</b-button>
+            <b-button variant="outline-danger" size="sm" block @click="removeMeal(meal)">
+              <span class="oi oi-ban" aria-hidden="true" />
+            </b-button>
           </td>
         </tr>
       </draggable>
@@ -90,17 +104,17 @@
         <tr v-for="(meal, i) in calendar.meals" :key="i">
           <td>{{meal.recipe ? meal.recipe.name : meal.ingredient.name}}</td>
           <td>{{meal.weight | toFixed(0)}}</td>
-          <td>{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
-          <td>{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].protein | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].fat | toFixed(2)}}</td>
+          <td class="d-none d-md-table-cell">{{mealsNutritionFacts[i].carbonhydrate | toFixed(2)}}</td>
           <td>{{mealsNutritionFacts[i].energy | toFixed(0)}}</td>
         </tr>
       </tbody>
       <tfoot>
         <th colspan="2"></th>
-        <th>{{totalNutritionFacts.protein | toFixed(2)}}</th>
-        <th>{{totalNutritionFacts.fat | toFixed(2)}}</th>
-        <th>{{totalNutritionFacts.carbonhydrate | toFixed(2)}}</th>
+        <th class="d-none d-md-table-cell">{{totalNutritionFacts.protein | toFixed(2)}}</th>
+        <th class="d-none d-md-table-cell">{{totalNutritionFacts.fat | toFixed(2)}}</th>
+        <th class="d-none d-md-table-cell">{{totalNutritionFacts.carbonhydrate | toFixed(2)}}</th>
         <th>{{totalNutritionFacts.energy | toFixed(0)}}</th>
         <th v-if="editCalendar"></th>
       </tfoot>
@@ -280,5 +294,9 @@ export default {
 
 #chart-view {
   margin-top: 1.25rem;
+}
+.widget-table > thead > th:nth-child(8) {
+  width: 10px !important;
+  white-space: nowrap;
 }
 </style>

@@ -4,9 +4,10 @@
 
     <b-input-group>
       <b-input-group-prepend v-if="disabled">
-        <b-btn variant="secondary" @click="startNewSearch">Edit</b-btn>
+        <b-btn :size="size" variant="secondary" @click="startNewSearch">Edit</b-btn>
       </b-input-group-prepend>
       <b-input
+        :size="size"
         type="text"
         v-model="queryFilter"
         @focus.native="focused = true"
@@ -53,7 +54,8 @@ export default {
     minInputLength: { default: 3, type: Number },
     allowAddNew: { default: true, type: Boolean },
     value: { type: Object },
-    state: { type: Boolean }
+    state: { type: Boolean },
+    size: { type: String, default: "md" }
   },
   computed: {
     searchable() {

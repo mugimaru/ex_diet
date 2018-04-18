@@ -1,5 +1,6 @@
 <template>
   <b-form-select
+    :size="size"
     v-model="selected"
     :options="options"
     @change="onChange"
@@ -9,7 +10,12 @@
 <script>
 export default {
   name: "recipes-search",
-  props: ["value", "recipes", "state"],
+  props: {
+    value: {},
+    recipes: {},
+    state: {},
+    size: { type: String, default: "md" }
+  },
   data() {
     return {
       selected: null
@@ -17,9 +23,11 @@ export default {
   },
   computed: {
     options() {
-      return this.recipes.map(function(recipe) {
-        return { value: recipe, text: recipe.name };
-      }).sort(r => r.value.eaten);
+      return this.recipes
+        .map(function(recipe) {
+          return { value: recipe, text: recipe.name };
+        })
+        .sort(r => r.value.eaten);
     }
   },
   methods: {

@@ -1,32 +1,44 @@
 <template>
 <div>
-  <div class="text-center">
-
-    <b-button-group size="lg">
-      <b-button variant="primary" @click="changeCalendarScope(-7)">
-        <span class="oi oi-chevron-left" aria-hidden="true" />
-      </b-button>
-      <b-button variant="outline-primary" @click="returnToCurrentWeek">
-        {{startDate | moment("MMMM Do YYYY")}} - {{endDate | moment("MMMM Do YYYY")}}
-      </b-button>
-      <b-button variant="primary" @click="changeCalendarScope(+7)">
-        <span class="oi oi-chevron-right" aria-hidden="true" />
-      </b-button>
-    </b-button-group>
-  </div>
-
-  <div class="text-right">
-    <b-form-checkbox v-model="hideCalendarsBeforeToday">
-      Hide widgets before today
-    </b-form-checkbox>
-  </div>
+  <b-row>
+    <b-col cols="12">
+      <div class="text-center">
+        <b-button-group>
+          <b-button variant="primary" @click="changeCalendarScope(-7)">
+            <span class="oi oi-chevron-left" aria-hidden="true" />
+          </b-button>
+          <b-button variant="outline-primary" @click="returnToCurrentWeek">
+            {{startDate | moment("MMMM Do YYYY")}} - {{endDate | moment("MMMM Do YYYY")}}
+          </b-button>
+          <b-button variant="primary" @click="changeCalendarScope(+7)">
+            <span class="oi oi-chevron-right" aria-hidden="true" />
+          </b-button>
+        </b-button-group>
+      </div>
+    </b-col>
+    <b-col cols="12" class="d-none d-md-block">
+      <div class="text-right">
+        <b-form-checkbox v-model="hideCalendarsBeforeToday">
+          Hide widgets before today
+        </b-form-checkbox>
+      </div>
+    </b-col>
+    <b-col cols="12" class="d-block d-md-none">
+      <br/>
+      <div class="text-center">
+        <b-form-checkbox v-model="hideCalendarsBeforeToday">
+          Hide widgets before today
+        </b-form-checkbox>
+      </div>
+    </b-col>
+  </b-row>
   <br/>
 
   <b-row>
-    <b-col cols="4">
+    <b-col cols="12" md="4">
 
       <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-      <b-card no-body header="Recipes">
+      <b-card no-body header="Recipes" id="recipes-card">
         <b-list-group flush>
           <b-list-group-item :disabled="recipe.eaten" v-for="recipe in recipes" :key="recipe.id" class="d-flex justify-content-between align-items-center">
             <span>
@@ -42,7 +54,7 @@
         </b-list-group>
       </b-card>
     </b-col>
-    <b-col cols="8">
+    <b-col cols="12" md="8">
       <calendar-widget
         v-for="(cal, i) in calendarsForWeek"
         :key="i"
@@ -202,3 +214,9 @@ export default {
   }
 };
 </script>
+
+<style>
+#recipes-card {
+  margin-bottom: 1.25rem;
+}
+</style>
