@@ -14,7 +14,7 @@
       </b-input-group>
     </b-col>
   </b-row>
-  <b-table responsive bordered :items="nodes" :fields="fields" :sort-by="sortBy">
+  <b-table responsive bordered :items="nodes" :fields="fields">
     <template slot="HEAD_actions" slot-scope="actions">
       <b-button variant="outline-primary" block size="sm" @click.stop="addNewRecipe">Add new recipe</b-button>
     </template>
@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       error: null,
-      sortBy: "name",
       filter: null,
       excludeEaten: false,
       queryFilter: null,

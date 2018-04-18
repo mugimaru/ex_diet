@@ -9,6 +9,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     Food.Ingredient
     |> Food.Queries.Ingredient.for_user_or_global(user)
     |> Food.Queries.Ingredient.search(args)
+    |> Food.Queries.Ingredient.recent_first()
     |> Connection.from_query(&Repo.all/1, args)
   end
 
@@ -16,6 +17,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     Food.Ingredient
     |> Food.Queries.Ingredient.global()
     |> Food.Queries.Ingredient.search(args)
+    |> Food.Queries.Ingredient.recent_first()
     |> Connection.from_query(&Repo.all/1, args)
   end
 
@@ -23,6 +25,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     Food.Recipe
     |> Food.Queries.Calendar.for_user(user)
     |> Food.Queries.Recipe.search(args)
+    |> Food.Queries.Ingredient.recent_first()
     |> Connection.from_query(&Repo.all/1, args)
   end
 

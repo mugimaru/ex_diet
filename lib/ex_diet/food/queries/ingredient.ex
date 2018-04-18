@@ -6,6 +6,10 @@ defmodule ExDiet.Food.Queries.Ingredient do
     from(q in query, where: is_nil(q.user_id))
   end
 
+  def recent_first(query) do
+    from(q in query, order_by: [desc: q.updated_at])
+  end
+
   def search(query, %{filter: filter}) when not is_nil(filter) do
     from(q in query, where: ilike(q.name, ^"%#{filter}%"))
   end

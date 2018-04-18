@@ -8,7 +8,7 @@
       <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
     </b-input-group-append>
   </b-input-group>
-  <b-table bordered :items="nodes" :fields="fields" :sort-by="sortBy">
+  <b-table bordered :items="nodes" :fields="fields">
     <template slot="actions" slot-scope="row">
       <b-button-group size="sm">
         <b-button variant="outline-success" size="sm" @click.stop="editIngredient(row.item)"> Edit </b-button>
@@ -33,7 +33,6 @@ export default {
   data() {
     return {
       error: null,
-      sortBy: "name",
       filter: null,
       queryFilter: null,
       fields: [
