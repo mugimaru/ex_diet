@@ -69,7 +69,7 @@
         </template>
       </thead>
       <draggable v-if="editCalendar" v-model="editCalendar.meals" :element="'tbody'">
-        <tr v-for="(meal, i) in editCalendar.meals" :key="meal.id || `${meal.name}-${i}`">
+        <tr v-for="(meal, i) in editCalendar.meals" :key="meal.id || meal.tmpId">
           <td v-if="meal.ingredient">
             <ingredients-search-input
               size="sm"
@@ -144,6 +144,12 @@ const emptyNfData = () =>
     acc[key] = 0;
     return acc;
   }, {});
+
+const ID = () =>
+  "_" +
+  Math.random()
+    .toString(36)
+    .substr(2, 9);
 
 export default {
   name: "calendar-widget",
@@ -220,10 +226,16 @@ export default {
   },
   methods: {
     addRecipeMeal() {
-      this.editCalendar.meals.push({ weight: 0, recipeId: null, recipe: {} });
+      this.editCalendar.meals.push({
+        tmpId: ID(),
+        weight: 0,
+        recipeId: null,
+        recipe: {}
+      });
     },
     addIngredientMeal() {
       this.editCalendar.meals.push({
+        tmpId: ID(),
         weight: 0,
         ingredientId: null,
         ingredient: {}
