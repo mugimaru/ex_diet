@@ -19,7 +19,7 @@ export default {
     options() {
       return this.recipes.map(function(recipe) {
         return { value: recipe, text: recipe.name };
-      });
+      }).sort(r => r.value.eaten);
     }
   },
   methods: {
