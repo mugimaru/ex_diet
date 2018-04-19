@@ -178,7 +178,7 @@ export default {
           const res = fetchMoreResult.listRecipes;
 
           return {
-            listIngredients: {
+            listRecipes: {
               __typename: prevRes.__typename,
               edges: [...prevRes.edges, ...res.edges],
               pageInfo: res.pageInfo
