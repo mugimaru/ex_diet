@@ -69,6 +69,7 @@ defmodule ExDiet.Food.NutritionFacts do
           |> Map.get(key)
           |> Decimal.div(Decimal.new(recipe.weight_cooked))
           |> Decimal.mult(100)
+
         %{struct | key => value}
       end)
     )

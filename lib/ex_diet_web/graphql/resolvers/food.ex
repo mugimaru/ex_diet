@@ -37,14 +37,14 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     |> Food.create_ingredient()
   end
 
-  def update_ingredient(_, %{id: id, input: args}, _) do
-    with {:ok, ingredient} <- Repo.fetch(Food.Ingredient, id) do
+  def update_ingredient(_, %{id: id, input: args}, %{context: %{user: user}}) do
+    with {:ok, ingredient} <- Repo.fetch_by(Food.Ingredient, id: id, user_id: user.id) do
       Food.update_ingredient(ingredient, args)
     end
   end
 
-  def delete_ingredient(_, %{id: id}, _) do
-    with {:ok, ingredient} <- Repo.fetch(Food.Ingredient, id) do
+  def delete_ingredient(_, %{id: id}, %{context: %{user: user}}) do
+    with {:ok, ingredient} <- Repo.fetch_by(Food.Ingredient, id: id, user_id: user.id) do
       Food.delete_ingredient(ingredient)
     end
   end
@@ -52,19 +52,20 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
   def create_recipe(_, %{input: args}, %{context: %{user: user}}) do
     args
     |> Map.put_new(:user_id, user.id)
+    |> put_user_id_into_new_ingredients(user.id)
     |> Food.create_recipe()
   end
 
-  def update_recipe(_, %{id: id, input: args}, _) do
-    with {:ok, recipe} <- Repo.fetch(Food.Recipe, id) do
+  def update_recipe(_, %{id: id, input: args}, %{context: %{user: user}}) do
+    with {:ok, recipe} <- Repo.fetch_by(Food.Recipe, id: id, user_id: user.id) do
       recipe = Repo.preload(recipe, :recipe_ingredients)
 
-      Food.update_recipe(recipe, args)
+      Food.update_recipe(recipe, put_user_id_into_new_ingredients(args, user.id))
     end
   end
 
-  def delete_recipe(_, %{id: id}, _) do
-    with {:ok, recipe} <- Repo.fetch(Food.Recipe, id) do
+  def delete_recipe(_, %{id: id}, %{context: %{user: user}}) do
+    with {:ok, recipe} <- Repo.fetch_by(Food.Recipe, id: id, user_id: user.id) do
       Food.delete_recipe(recipe)
     end
   end
@@ -75,13 +76,27 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     |> Food.create_calendar()
   end
 
-  def update_calendar(_, %{id: id, input: args}, _) do
-    with {:ok, calendar} <- Repo.fetch(Food.Calendar, id) do
+  def update_calendar(_, %{id: id, input: args}, %{context: %{user: user}}) do
+    with {:ok, calendar} <- Repo.fetch_by(Food.Calendar, id: id, user_id: user.id) do
       Food.update_calendar(calendar, args)
     end
   end
 
   def nutrient_fact(parent, _args, %{definition: %{name: field}}) do
     {:ok, ExDiet.Food.NutritionFacts.calculate_one(parent, String.to_existing_atom(field))}
+  end
+
+  defp put_user_id_into_new_ingredients(attrs, user_id) do
+    Map.put(
+      attrs,
+      :recipe_ingredients,
+      Enum.map(Map.get(attrs, :recipe_ingredients), fn
+        %{ingredient: %{}} = ri ->
+          Map.put(ri, :ingredient, Map.put(ri[:ingredient], :user_id, user_id))
+
+        ri ->
+          ri
+      end)
+    )
   end
 end

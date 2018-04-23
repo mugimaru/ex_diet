@@ -58,6 +58,7 @@ defmodule ExDiet.GraphQLCase do
       def global_id(%ExDiet.Food.Recipe{id: id}), do: Absinthe.Relay.Node.to_global_id("Recipe", id)
       def global_id(%ExDiet.Food.Ingredient{id: id}), do: Absinthe.Relay.Node.to_global_id("Ingredient", id)
       def global_id(%ExDiet.Food.RecipeIngredient{id: id}), do: Absinthe.Relay.Node.to_global_id("RecipeIngredient", id)
+      def global_id(%ExDiet.Accounts.User{id: id}), do: Absinthe.Relay.Node.to_global_id("User", id)
     end
   end
 end

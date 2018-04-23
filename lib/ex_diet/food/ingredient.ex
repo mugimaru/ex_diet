@@ -41,7 +41,7 @@ defmodule ExDiet.Food.Ingredient do
     |> validate_number(:fat, greater_than_or_equal_to: 0)
     |> validate_number(:carbonhydrate, greater_than_or_equal_to: 0)
     |> validate_number(:energy, greater_than_or_equal_to: 0)
-    |> validate_required([:name, :protein, :fat, :carbonhydrate, :energy])
+    |> validate_required([:name, :protein, :fat, :carbonhydrate, :energy, :user_id])
     |> unique_constraint(:name, name: :ingredients_name_uniq_idx)
   end
 end
