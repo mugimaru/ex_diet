@@ -60,8 +60,6 @@ defmodule ExDiet.Food.NutritionFacts do
   def calculate(%Recipe{} = recipe) do
     recipe = Repo.preload(recipe, recipe_ingredients: :ingredient)
 
-    ingredients_weight = Enum.reduce(recipe.recipe_ingredients, 0, &(&1.weight + &2))
-
     new(
       Enum.reduce(@nutrients, sum_nutrition_facts(recipe.recipe_ingredients), fn key, struct ->
         value =
