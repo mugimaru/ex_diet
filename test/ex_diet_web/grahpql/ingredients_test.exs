@@ -31,6 +31,72 @@ defmodule ExDietWeb.GraphQL.IngredientsTest do
   }
   """
 
+  describe "`deleteIngredient` mutation" do
+    test "requires auth" do
+      ingredient = insert(:ingredient)
+
+      result =
+        build_conn()
+        |> graphql_send(@delete_query, %{id: global_id(ingredient)})
+        |> graphql_errors()
+
+      assert [%{code: "authentication_required"}] = result
+    end
+
+    test "allows to delete personal ingredient" do
+      ingredient = insert(:ingredient)
+
+      result =
+        build_conn()
+        |> authenticate(ingredient.user)
+        |> graphql_send(@delete_query, %{id: global_id(ingredient)})
+        |> graphql_result(:deleteIngredient)
+
+      assert %{id: global_id(ingredient)} == result
+    end
+
+    test "does not allow to delete other user ingredient" do
+      user = insert(:user)
+      ingredient = insert(:ingredient)
+
+      result =
+        build_conn()
+        |> authenticate(user)
+        |> graphql_send(@delete_query, %{id: global_id(ingredient)})
+        |> graphql_errors()
+
+      assert [%{code: "not_found"}] = result
+    end
+
+    test "does not allow to delete an ingredient that linked to recipe" do
+      user = insert(:user)
+      ingredient = insert(:ingredient, user: user)
+      :recipe |> insert(user: user) |> with_ingredient(ingredient, 200)
+
+      result =
+        build_conn()
+        |> authenticate(user)
+        |> graphql_send(@delete_query, %{id: global_id(ingredient)})
+        |> graphql_errors()
+
+      assert [%{code: "referenced"}] = result
+    end
+
+    test "does not allow to delete an ingredient that linked to calendar" do
+      user = insert(:user)
+      ingredient = insert(:ingredient, user: user)
+      :calendar |> insert(user: user) |> with_ingredient(ingredient, 200)
+
+      result =
+        build_conn()
+        |> authenticate(user)
+        |> graphql_send(@delete_query, %{id: global_id(ingredient)})
+        |> graphql_errors()
+
+      assert [%{code: "referenced"}] = result
+    end
+  end
+
   test "an ability to create, update, read and delete ingredients" do
     user = insert(:user)
     # create

@@ -18,6 +18,7 @@ defmodule ExDietWeb.GraphQL.Errors do
 
   @spec from_code(atom) :: {:error, map}
 
+  def from_code(:referenced), do: referenced()
   def from_code(:not_found), do: not_found()
   def from_code(:invalid_credentials), do: invalid_credentials()
 
@@ -25,6 +26,13 @@ defmodule ExDietWeb.GraphQL.Errors do
 
   def not_found do
     {:error, %{message: dgettext("errors", "resource not found"), code: "not_found"}}
+  end
+
+  @spec referenced() :: {:error, map}
+
+  def referenced do
+    {:error,
+     %{message: dgettext("errors", "resource is referenced by others and can not be deleted"), code: "referenced"}}
   end
 
   @spec authentication_required() :: {:error, map}

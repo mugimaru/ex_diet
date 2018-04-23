@@ -4,7 +4,7 @@ defmodule ExDiet.Food.Recipe do
   use ExDiet.Schema
   import Ecto.Changeset
 
-  alias ExDiet.Food.{RecipeIngredient, Ingredient}
+  alias ExDiet.Food.{RecipeIngredient, Ingredient, Meal}
 
   @type t :: %__MODULE__{
           id: String.t(),
@@ -15,6 +15,7 @@ defmodule ExDiet.Food.Recipe do
           recipe_ingredients: list(RecipeIngredient),
           weight_cooked: integer | nil,
           eaten: boolean,
+          meals: list(Meal.t()),
           inserted_at: %DateTime{},
           updated_at: %DateTime{}
         }
@@ -26,6 +27,7 @@ defmodule ExDiet.Food.Recipe do
     field(:eaten, :boolean)
 
     belongs_to(:user, ExDiet.Accounts.User)
+    has_many(:meals, Meal)
     has_many(:recipe_ingredients, RecipeIngredient, on_replace: :delete)
     many_to_many(:ingredients, Ingredient, join_through: RecipeIngredient)
 

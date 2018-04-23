@@ -28,7 +28,17 @@ defmodule ExDiet.Factory do
     }
   end
 
-  def with_ingredient(recipe, ingredient, weight) do
+  def with_recipe(%ExDiet.Food.Calendar{} = calendar, recipe, weight) do
+    insert(:recipe_meal, calendar: calendar, recipe: recipe, weight: weight)
+    calendar
+  end
+
+  def with_ingredient(%ExDiet.Food.Calendar{} = calendar, ingredient, weight) do
+    insert(:ingredient_meal, calendar: calendar, ingredient: ingredient, weight: weight)
+    calendar
+  end
+
+  def with_ingredient(%ExDiet.Food.Recipe{} = recipe, ingredient, weight) do
     insert(:recipe_ingredient, recipe: recipe, ingredient: ingredient, weight: weight)
     recipe
   end

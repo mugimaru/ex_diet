@@ -116,6 +116,19 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
   end
 
   describe "`deleteRecipe` mutation" do
+    test "does not allow to delete recipe that linked to calendar", %{user: user} do
+      recipe = insert(:recipe, user: user)
+      :calendar |> insert(user: user) |> with_recipe(recipe, 200)
+
+      result =
+        build_conn()
+        |> authenticate(user)
+        |> graphql_send(@delete_recipe_gql, %{id: global_id(recipe)})
+        |> graphql_errors()
+
+      assert [%{code: "referenced"}] = result
+    end
+
     test "does not allow to delete other user recipe", %{user: user} do
       recipe = insert(:recipe)
 

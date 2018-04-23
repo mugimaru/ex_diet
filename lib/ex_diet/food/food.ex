@@ -21,7 +21,13 @@ defmodule ExDiet.Food do
   end
 
   def delete_ingredient(%Ingredient{} = ingredient) do
-    Repo.delete(ingredient)
+    case count_references(ingredient) do
+      0 ->
+        Repo.delete(ingredient)
+
+      _ ->
+        {:error, :referenced}
+    end
   end
 
   def create_recipe(attrs \\ %{}) do
@@ -37,7 +43,13 @@ defmodule ExDiet.Food do
   end
 
   def delete_recipe(%Recipe{} = recipe) do
-    Repo.delete(recipe)
+    case count_references(recipe) do
+      0 ->
+        Repo.delete(recipe)
+
+      _ ->
+        {:error, :referenced}
+    end
   end
 
   def create_calendar(attrs) do
@@ -58,5 +70,17 @@ defmodule ExDiet.Food do
       end)
 
     res
+  end
+
+  defp count_references(%Ingredient{} = entity), do: count_references(entity, [:meals, :recipe_ingredients])
+  defp count_references(%Recipe{} = entity), do: count_references(entity, [:meals])
+
+  defp count_references(entity, assocs) do
+    Enum.reduce(assocs, 0, fn assoc, acc ->
+      acc +
+        Repo.one(
+          from(q in entity.__struct__, join: a in assoc(q, ^assoc), where: q.id == ^entity.id, select: count(a.id))
+        )
+    end)
   end
 end
