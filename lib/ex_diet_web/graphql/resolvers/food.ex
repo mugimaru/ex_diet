@@ -7,15 +7,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
 
   def list_ingredients(_parent, args, %{context: %{user: user}}) do
     Food.Ingredient
-    |> Food.Queries.Ingredient.for_user_or_global(user)
-    |> Food.Queries.Ingredient.search(args)
-    |> Food.Queries.Ingredient.recent_first()
-    |> Connection.from_query(&Repo.all/1, args)
-  end
-
-  def list_ingredients(_parent, args, _res) do
-    Food.Ingredient
-    |> Food.Queries.Ingredient.global()
+    |> Food.Queries.Calendar.for_user(user)
     |> Food.Queries.Ingredient.search(args)
     |> Food.Queries.Ingredient.recent_first()
     |> Connection.from_query(&Repo.all/1, args)
