@@ -18,6 +18,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     |> Food.Queries.Calendar.for_user(user)
     |> Food.Queries.Recipe.search(args)
     |> Food.Queries.Ingredient.recent_first()
+    |> Food.Queries.Recipe.preload_ingredients()
     |> Connection.from_query(&Repo.all/1, args)
   end
 

@@ -18,7 +18,7 @@
 - [x] build graphql API
 - [x] deployment
 - [ ] docs & test coverage
-- [ ] fix SQL n+1 on recipe/calendar eatable attributes
+- [x] fix SQL n+1 on recipe/calendar eatable attributes
 
 ### Frontend
 - [x] bootstrap an UI with vuejs
