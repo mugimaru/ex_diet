@@ -21,11 +21,6 @@ defmodule ExDiet.Food.Queries.Recipe do
   end
 
   def preload_ingredients(query) do
-    from(
-      q in query,
-      join: ri in assoc(q, :recipe_ingredients),
-      join: i in assoc(ri, :ingredient),
-      preload: [recipe_ingredients: {ri, ingredient: i}]
-    )
+    from(q in query, preload: [recipe_ingredients: [:ingredient]])
   end
 end
