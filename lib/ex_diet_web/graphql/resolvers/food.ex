@@ -87,7 +87,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     {:ok, ExDiet.Food.NutritionFacts.calculate_one(parent, String.to_existing_atom(field))}
   end
 
-  defp put_user_id_into_new_ingredients(attrs, user_id) do
+  defp put_user_id_into_new_ingredients(%{recipe_ingredients: _} = attrs, user_id) do
     Map.put(
       attrs,
       :recipe_ingredients,
@@ -100,4 +100,6 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
       end)
     )
   end
+
+  defp put_user_id_into_new_ingredients(attrs, _user_id), do: attrs
 end

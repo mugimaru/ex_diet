@@ -25,6 +25,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
       name
       description
       weight_cooked
+      eaten
       recipeIngredients {
         ingredient {
           name
@@ -103,6 +104,7 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
                name: "foo",
                description: "bar",
                weight_cooked: 100,
+               eaten: false,
                recipeIngredients: [
                  %{ingredient: %{name: new_ingredient.name, user: %{id: global_id(user)}}, weight: 31},
                  %{ingredient: %{name: ingredient.name, user: %{id: global_id(user)}}, weight: ri.weight},
@@ -110,8 +112,20 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
                ]
              } == result
 
-      {:ok, newIngredient} = ExDiet.Repo.fetch_by(ExDiet.Food.Ingredient, name: new_ingredient.name)
-      assert newIngredient.user_id == user.id
+      {:ok, new_ingredient} = ExDiet.Repo.fetch_by(ExDiet.Food.Ingredient, name: new_ingredient.name)
+      assert new_ingredient.user_id == user.id
+    end
+
+    test "provides an ability to mark recipe as eaten", %{user: user} do
+      recipe = insert(:recipe, description: "bar", user: user)
+
+      result =
+        build_conn()
+        |> authenticate(user)
+        |> graphql_send(@update_recipe_gql, %{id: global_id(recipe), input: %{eaten: true}})
+        |> graphql_result(:updateRecipe)
+
+      assert result[:eaten] == true
     end
   end
 
