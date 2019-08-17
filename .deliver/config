@@ -22,7 +22,7 @@ pre_erlang_clean_compile() {
     npm --prefix ./assets install
     npm --prefix ./assets run build
 
-    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
+    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phx.digest $SILENCE
   "
 }
 
