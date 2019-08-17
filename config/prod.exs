@@ -15,7 +15,17 @@ use Mix.Config
 # which you typically run after static files are built.
 
 # Do not print debug messages in production
-config :logger, level: :info
+
+config :logger,
+  backends: [
+    {LoggerFileBackend, :app_log}
+  ]
+
+config :logger, :app_log,
+  path: "/srv/projects/ex_diet/var/log/prod.log",
+  format: "$dateT$time [$level] $levelpad$metadata$message\n",
+  metadata: [:request_id],
+  level: :info
 
 # ## SSL Support
 #

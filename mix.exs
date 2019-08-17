@@ -60,7 +60,8 @@ defmodule ExDiet.Mixfile do
       {:ex_machina, "~> 2.2", only: :test},
       {:excoveralls, "~> 0.8", only: :test},
       {:cowboy, "~> 2.0"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:logger_file_backend, "~> 0.0.11"}
     ]
   end
 
