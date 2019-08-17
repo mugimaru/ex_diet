@@ -59,7 +59,8 @@ defmodule ExDiet.Mixfile do
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:ex_machina, "~> 2.2", only: :test},
       {:excoveralls, "~> 0.8", only: :test},
-      {:cowboy, "~> 2.0"}
+      {:cowboy, "~> 2.0"},
+      {:jason, "~> 1.1"}
     ]
   end
 
