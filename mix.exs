@@ -56,7 +56,7 @@ defmodule ExDiet.Mixfile do
       {:edeliver, "~> 1.5.0"},
       {:distillery, "~> 1.5.0", runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:ex_machina, "~> 2.2", only: :test},
       {:excoveralls, "~> 0.8", only: :test},
