@@ -29,7 +29,7 @@ defmodule ExDiet.Food.NutritionFacts do
     struct(
       __MODULE__,
       Enum.reduce(@nutrients, map, fn key, map ->
-        Map.put(map, key, Decimal.new(Map.get(map, key, 0)))
+        Map.put(map, key, Decimal.cast(Map.get(map, key, 0)))
       end)
     )
   end
@@ -46,7 +46,7 @@ defmodule ExDiet.Food.NutritionFacts do
     meal = Repo.preload(meal, [:recipe, :ingredient])
 
     Enum.reduce(@nutrients, calculate(entity(meal)), fn key, nf ->
-      %{nf | key => Decimal.mult(Map.get(nf, key), Decimal.new(meal.weight / 100))}
+      %{nf | key => Decimal.mult(Map.get(nf, key), Decimal.cast(meal.weight / 100))}
     end)
   end
 
@@ -65,7 +65,7 @@ defmodule ExDiet.Food.NutritionFacts do
         value =
           struct
           |> Map.get(key)
-          |> Decimal.div(Decimal.new(recipe.weight_cooked))
+          |> Decimal.div(Decimal.cast(recipe.weight_cooked))
           |> Decimal.mult(100)
 
         %{struct | key => value}

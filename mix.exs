@@ -37,16 +37,15 @@ defmodule ExDiet.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.2"},
+      {:phoenix, "~> 1.4.9"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.3"},
+      {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
-      {:cors_plug, "~> 1.5"},
+      {:cors_plug, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:bcrypt_elixir, "~> 1.0"},
-      {:comeonin, "~> 4.0"},
-      {:guardian, "~> 1.0"},
-      {:guardian_db, "~> 1.0"},
+      {:bcrypt_elixir, "~> 2.0"},
+      {:guardian, "~> 2.0"},
+      {:guardian_db, "~> 2.0"},
       {:absinthe, "~> 1.4.9"},
       {:absinthe_plug, "~> 1.4.2"},
       {:absinthe_relay, "~> 1.4.2"},
@@ -60,7 +59,7 @@ defmodule ExDiet.Mixfile do
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:ex_machina, "~> 2.2", only: :test},
       {:excoveralls, "~> 0.8", only: :test},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 2.0"}
     ]
   end
 

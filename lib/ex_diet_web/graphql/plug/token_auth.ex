@@ -21,7 +21,8 @@ defmodule ExDietWeb.GraphQL.Plug.TokenAuth do
       {:error, reason} ->
         conn
         |> put_status(401)
-        |> Phoenix.Controller.render(ErrorView, "401.json", %{reason: reason})
+        |> Phoenix.Controller.put_view(ErrorView)
+        |> Phoenix.Controller.render("401.json", %{reason: reason})
         |> halt()
 
       _ ->

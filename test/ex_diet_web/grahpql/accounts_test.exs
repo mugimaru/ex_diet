@@ -3,8 +3,6 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
   use ExDiet.GraphQLCase
   import ExDiet.Factory
 
-  alias Comeonin.Bcrypt
-
   @create_user_gql """
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -81,7 +79,7 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
         insert(
           :user,
           email: @user_attrs[:email],
-          password_hash: Bcrypt.hashpwsalt(@user_attrs[:password])
+          password_hash: Bcrypt.hash_pwd_salt(@user_attrs[:password])
         )
 
       result =
@@ -111,7 +109,7 @@ defmodule ExDietWeb.GraphQL.AccountsTest do
         insert(
           :user,
           email: @user_attrs[:email],
-          password_hash: Bcrypt.hashpwsalt(@user_attrs[:password])
+          password_hash: Bcrypt.hash_pwd_salt(@user_attrs[:password])
         )
 
       result =

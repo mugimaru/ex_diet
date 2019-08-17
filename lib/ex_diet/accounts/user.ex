@@ -6,7 +6,6 @@ defmodule ExDiet.Accounts.User do
   import Ecto.Query
 
   alias __MODULE__
-  alias Comeonin.Bcrypt
   alias ExDiet.Accounts.Authentication
   alias Guardian.DB.Token
 
@@ -63,7 +62,7 @@ defmodule ExDiet.Accounts.User do
 
   defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: pw}} = changeset) do
     changeset
-    |> put_change(:password_hash, Bcrypt.hashpwsalt(pw))
+    |> put_change(:password_hash, Bcrypt.hash_pwd_salt(pw))
     |> put_change(:password, nil)
   end
 

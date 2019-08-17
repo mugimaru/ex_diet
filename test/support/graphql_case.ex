@@ -41,7 +41,7 @@ defmodule ExDiet.GraphQLCase do
 
       @spec body_json(Plug.Conn.t()) :: map()
       def body_json(conn) do
-        Poison.decode!(conn.resp_body, %{keys: :atoms})
+        Jason.decode!(conn.resp_body, %{keys: :atoms})
       end
 
       def authenticate(conn, %ExDiet.Accounts.User{} = user, opts \\ []) do

@@ -106,8 +106,8 @@ defmodule ExDietWeb.GraphQL.RecipesTest do
                weight_cooked: 100,
                eaten: false,
                recipeIngredients: [
-                 %{ingredient: %{name: new_ingredient.name, user: %{id: global_id(user)}}, weight: 31},
                  %{ingredient: %{name: ingredient.name, user: %{id: global_id(user)}}, weight: ri.weight},
+                 %{ingredient: %{name: new_ingredient.name, user: %{id: global_id(user)}}, weight: 31},
                  %{ingredient: %{name: "Created", user: %{id: global_id(user)}}, weight: 100}
                ]
              } == result
