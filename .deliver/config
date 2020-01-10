@@ -1,10 +1,10 @@
 APP="ex_diet"
 
-BUILD_HOST="do"
+BUILD_HOST="vscale"
 BUILD_USER="service"
-BUILD_AT="/srv/projects/builds/ex_diet"
+BUILD_AT="/home/service/builds/ex_diet"
 
-PRODUCTION_HOSTS="do"
+PRODUCTION_HOSTS="vscale"
 PRODUCTION_USER="service"
 DELIVER_TO="/srv/projects"
 
