@@ -8,89 +8,26 @@
 * [Vue.js](https://vuejs.org/)
 * [TwitterBootstrap 4](https://getbootstrap.com/)
 
-## TODO
-
-### Backend
-- [x] bootstrap a phoenix app
-- [x] setup graphql endpoint
-- [x] setup token authentication
-- [x] build the core domain (ingredients, recipes, meals, calendar, etc)
-- [x] build graphql API
-- [x] deployment
-- [ ] docs & test coverage
-- [x] fix SQL n+1 on recipe/calendar eatable attributes
-
-### Frontend
-- [x] bootstrap an UI with vuejs
-- [x] implement authentication
-- [x] add ingredients crud
-- [x] add recipes
-- [x] add calendar dashboard
-- [x] dashboard forms validation
-- [x] replace font-awesome with something that fits twbs better
-- [ ] write tests
-- [ ] improve UX
-
-### Global
-- [ ] Implement user profile (energy/macronutrients thresholds & body params)
-- [ ] Find better way to serve static assets on production (proxy / -> /index.html)
-- [ ] Consider having multiple profiles per account or connected accounts with shared recipes pool (several people, same fridge)
-- [ ] I18n
-
 ## Development
 
-### Docker
+With docker and docker-compose installed.
 
-prepare an image
-```
-docker-compose build web
-docker-compose run web mix ecto.prepare
-```
+build images
 
-```
-docker-compose up web
-```
+    make compose-build
 
-### Localhost
+run application
 
-```
-# prepare backend
-mix deps.get
-mix ecto.prepare
+    make compose-up
 
-# prepare frontend
-cd assets && npm install && cd -
+run backend tests
 
-# start everything with foreman
-gem install foreman
-foremant start
-```
+    make compose-be-make-test
 
-### Graphql tools
+run bash inside backend container
 
-Update schema.graphql
-```
-npm install -g get-graphql-schema
-get-graphql-schema http://localhost:4000/api/graphql > schema.graphql
-```
+    make compose-be-run-bash
 
-Run graphql playground
-```
-npm install -g graphql-cli
-graphql playground
-```
+run bash inside frontend container
 
-## Test
-
-### Docker
-
-```
-docker-compose run --rm test
-```
-
-### Localhost
-
-```
-mix deps.get
-mix test
-```
+    make compose-fe-run-bash

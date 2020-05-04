@@ -1,44 +1,37 @@
-version: '3.5'
+version: "3.7"
 
 services:
-  web:
+  frontend:
+    build: ./frontend
+    ports:
+      - "4001:4001"
+    command: npm run serve
+    working_dir: /app
+    user: ${HOST_UID_GID}
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+
+  backend:
     build: .
     ports:
       - "4000:4000"
     command: mix phx.server
     working_dir: /app
+    user: ${HOST_UID_GID}
     environment:
-      BUILD_PATH: /appdata/_build
-      DEPS_PATH: /appdata/deps
-      MIX_ENV: test
+      MIX_ENV: ${MIX_ENV:-dev}
       PG_USER: "postgres"
       PG_PASSWORD: "postgres"
       PG_HOST: "db"
-    links:
+    depends_on:
       - db
     volumes:
       - .:/app
-      - appdata:/appdata
-
-  test:
-    image: exdiet_web
-    command: mix do deps.get, test
-    working_dir: /app
-    environment:
-      BUILD_PATH: /appdata/_build
-      DEPS_PATH: /appdata/deps
-      MIX_ENV: test
-      PG_USER: "postgres"
-      PG_PASSWORD: "postgres"
-      PG_HOST: "db"
-    links:
-      - db
-    volumes:
-      - .:/app
-      - appdata:/appdata
 
   db:
-    image: postgres
+    image: postgres:10-alpine
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -47,5 +40,4 @@ services:
       - pgdata:/var/lib/postgresql/data
 
 volumes:
-  appdata: {}
   pgdata: {}
