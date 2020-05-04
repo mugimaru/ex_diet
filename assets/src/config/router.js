@@ -8,6 +8,8 @@ import CalendarDashboard from '../components/calendar/Dashboard.vue';
 import Guard from '../services/authMiddleware.js';
 
 export default new Router({
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
   routes: [
     { path: '/', component: Index },
     { path: '/login', component: AppLogin, beforeEnter: Guard.guest },
