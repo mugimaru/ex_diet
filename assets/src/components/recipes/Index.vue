@@ -101,7 +101,7 @@
 <script>
 import listRecipesQuery from '@/graphql/queries/listRecipes.graphql';
 import deleteRecipeMutation from '@/graphql/mutations/deleteRecipe.graphql';
-import { EventBus } from '@/config/eventBus.js';
+import { EventBus } from '@/config/eventBus';
 
 export default {
   name: 'recipes-index',
@@ -165,10 +165,10 @@ export default {
     },
   },
   methods: {
-    onSearchInput: _.debounce(function () {
+    onSearchInput() {
       this.queryFilter = this.filter;
       this.refetch();
-    }, 600),
+    },
     clearSearch() {
       this.filter = null;
       this.queryFilter = null;
@@ -200,7 +200,7 @@ export default {
           mutation: deleteRecipeMutation,
           variables: { id: item.id },
         })
-        .then((result) => {
+        .then(() => {
           EventBus.$emit(
             'notification',
             `Recipe "${item.name}" has been successfully deleted.`,

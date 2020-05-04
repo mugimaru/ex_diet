@@ -73,7 +73,7 @@ function calculateNutritionFact(item, field, prescision) {
   if (!item.ingredient || !item.ingredient[field]) {
     return null;
   }
-  if (item.weight == 0) {
+  if (item.weight === 0) {
     return 0;
   }
   return (item.ingredient[field] * item.weight / 100).toFixed(prescision);

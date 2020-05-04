@@ -3,6 +3,10 @@ const path = require('path');
 module.exports = {
   lintOnSave: false,
   devServer: {
+    overlay: {
+      warnings: true,
+      errors: true,
+    },
     proxy: {
       '/api': {
         target: 'http://loclahost:4000/api',

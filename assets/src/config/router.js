@@ -5,7 +5,7 @@ import Ingredients from '../components/ingredients/Index.vue';
 import Recipes from '../components/recipes/Index.vue';
 import EditRecipe from '../components/recipes/NewOrEdit.vue';
 import CalendarDashboard from '../components/calendar/Dashboard.vue';
-import Guard from '../services/authMiddleware.js';
+import Guard from '../services/authMiddleware';
 
 export default new Router({
   linkActiveClass: 'active',

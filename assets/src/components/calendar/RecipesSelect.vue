@@ -35,7 +35,7 @@ export default {
     },
   },
   created() {
-    const recipe = this.recipes.find((rec) => rec.id == this.value.id);
+    const recipe = this.recipes.find((rec) => rec.id === this.value.id);
     if (recipe) {
       this.selected = recipe;
     }

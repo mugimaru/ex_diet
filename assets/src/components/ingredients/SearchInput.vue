@@ -48,7 +48,7 @@
         >
           {{item.title}}
         </b-dropdown-item-button>
-        <b-dropdown-item-button v-if="!allowAddNew && dropdownItems.length == 0">
+        <b-dropdown-item-button v-if="!allowAddNew && dropdownItems.length === 0">
           Nothing found
         </b-dropdown-item-button>
       </div>
@@ -120,7 +120,7 @@ export default {
         this.$emit('input', {});
       }
     },
-    onFocusLost(e) {
+    onFocusLost() {
       setTimeout(() => (this.focused = false), 100);
     },
     onSelected(node) {

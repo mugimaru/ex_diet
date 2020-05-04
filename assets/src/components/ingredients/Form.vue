@@ -105,7 +105,7 @@ export default {
       this.error = null;
       this.$emit('reset');
     },
-    onSubmit(event) {
+    onSubmit() {
       this.error = null;
       const {
         name, protein, fat, carbonhydrate, energy,
@@ -135,7 +135,7 @@ export default {
           mutation,
           variables,
         })
-        .then((result) => {
+        .then(() => {
           const event = this.ingredient.id ? 'updated' : 'created';
           this.$emit(event, this.ingredient);
         })

@@ -234,7 +234,6 @@ import {
   required,
   requiredIf,
   minValue,
-  minLength,
 } from 'vuelidate/lib/validators';
 
 import moment from 'moment';
@@ -309,7 +308,7 @@ export default {
       });
     },
     totalNutritionFacts() {
-      if (this.mealsNutritionFacts.length == 0) {
+      if (this.mealsNutritionFacts.length === 0) {
         return emptyNfData();
       }
 
@@ -361,12 +360,9 @@ export default {
             : createCalendarMutation,
           variables: vars,
         })
-        .then((result) => {
+        .then(() => {
           this.$emit('updated', this.editCalendar);
           this.editCalendar = null;
-        })
-        .catch((e) => {
-          console.dir(e);
         });
     },
     toggleChartMode() {

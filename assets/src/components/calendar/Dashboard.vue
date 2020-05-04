@@ -135,8 +135,7 @@ export default {
       const notEatenRecipesId = this.notEatenRecipes.map((edge) => edge.node.id);
       return this._.uniqBy(
         this._.compact(
-          this._.flatMap(this.calendars, (cal) => cal.meals.map((meal) => meal.recipe),
-          ),
+          this._.flatMap(this.calendars, (cal) => cal.meals.map((meal) => meal.recipe)),
         ),
         (recipe) => recipe.id,
       ).filter((recipe) => !notEatenRecipesId.includes(recipe.id));
@@ -168,8 +167,8 @@ export default {
 
       const comp = this;
       return this._.range(range).map((n) => {
-        const date = n == 0 ? moment(startDate) : moment(startDate).add(n, 'days');
-        const cal = comp.calendars.find(cal => date.isSame(cal.day, "day"));
+        const date = n === 0 ? moment(startDate) : moment(startDate).add(n, 'days');
+        const cal = comp.calendars.find((c) => date.isSame(c.day, 'day'));
 
         return cal || { day: date.format('YYYY-MM-DD'), meals: [] };
       });
@@ -221,9 +220,8 @@ export default {
       this.$apollo.queries.calendars.refetch();
     },
     changeSetHideCalendarsBeforeToday() {
-      this.hideCalendarsBeforeToday =
-        moment(this.startDate).isSame(moment().startOf("isoweek"), "day") &&
-        moment(this.endDate).isSame(moment().endOf("isoWeek"), "day");
+      this.hideCalendarsBeforeToday = moment(this.startDate).isSame(moment().startOf('isoweek'), 'day')
+        && moment(this.endDate).isSame(moment().endOf('isoWeek'), 'day');
     },
     returnToCurrentWeek() {
       const startOfCurrentWeek = moment().startOf('isoWeek');
@@ -247,7 +245,7 @@ export default {
           mutation: updateRecipeMutation,
           variables: { id: recipeId, input: { eaten: true } },
         })
-        .then((result) => {
+        .then(() => {
           this.$apollo.queries.notEatenRecipes.refetch();
           this.$apollo.queries.calendars.refetch();
         })

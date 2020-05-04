@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import ingredientsSearchInput from './ingredients/SearchInput.vue';
 
 export default {
   name: 'index',

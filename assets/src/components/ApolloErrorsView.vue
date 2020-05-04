@@ -2,7 +2,7 @@
   <div class="apollo-errors-view">
     <b-list-group
       flush
-      v-if="variant == 'list'"
+      v-if="variant === 'list'"
       :show="!!error"
     >
       <b-list-group-item
@@ -13,7 +13,7 @@
     </b-list-group>
 
     <b-alert
-      v-if="variant == 'dismissible-alert'"
+      v-if="variant === 'dismissible-alert'"
       :show="!!error"
       variant="danger"
       dismissible
@@ -48,7 +48,7 @@ export default {
       if (this.error.graphQLErrors && this.error.graphQLErrors.length > 0) {
         return this.error.graphQLErrors
           .map((e) => {
-            if (e.code == 'validation_error') {
+            if (e.code === 'validation_error') {
               return Object.keys(e.fields).map(
                 (key) => `${key}: ${e.fields[key].join(', ')}`,
               );

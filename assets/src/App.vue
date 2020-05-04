@@ -61,7 +61,7 @@
 
 <script>
 import { SemipolarSpinner } from 'epic-spinners';
-import { EventBus } from './config/eventBus.js';
+import { EventBus } from './config/eventBus';
 
 export default {
   name: 'app',

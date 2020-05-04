@@ -103,7 +103,7 @@ import getRecipe from '@/graphql/queries/getRecipe.graphql';
 import updateRecipeMutation from '@/graphql/mutations/updateRecipe.graphql';
 import createRecipeMutation from '@/graphql/mutations/createRecipe.graphql';
 import marked from 'marked';
-import { EventBus } from '@/config/eventBus.js';
+import { EventBus } from '@/config/eventBus';
 import { required, minValue } from 'vuelidate/lib/validators';
 import formRow from './form/Row.vue';
 
@@ -148,7 +148,7 @@ export default {
   data() {
     return {
       getRecipe: null,
-      recipe: this.id == 'new' ? newRecipe() : null,
+      recipe: this.id === 'new' ? newRecipe() : null,
       error: null,
     };
   },
@@ -189,7 +189,7 @@ export default {
           if (ri.ingredient.id) {
             riParams.ingredientId = ri.ingredient.id;
           } else {
-            riParams.ingredient = _.pick(
+            riParams.ingredient = this._.pick(
               ri.ingredient,
               'name',
               'protein',
@@ -210,7 +210,7 @@ export default {
         carbonhydrate: 0,
         energy: 0,
       };
-      if (!this.recipe || this.recipe.weightCooked == 0) {
+      if (!this.recipe || this.recipe.weightCooked === 0) {
         return data;
       }
       const { weightCooked } = this.recipe;
@@ -229,7 +229,7 @@ export default {
 
       if (ingredientsWeight > 0) {
         Object.keys(data).forEach((key) => {
-          const prescision = key == 'energy' ? 0 : 2;
+          const prescision = key === 'energy' ? 0 : 2;
           data[key] = (data[key] * weightCooked / ingredientsWeight).toFixed(
             prescision,
           );
@@ -254,9 +254,9 @@ export default {
       },
       skip() {
         return (
-          this.id == 'new'
+          this.id === 'new'
           || this.editRecipe
-          || (this.recipe && this.recipe.id == this.id)
+          || (this.recipe && this.recipe.id === this.id)
         );
       },
     },
@@ -271,7 +271,7 @@ export default {
       };
       let mutationName = null;
 
-      if (this.id == 'new') {
+      if (this.id === 'new') {
         mutationName = 'createRecipe';
       } else {
         vars.id = this.id;
@@ -284,7 +284,7 @@ export default {
           variables: vars,
         })
         .then((result) => {
-          const created = this.id == 'new';
+          const created = this.id === 'new';
           EventBus.$emit(
             'notification',
             `Recipe "${this.recipe.name}" has been successfully ${
@@ -321,9 +321,9 @@ export default {
   beforeRouteUpdate(to, from, next) {
     next();
 
-    if (this.id == 'new') {
+    if (this.id === 'new') {
       this.recipe = newRecipe();
-    } else if (this.recipe.id != this.id) {
+    } else if (this.recipe.id !== this.id) {
       this.recipe = null;
       this.$apollo.queries.getRecipe.refetch();
     }

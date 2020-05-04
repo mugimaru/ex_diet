@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { EventBus } from '@/config/eventBus.js';
+import { EventBus } from '@/config/eventBus';
 import Form from './Form.vue';
 import Table from './Table.vue';
 

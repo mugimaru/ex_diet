@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import _ from 'lodash';
 import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql';
 import deleteIngredientMutation from '@/graphql/mutations/deleteIngredient.graphql';
 
@@ -99,10 +98,10 @@ export default {
     },
   },
   methods: {
-    onSearchInput: _.debounce(() => {
+    onSearchInput() {
       this.queryFilter = this.filter;
       this.refetch();
-    }, 600),
+    },
     clearSearch() {
       this.filter = null;
       this.queryFilter = null;
@@ -122,7 +121,7 @@ export default {
           mutation: deleteIngredientMutation,
           variables: { id: item.id },
         })
-        .then((result) => {
+        .then(() => {
           this.$emit('deleted', item);
           this.refetch();
         })
