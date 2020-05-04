@@ -16,7 +16,7 @@ defmodule ExDiet.Food.NutritionFacts do
         }
 
   @nutrients [:protein, :fat, :carbonhydrate, :energy]
-  defstruct(Enum.map(@nutrients, &{&1, Decimal.new(0)}))
+  defstruct(Enum.map(@nutrients, &{&1, Decimal.cast(0)}))
 
   alias ExDiet.Food.{Ingredient, Recipe, RecipeIngredient, Meal, Calendar}
   alias ExDiet.Repo
