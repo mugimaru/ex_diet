@@ -20,6 +20,9 @@ compose-setup:
 compose-up:
 	$(docker-compose) up backend frontend
 
+compose-fe-run-%:
+	$(docker-compose) run --rm frontend $*
+
 compose-be-run-%:
 	$(docker-compose) run --rm backend $*
 
