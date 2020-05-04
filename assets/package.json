@@ -1,59 +1,61 @@
 {
   "name": "ex_diet",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "author": "pochi.73@gmail.com",
-  "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 4001",
     "build": "vue-cli-service build",
-    "test": "vue-cli-service test",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "vue-cli-service test"
   },
   "dependencies": {
-    "apollo-cache-inmemory": "^1.1.12",
-    "apollo-client": "^2.2.8",
-    "apollo-link-http": "^1.5.2",
-    "bootstrap-vue": "^2.0.0-rc.6",
-    "epic-spinners": "^1.0.3",
-    "graphql": "^0.13.2",
-    "graphql-tag": "^2.8.0",
-    "marked": "^0.3.19",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link-http": "^1.5.17",
+    "bootstrap-vue": "^2.13.0",
+    "epic-spinners": "^1.1.0",
+    "graphql": "^14.0.0",
+    "graphql-tag": "^2.10.3",
+    "jquery": "^3.5.0",
+    "marked": "^1.0.0",
+    "moment": "2.24.0",
+    "moment-timezone": "^0.5.28",
     "open-iconic": "^1.1.1",
-    "vue": "^2.5.13",
-    "vue-apollo": "^3.0.0-beta.2",
-    "vue-chartkick": "^0.3.1",
-    "vue-lodash": "^2.0.0",
-    "vue-moment": "^3.2.0",
-    "vue-router": "^3.0.1",
-    "vuedraggable": "^2.16.0",
-    "vuelidate": "^0.6.2"
+    "vue": "^2.6.11",
+    "vue-apollo": "^3.0.3",
+    "vue-chartkick": "^0.6.0",
+    "vue-lodash": "^2.1.2",
+    "vue-moment": "^4.1.0",
+    "vue-router": "^3.1.6",
+    "vuedraggable": "^2.23.2",
+    "vuelidate": "^0.7.5"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.6",
-    "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
-    "@vue/cli-plugin-unit-jest": "^3.0.0-beta.6",
-    "@vue/cli-service": "^3.0.0-beta.6",
-    "@vue/eslint-config-prettier": "^3.0.0-beta.6",
-    "@vue/test-utils": "^1.0.0-beta.10",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
+    "@vue/cli-plugin-unit-jest": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/test-utils": "^1.0.0-beta.33",
+    "acorn": "^7.1.1",
     "babel-core": "^7.0.0-0",
-    "babel-jest": "^22.0.4",
-    "graphql-cli": "^2.15.9",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.5.1",
+    "core-js": "^3.6.5",
+    "eslint": "^6.7.2",
+    "eslint-plugin-graphql": "^3.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.14.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.11.0"
+    "request": "^2.88.2",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0"
   },
   "babel": {
     "presets": [
       "@vue/app"
-    ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/prettier"
     ]
   },
   "postcss": {
@@ -65,5 +67,6 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "license": "MIT"
 }

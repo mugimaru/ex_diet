@@ -1,3 +1,3 @@
 export default {
-  recipeIngredient() {}
+  recipeIngredient() { },
 };

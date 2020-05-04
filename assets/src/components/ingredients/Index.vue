@@ -1,41 +1,51 @@
 <template>
-<div>
-  <b-row>
-    <b-col cols="8">
-      <ingredients-table :search-enabled="true" ref="ingredientsTable" @edit="editIngredient" @deleted="onIngredientDeleted"></ingredients-table>
-    </b-col>
-    <b-col>
-      <ingredient-form :ingredient="ingredient" @updated="onUpdated" @created="onCreated" @reset="resetIngredient"></ingredient-form>
-    </b-col>
-  </b-row>
-</div>
+  <div>
+    <b-row>
+      <b-col cols="8">
+        <ingredients-table
+          :search-enabled="true"
+          ref="ingredientsTable"
+          @edit="editIngredient"
+          @deleted="onIngredientDeleted"
+        ></ingredients-table>
+      </b-col>
+      <b-col>
+        <ingredient-form
+          :ingredient="ingredient"
+          @updated="onUpdated"
+          @created="onCreated"
+          @reset="resetIngredient"
+        ></ingredient-form>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
-import Form from "./Form.vue";
-import Table from "./Table.vue";
-import { EventBus } from "@/config/eventBus.js";
+import { EventBus } from '@/config/eventBus.js';
+import Form from './Form.vue';
+import Table from './Table.vue';
 
 export default {
-  name: "ingredients-index",
+  name: 'ingredients-index',
   components: {
-    "ingredient-form": Form,
-    "ingredients-table": Table
+    'ingredient-form': Form,
+    'ingredients-table': Table,
   },
   data() {
     return {
-      ingredient: this.emptyIngredient()
+      ingredient: this.emptyIngredient(),
     };
   },
   methods: {
     emptyIngredient() {
       return {
         id: null,
-        name: "",
+        name: '',
         protein: 0,
         fat: 0,
         carbonhydrate: 0,
-        energy: 0
+        energy: 0,
       };
     },
     resetAndRefetchIngredient() {
@@ -43,20 +53,20 @@ export default {
       this.$refs.ingredientsTable.refetch();
     },
     onUpdated(item) {
-      this.publishOkMessage(item.name, "updated");
+      this.publishOkMessage(item.name, 'updated');
       this.resetAndRefetchIngredient();
     },
     onCreated(item) {
-      this.publishOkMessage(item.name, "created");
+      this.publishOkMessage(item.name, 'created');
       this.resetAndRefetchIngredient();
     },
     onIngredientDeleted(item) {
-      this.publishOkMessage(item.name, "deleted");
+      this.publishOkMessage(item.name, 'deleted');
     },
     publishOkMessage(name, operation) {
       EventBus.$emit(
-        "notification",
-        `"${name}" has been successfully ${operation}.`
+        'notification',
+        `"${name}" has been successfully ${operation}.`,
       );
     },
     resetIngredient() {
@@ -64,7 +74,7 @@ export default {
     },
     editIngredient(item) {
       this.ingredient = item;
-    }
-  }
+    },
+  },
 };
 </script>

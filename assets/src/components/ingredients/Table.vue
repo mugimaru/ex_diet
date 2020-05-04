@@ -1,34 +1,64 @@
 <template>
-<div>
+  <div>
 
-  <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-  <b-input-group v-if="searchEnabled">
-    <b-form-input v-model="filter" placeholder="Search ingredients" @input="onSearchInput" @keyup.esc.native="clearSearch"  />
-    <b-input-group-append>
-      <b-btn variant="danger" :disabled="!filter" @click="clearSearch">Clear search</b-btn>
-    </b-input-group-append>
-  </b-input-group>
-  <b-table bordered :items="nodes" :fields="fields">
-    <template slot="actions" slot-scope="row">
-      <b-button-group size="sm">
-        <b-button variant="outline-success" size="sm" @click.stop="editIngredient(row.item)"> Edit </b-button>
-        <b-button variant="outline-danger" size="sm" @click.stop="deleteIngredient(row.item)"> Delete </b-button>
-      </b-button-group>
-    </template>
-  </b-table>
-  <b-button v-if="fetchMoreEnabled" size="sm" id="fetchMore" class="float-right" variant="outline-primary" @click="fetchMore">Fetch more</b-button>
-</div>
+    <apollo-errors-view
+      variant="dismissible-alert"
+      :error="error"
+    ></apollo-errors-view>
+    <b-input-group v-if="searchEnabled">
+      <b-form-input
+        v-model="filter"
+        placeholder="Search ingredients"
+        @input="onSearchInput"
+        @keyup.esc.native="clearSearch"
+      />
+      <b-input-group-append>
+        <b-btn
+          variant="danger"
+          :disabled="!filter"
+          @click="clearSearch"
+        >Clear search</b-btn>
+      </b-input-group-append>
+    </b-input-group>
+    <b-table
+      bordered
+      :items="nodes"
+      :fields="fields"
+    >
+      <template v-slot:cell(actions)="row">
+        <b-button-group size="sm">
+          <b-button
+            variant="outline-success"
+            @click.stop="editIngredient(row.item)"
+          > Edit </b-button>
+          <b-button
+            variant="outline-danger"
+            @click.stop="deleteIngredient(row.item)"
+          > Delete </b-button>
+        </b-button-group>
+      </template>
+    </b-table>
+    <b-button
+      v-if="fetchMoreEnabled"
+      size="sm"
+      id="fetchMore"
+      class="float-right"
+      variant="outline-primary"
+      @click="fetchMore"
+    >Fetch more</b-button>
+  </div>
 </template>
 
 <script>
-import allIngredientsQuery from "@/graphql/queries/listIngredients.graphql";
-import deleteIngredientMutation from "@/graphql/mutations/deleteIngredient.graphql";
+import _ from 'lodash';
+import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql';
+import deleteIngredientMutation from '@/graphql/mutations/deleteIngredient.graphql';
 
 export default {
-  name: "ingredients-table",
+  name: 'ingredients-table',
   props: {
     perPage: { default: 10, type: Number },
-    searchEnabled: { default: true, type: Boolean }
+    searchEnabled: { default: true, type: Boolean },
   },
   data() {
     return {
@@ -36,14 +66,14 @@ export default {
       filter: null,
       queryFilter: null,
       fields: [
-        { key: "name", sortable: true },
-        { key: "protein", sortable: true },
-        { key: "fat", sortable: true },
-        { key: "carbonhydrate", sortable: true },
-        { key: "energy", sortable: true },
-        { key: "actions", sortable: false }
+        { key: 'name', sortable: true },
+        { key: 'protein', sortable: true },
+        { key: 'fat', sortable: true },
+        { key: 'carbonhydrate', sortable: true },
+        { key: 'energy', sortable: true },
+        { key: 'actions', sortable: false },
       ],
-      allIngredients: null
+      allIngredients: null,
     };
   },
   computed: {
@@ -52,9 +82,9 @@ export default {
     },
     nodes() {
       return this.allIngredients
-        ? this.allIngredients.edges.map(edge => edge.node)
+        ? this.allIngredients.edges.map((edge) => edge.node)
         : [];
-    }
+    },
   },
   apollo: {
     allIngredients: {
@@ -62,14 +92,14 @@ export default {
       variables() {
         return { first: this.perPage, filter: this.queryFilter };
       },
-      update: data => data.listIngredients,
+      update: (data) => data.listIngredients,
       error(e) {
         this.error = e;
-      }
-    }
+      },
+    },
   },
   methods: {
-    onSearchInput: _.debounce(function() {
+    onSearchInput: _.debounce(() => {
       this.queryFilter = this.filter;
       this.refetch();
     }, 600),
@@ -83,20 +113,20 @@ export default {
       this.$apollo.queries.allIngredients.refetch();
     },
     editIngredient(item) {
-      this.$emit("edit", Object.assign({}, item));
+      this.$emit('edit', { ...item });
     },
     deleteIngredient(item) {
       this.error = null;
       this.$apollo
         .mutate({
           mutation: deleteIngredientMutation,
-          variables: { id: item.id }
+          variables: { id: item.id },
         })
-        .then(result => {
-          this.$emit("deleted", item);
+        .then((result) => {
+          this.$emit('deleted', item);
           this.refetch();
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error;
         });
     },
@@ -106,7 +136,7 @@ export default {
         variables: {
           first: this.perPage,
           filter: this.queryFilter,
-          cursor: this.allIngredients.pageInfo.endCursor
+          cursor: this.allIngredients.pageInfo.endCursor,
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           const prevRes = previousResult.listIngredients;
@@ -116,13 +146,13 @@ export default {
             listIngredients: {
               __typename: prevRes.__typename,
               edges: [...prevRes.edges, ...res.edges],
-              pageInfo: res.pageInfo
-            }
+              pageInfo: res.pageInfo,
+            },
           };
-        }
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

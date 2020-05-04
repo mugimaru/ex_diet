@@ -1,88 +1,118 @@
 <template>
-<div>
-  <apollo-errors-view variant="dismissible-alert" :error="error"></apollo-errors-view>
-  <b-form v-if="recipe" @submit="onSubmit">
-    <b-row>
-      <b-col cols="2">
-        <b-form-group label="Name:">
-          <b-form-input type="text" v-model="recipe.name" :state="!$v.recipe.name.$invalid" ></b-form-input>
-        </b-form-group>
-
-        <b-form-group label="Weight cooked:">
-          <b-form-input type="number" v-model="recipe.weightCooked"  :state="!$v.recipe.weightCooked.$invalid"></b-form-input>
-        </b-form-group>
-
-
-        <fieldset class="b-form-group form-group">
-          <b-form-checkbox v-model="recipe.eaten" id="eaten"> Eaten </b-form-checkbox>
-        </fieldset>
-
-        <b-button type="submit" :block="true" variant="primary" :disabled="!!$v.recipe.$invalid">Submit recipe</b-button>
-        <br/>
-      </b-col>
-
-      <b-col cols="10">
-
-        <table class="table table-bordered" id="ri-form">
-          <thead>
-            <th>Ingredient</th>
-            <th>Weight</th>
-            <th>Protein</th>
-            <th>Fat</th>
-            <th>Carbonhydrate</th>
-            <th>Energy</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <form-row
-              v-for="(ri, index) in recipe.recipeIngredients"
-              :key="index"
-              :v="$v.recipe.recipeIngredients.$each[index]"
-              @delete="recipe.recipeIngredients.splice(index, 1)"
-              v-model="recipe.recipeIngredients[index]">
-            </form-row>
-          </tbody>
-          <tfoot>
-            <th colspan="2">
-              <b-button variant="success" @click="addIngredient">Add ingredient</b-button>
-            </th>
-            <th>{{totals.protein}}</th>
-            <th>{{totals.fat}}</th>
-            <th>{{totals.carbonhydrate}}</th>
-            <th>{{totals.energy}}</th>
-          </tfoot>
-        </table>
-      </b-col>
-    </b-row>
-
-
-    <b-card header="Recipe description">
+  <div>
+    <apollo-errors-view
+      variant="dismissible-alert"
+      :error="error"
+    ></apollo-errors-view>
+    <b-form
+      v-if="recipe"
+      @submit.prevent="onSubmit"
+    >
       <b-row>
-        <b-col>
-          <b-form-textarea rows="12" v-model="recipe.description"></b-form-textarea>
+        <b-col cols="2">
+          <b-form-group label="Name:">
+            <b-form-input
+              type="text"
+              v-model="recipe.name"
+              :state="!$v.recipe.name.$invalid"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Weight cooked:">
+            <b-form-input
+              type="number"
+              v-model="recipe.weightCooked"
+              :state="!$v.recipe.weightCooked.$invalid"
+            ></b-form-input>
+          </b-form-group>
+
+          <fieldset class="b-form-group form-group">
+            <b-form-checkbox
+              v-model="recipe.eaten"
+              id="eaten"
+            > Eaten </b-form-checkbox>
+          </fieldset>
+
+          <b-button
+            type="submit"
+            :block="true"
+            variant="primary"
+            :disabled="!!$v.recipe.$invalid"
+          >Submit recipe</b-button>
+          <br />
         </b-col>
-        <b-col v-html="compiledMarkdownDescription"></b-col>
+
+        <b-col cols="10">
+
+          <table
+            class="table table-bordered"
+            id="ri-form"
+          >
+            <thead>
+              <th>Ingredient</th>
+              <th>Weight</th>
+              <th>Protein</th>
+              <th>Fat</th>
+              <th>Carbonhydrate</th>
+              <th>Energy</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <form-row
+                v-for="(ri, index) in recipe.recipeIngredients"
+                :key="index"
+                :v="$v.recipe.recipeIngredients.$each[index]"
+                @delete="recipe.recipeIngredients.splice(index, 1)"
+                v-model="recipe.recipeIngredients[index]"
+              >
+              </form-row>
+            </tbody>
+            <tfoot>
+              <th colspan="2">
+                <b-button
+                  variant="success"
+                  @click="addIngredient"
+                >Add ingredient</b-button>
+              </th>
+              <th>{{totals.protein}}</th>
+              <th>{{totals.fat}}</th>
+              <th>{{totals.carbonhydrate}}</th>
+              <th>{{totals.energy}}</th>
+            </tfoot>
+          </table>
+        </b-col>
       </b-row>
-    </b-card>
-  </b-form>
-</div>
+
+      <b-card header="Recipe description">
+        <b-row>
+          <b-col>
+            <b-form-textarea
+              rows="12"
+              v-model="recipe.description"
+            ></b-form-textarea>
+          </b-col>
+          <b-col v-html="compiledMarkdownDescription"></b-col>
+        </b-row>
+      </b-card>
+    </b-form>
+  </div>
 </template>
 
 <script>
-import getRecipe from "@/graphql/queries/getRecipe.graphql";
-import formRow from "./form/Row.vue";
-import updateRecipeMutation from "@/graphql/mutations/updateRecipe.graphql";
-import createRecipeMutation from "@/graphql/mutations/createRecipe.graphql";
-import marked from "marked";
-import { EventBus } from "@/config/eventBus.js";
-import { required, minValue } from "vuelidate/lib/validators";
+import getRecipe from '@/graphql/queries/getRecipe.graphql';
+import updateRecipeMutation from '@/graphql/mutations/updateRecipe.graphql';
+import createRecipeMutation from '@/graphql/mutations/createRecipe.graphql';
+import marked from 'marked';
+import { EventBus } from '@/config/eventBus.js';
+import { required, minValue } from 'vuelidate/lib/validators';
+import formRow from './form/Row.vue';
 
 function newRecipe() {
   return {
     weight: 0,
-    name: "",
-    description: "",
-    recipeIngredients: []
+    name: '',
+    description: '',
+    recipeIngredients: [],
   };
 }
 
@@ -92,22 +122,20 @@ function copyRecipe(r) {
     weightCooked: r.weightCooked,
     name: r.name,
     description: r.description,
-    recipeIngredients: r.recipeIngredients.map(function(ri) {
-      return {
-        id: ri.id,
-        weight: ri.weight,
-        ingredient: Object.assign({}, ri.ingredient)
-      };
-    })
+    recipeIngredients: r.recipeIngredients.map((ri) => ({
+      id: ri.id,
+      weight: ri.weight,
+      ingredient: { ...ri.ingredient },
+    })),
   };
 }
 
 export default {
-  name: "recipes-new-or-edit",
+  name: 'recipes-new-or-edit',
   components: {
-    "form-row": formRow
+    'form-row': formRow,
   },
-  props: ["copyFrom", "id", "editRecipe"],
+  props: ['copyFrom', 'id', 'editRecipe'],
   created() {
     if (this.copyFrom) {
       this.recipe = copyRecipe(this.copyFrom);
@@ -120,8 +148,8 @@ export default {
   data() {
     return {
       getRecipe: null,
-      recipe: this.id == "new" ? newRecipe() : null,
-      error: null
+      recipe: this.id == 'new' ? newRecipe() : null,
+      error: null,
     };
   },
   validations: {
@@ -136,15 +164,15 @@ export default {
             protein: { minValue: minValue(0) },
             fat: { minValue: minValue(0) },
             carbonhydrate: { minValue: minValue(0) },
-            energy: { minValue: minValue(0) }
-          }
-        }
-      }
-    }
+            energy: { minValue: minValue(0) },
+          },
+        },
+      },
+    },
   },
   computed: {
     compiledMarkdownDescription() {
-      return marked(this.recipe.description || "", { sanitize: true });
+      return marked(this.recipe.description || '', { sanitize: true });
     },
     updateRecipeInput() {
       return {
@@ -152,8 +180,8 @@ export default {
         eaten: this.recipe.eaten,
         weightCooked: Number(this.recipe.weightCooked),
         description: this.recipe.description,
-        recipeIngredients: this.recipe.recipeIngredients.map(function(ri) {
-          let riParams = { weight: Number(ri.weight) };
+        recipeIngredients: this.recipe.recipeIngredients.map((ri) => {
+          const riParams = { weight: Number(ri.weight) };
           if (ri.id) {
             riParams.id = ri.id;
           }
@@ -163,31 +191,36 @@ export default {
           } else {
             riParams.ingredient = _.pick(
               ri.ingredient,
-              "name",
-              "protein",
-              "fat",
-              "carbonhydrate",
-              "energy"
+              'name',
+              'protein',
+              'fat',
+              'carbonhydrate',
+              'energy',
             );
           }
 
           return riParams;
-        })
+        }),
       };
     },
     totals() {
-      let data = { protein: 0, fat: 0, carbonhydrate: 0, energy: 0 };
+      const data = {
+        protein: 0,
+        fat: 0,
+        carbonhydrate: 0,
+        energy: 0,
+      };
       if (!this.recipe || this.recipe.weightCooked == 0) {
         return data;
       }
-      const weightCooked = this.recipe.weightCooked;
+      const { weightCooked } = this.recipe;
       let ingredientsWeight = 0;
 
-      this.recipe.recipeIngredients.forEach(function(ri) {
+      this.recipe.recipeIngredients.forEach((ri) => {
         const weight = Number(ri.weight);
 
         if (weight > 0) {
-          Object.keys(data).forEach(function(key) {
+          Object.keys(data).forEach((key) => {
             data[key] += Number(ri.ingredient[key]) * weight / 100;
           });
           ingredientsWeight += weight;
@@ -195,16 +228,16 @@ export default {
       });
 
       if (ingredientsWeight > 0) {
-        Object.keys(data).forEach(function(key) {
-          const prescision = key == "energy" ? 0 : 2;
+        Object.keys(data).forEach((key) => {
+          const prescision = key == 'energy' ? 0 : 2;
           data[key] = (data[key] * weightCooked / ingredientsWeight).toFixed(
-            prescision
+            prescision,
           );
         });
       }
 
       return data;
-    }
+    },
   },
   apollo: {
     getRecipe: {
@@ -212,7 +245,7 @@ export default {
       variables() {
         return { id: this.id };
       },
-      update: data => data.node,
+      update: (data) => data.node,
       error(e) {
         this.error = e;
       },
@@ -221,54 +254,54 @@ export default {
       },
       skip() {
         return (
-          this.id == "new" ||
-          this.editRecipe ||
-          (this.recipe && this.recipe.id == this.id)
+          this.id == 'new'
+          || this.editRecipe
+          || (this.recipe && this.recipe.id == this.id)
         );
-      }
-    }
+      },
+    },
   },
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      let vars = { input: this.updateRecipeInput };
-      let mutations = {
+      const vars = { input: this.updateRecipeInput };
+      const mutations = {
         createRecipe: createRecipeMutation,
-        updateRecipe: updateRecipeMutation
+        updateRecipe: updateRecipeMutation,
       };
       let mutationName = null;
 
-      if (this.id == "new") {
-        mutationName = "createRecipe";
+      if (this.id == 'new') {
+        mutationName = 'createRecipe';
       } else {
         vars.id = this.id;
-        mutationName = "updateRecipe";
+        mutationName = 'updateRecipe';
       }
 
       this.$apollo
         .mutate({
           mutation: mutations[mutationName],
-          variables: vars
+          variables: vars,
         })
-        .then(result => {
-          const created = this.id == "new";
+        .then((result) => {
+          const created = this.id == 'new';
           EventBus.$emit(
-            "notification",
+            'notification',
             `Recipe "${this.recipe.name}" has been successfully ${
-              created ? "created" : "updated"
-            }.`
+              created ? 'created' : 'updated'
+            }.`,
           );
 
           this.recipe = this._.merge({}, result.data[mutationName]);
 
           if (created) {
             this.$router.push({
-              name: "recipe",
-              params: { id: result.data[mutationName].id }
+              name: 'recipe',
+              params: { id: result.data[mutationName].id },
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error;
         });
     },
@@ -280,22 +313,20 @@ export default {
           fat: 0,
           carbonhydrate: 0,
           energy: 0,
-          name: ""
-        }
+          name: '',
+        },
       });
-    }
+    },
   },
   beforeRouteUpdate(to, from, next) {
     next();
 
-    if (this.id == "new") {
+    if (this.id == 'new') {
       this.recipe = newRecipe();
-    } else {
-      if (this.recipe.id != this.id) {
-        this.recipe = null;
-        this.$apollo.queries.getRecipe.refetch();
-      }
+    } else if (this.recipe.id != this.id) {
+      this.recipe = null;
+      this.$apollo.queries.getRecipe.refetch();
     }
-  }
+  },
 };
 </script>

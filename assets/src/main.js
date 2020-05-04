@@ -1,49 +1,53 @@
 /* global require */
 
-import Vue from "vue";
+import Vue from 'vue';
+
+import Router from 'vue-router';
+
+import Vuelidate from 'vuelidate';
+
+import BootstrapVue from 'bootstrap-vue';
+import './main.scss';
+// import 'bootstrap/dist/css/bootstrap';
+// import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+import draggable from 'vuedraggable';
+import VueChartkick from 'vue-chartkick';
+import VueMoment from 'vue-moment';
+import moment from 'moment-timezone';
+import App from './App.vue';
+import router from './config/router.js';
+
+import { apolloProvider, VueApollo } from './config/apollo.js';
+
+import apolloErrorsView from './components/ApolloErrorsView.vue';
+
+import timedAlert from './components/TimedAlert.vue';
+
 Vue.config.productionTip = false;
-
-import Router from "vue-router";
 Vue.use(Router);
-
-import Vuelidate from "vuelidate";
 Vue.use(Vuelidate);
-
-import BootstrapVue from "bootstrap-vue";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 
-import VueLodash from "vue-lodash";
-Vue.use(VueLodash);
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
+Vue.use(VueLodash, { lodash: lodash })
 
-import App from "./App.vue";
-import router from "./config/router.js";
+Vue.use(VueMoment, { moment });
 
-Vue.use(require("vue-moment"));
-
-import { apolloProvider, VueApollo } from "./config/apollo.js";
 Vue.use(VueApollo);
-
-import apolloErrorsView from "./components/ApolloErrorsView.vue";
-Vue.component("apollo-errors-view", apolloErrorsView);
-
-import timedAlert from "./components/TimedAlert.vue";
-Vue.component("timed-alert", timedAlert);
-
-import draggable from "vuedraggable";
-Vue.component("draggable", draggable);
-
-import VueChartkick from "vue-chartkick";
+Vue.component('apollo-errors-view', apolloErrorsView);
+Vue.component('timed-alert', timedAlert);
+Vue.component('draggable', draggable);
 Vue.use(VueChartkick);
 
-require("open-iconic/font/css/open-iconic-bootstrap.css");
+require('open-iconic/font/css/open-iconic-bootstrap.css');
 
 new Vue({
   router,
   data: {
-    userEmail: localStorage.getItem("userEmail")
+    userEmail: localStorage.getItem('userEmail'),
   },
-  provide: apolloProvider.provide(),
-  render: h => h(App)
-}).$mount("#app");
+  apolloProvider: apolloProvider,
+  render: (h) => h(App),
+}).$mount('#app');

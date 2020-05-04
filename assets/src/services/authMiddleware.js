@@ -1,18 +1,18 @@
 export default {
   guest(to, from, next) {
-    next(!localStorage.getItem("userEmail"));
+    next(!localStorage.getItem('userEmail'));
   },
 
   auth(to, from, next) {
     next(
-      localStorage.getItem("authToken")
+      localStorage.getItem('authToken')
         ? true
         : {
-            path: "/login",
-            query: {
-              redirect: to.name
-            }
-          }
+          path: '/login',
+          query: {
+            redirect: to.name,
+          },
+        },
     );
-  }
+  },
 };
