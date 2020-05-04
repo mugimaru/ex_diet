@@ -2,10 +2,10 @@ version: "3.7"
 
 services:
   frontend:
-    image: "node:12"
+    build: ./assets
     ports:
       - "4001:4001"
-    command: ./node_modules/.bin/vue-cli-service serve --open --port 4001
+    command: npm run serve
     working_dir: /app
     user: ${HOST_UID_GID}
     depends_on:
