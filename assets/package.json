@@ -39,7 +39,7 @@
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.0.4",
     "graphql-cli": "^2.15.9",
-    "node-sass": "^4.8.3",
+    "node-sass": "^4.14.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0"

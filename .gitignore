@@ -11,3 +11,5 @@ erl_crash.dump
 
 priv/static/
 .deliver/releases/
+/.elixir_ls
+/.vscode
