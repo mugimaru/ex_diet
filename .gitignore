@@ -12,3 +12,4 @@ priv/static/
 .deliver/releases/
 /.elixir_ls
 /.vscode
+/.deliver/docker_build_ssh_key.pub

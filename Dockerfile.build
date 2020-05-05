@@ -1,0 +1,53 @@
+FROM fedora:29
+
+ENV LANG=en_US.utf8
+
+RUN dnf -y install \
+  make unzip which perl git automake autoconf \
+  readline-devel ncurses-devel openssl-devel libyaml-devel \
+  libxslt-devel libffi-devel libtool procps git
+
+# add builder user
+RUN useradd --system --shell=/bin/bash --create-home builder
+USER builder
+
+# install asdf
+ENV ASDF_DIR=/home/builder/.asdf
+ENV PATH $ASDF_DIR/bin:$ASDF_DIR/shims:$PATH
+
+RUN git clone https://github.com/asdf-vm/asdf.git $ASDF_DIR && \
+  asdf plugin-add erlang && \
+  asdf plugin-add elixir && \
+  asdf plugin-add nodejs && \
+  $ASDF_DIR/plugins/nodejs/bin/import-release-team-keyring
+
+# install erlang, elixir & nodejs
+COPY --chown=builder:builder .tool-versions /home/builder/
+RUN asdf install
+RUN asdf reshim
+
+RUN mix local.hex --force \
+  && mix local.rebar --force
+
+RUN echo ". $ASDF_DIR/asdf.sh" > /home/builder/.bashrc
+
+# copy app secrets
+RUN mkdir -p /home/builder/config
+COPY --chown=builder:builder config/prod.secret.exs /home/builder/config/prod.secret.exs
+
+RUN mkdir /home/builder/.ssh/ && chmod 700 /home/builder/.ssh/
+COPY --chown=builder:builder ./.deliver/docker_build_ssh_key.pub /home/builder/.ssh/authorized_keys
+RUN chmod 700 /home/builder/.ssh/
+RUN chmod 644 /home/builder/.ssh/authorized_keys
+
+USER root
+
+RUN dnf install -y openssh-server
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa && \
+  ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa && \
+  ssh-keygen -f /etc/ssh/ssh_host_ed25519_key -N '' -t ed25519
+
+RUN  echo "AuthorizedKeysFile  %h/.ssh/authorized_keys" >> /etc/ssh/sshd_config
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
