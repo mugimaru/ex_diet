@@ -1,6 +1,19 @@
 # ExDiet: calories calculator & daily meal planner
 [![build status](https://api.travis-ci.org/mugimaru73/ex_diet.svg?branch=master)](https://travis-ci.org/mugimaru73/ex_diet)
 
+There is a lot of great diet journals available on the internet (for example [myfitnesspal](https://www.myfitnesspal.com/)).
+They provide you access to a community-driven database of meals and ingredients with the UX focused on logging what you've eaten with minimal efforts.
+This works great with ready-to-eat products from popular brands or meals from chain restaurants but it doesn't work for home-made food. Different ingredients and proportions
+used in your recipes lead to the significantly different nutritional value of your meal.
+
+What my ideal diet planner looks like:
+- It allows me to maintain a private database with ingredients from local markets;
+- It allows me to calculate the nutritional value of meals that I cooked from those ingredients precisely;
+- It allows me to fill in my diet journal using data from the above steps;
+- It visualizes daily totals so I can match them with recommended thresholds;
+
+With those use cases in mind, I created ex_diet. At this point, it provides all of the features mentioned above and I use it every day. You can try it out at [exdiet.tk](http://exdiet.tk) or fork it and refer to the deployment section to create your instance.
+
 ## Stack
 * [Elixir](https://elixir-lang.org/)
 * [Phoenix](http://phoenixframework.org/)
@@ -31,3 +44,44 @@ run bash inside backend container
 run bash inside frontend container
 
     make compose-fe-run-bash
+
+## Deployment with [edeliver](https://github.com/edeliver/edeliver)
+
+1. Install [docker](https://www.docker.com/).
+2. Configure production server with fedora and postgresql.
+3. Add `config/prod.secret.exs` similar to
+```elixir
+Import Config
+
+config :ex_diet, ExDietWeb.Endpoint,
+  load_from_system_env: false,
+  server: true,
+  http: [port: 4000],
+  url: [host: "my-exdiet.com", port: 80],
+  secret_key_base: "***"
+
+config :ex_diet, ExDiet.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "pg_user",
+  password: "pg_pass",
+  database: "ex_diet",
+  hostname: "my-postgres-server.com",
+  pool_size: 10
+```
+4. Change `./deliver/config` to match your production server.
+```
+PRODUCTION_HOSTS="my-fedora-server"
+PRODUCTION_USER="run_user"
+DELIVER_TO="/path/to/ex_diet"
+```
+
+5. Build release
+```
+./.deliver/build.sh
+```
+6. Deploy to production
+```
+mix edeliver deploy release to production
+mix edeliver restart production
+mix edeliver migrate production up
+```
