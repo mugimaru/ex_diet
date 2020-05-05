@@ -21,6 +21,7 @@
     "jquery": "^3.5.0",
     "lodash": "^4.17.15",
     "marked": "^1.0.0",
+    "md5": "^2.2.1",
     "moment": "2.24.0",
     "moment-timezone": "^0.5.28",
     "open-iconic": "^1.1.1",

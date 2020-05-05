@@ -31,11 +31,13 @@
 
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown
+            id="userNav"
             right
+            no-caret
             v-if="userEmail"
           >
-            <template slot="button-content">
-              <em>{{ userEmail }}</em>
+            <template v-slot:button-content>
+              <b-avatar :src="userGravatarURL"></b-avatar>
             </template>
             <b-dropdown-item @click="logout()">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
@@ -61,6 +63,7 @@
 
 <script>
 import { SemipolarSpinner } from 'epic-spinners';
+import md5 from 'md5';
 import { EventBus } from './config/eventBus';
 
 export default {
@@ -71,6 +74,12 @@ export default {
   computed: {
     userEmail() {
       return this.$root.$data.userEmail;
+    },
+    userGravatarURL() {
+      if (this.userEmail) {
+        return `https://www.gravatar.com/avatar/${md5(this.userEmail.toLowerCase())}?s=40`;
+      }
+      return null;
     },
   },
   methods: {
@@ -98,4 +107,7 @@ export default {
 </script>
 
 <style lang="scss">
+#userNav > .nav-link {
+  padding: 0;
+}
 </style>
