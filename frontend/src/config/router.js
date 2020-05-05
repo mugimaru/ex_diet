@@ -1,5 +1,4 @@
 import Router from 'vue-router';
-import Index from '../components/Index.vue';
 import AppLogin from '../components/AppLogin.vue';
 import Ingredients from '../components/ingredients/Index.vue';
 import Recipes from '../components/recipes/Index.vue';
@@ -11,7 +10,7 @@ export default new Router({
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
   routes: [
-    { path: '/', component: Index },
+    { path: '/', redirect: '/dashboard' },
     { path: '/login', component: AppLogin, beforeEnter: Guard.guest },
     { path: '/ingredients', component: Ingredients, beforeEnter: Guard.auth },
     {
