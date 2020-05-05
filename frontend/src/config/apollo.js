@@ -9,7 +9,7 @@ import { EventBus } from './eventBus';
 const httpLink = new HttpLink({
   uri:
     process.env.NODE_ENV === 'production'
-      ? 'http://exdiet.tk/api/graphql'
+      ? 'https://exdiet.tk/api/graphql'
       : 'http://localhost:4000/api/graphql',
 });
 
@@ -33,7 +33,7 @@ const apolloClient = new ApolloClient({
 });
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
-  watchLoading(state) {
+  watchLoading (state) {
     EventBus.$emit('apollo-global-loading-state', state);
   },
 });

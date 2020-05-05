@@ -12,7 +12,7 @@ What my ideal diet planner looks like:
 - It allows me to fill in my diet journal using data from the above steps;
 - It visualizes daily totals so I can match them with recommended thresholds;
 
-With those use cases in mind, I created ex_diet. At this point, it provides all of the features mentioned above and I use it every day. You can try it out at [exdiet.tk](http://exdiet.tk) or fork it and refer to the deployment section to create your instance.
+With those use cases in mind, I created ex_diet. At this point, it provides all of the features mentioned above and I use it every day. You can try it out at [exdiet.tk](https://exdiet.tk) or fork it and refer to the deployment section to create your instance.
 
 ## Stack
 * [Elixir](https://elixir-lang.org/)
