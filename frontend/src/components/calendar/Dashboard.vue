@@ -264,4 +264,8 @@ export default {
 #recipes-card {
   margin-bottom: 1.25rem;
 }
+
+#recipes-card .badge {
+  min-width: 10em;
+}
 </style>
