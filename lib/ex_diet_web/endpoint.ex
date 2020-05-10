@@ -12,7 +12,21 @@ defmodule ExDietWeb.Endpoint do
     at: "/",
     from: :ex_diet,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt index.html)
+    only: ~w(
+        css
+        fonts
+        images
+        js
+        index.html
+        robots.txt
+        site.webmanifest
+        favicon.ico
+        android-chrome-192x192.png
+        android-chrome-512x512.png
+        apple-touch-icon.png
+        favicon-16x16.png
+        favicon-32x32.png
+        )
   )
 
   plug(CORSPlug)
