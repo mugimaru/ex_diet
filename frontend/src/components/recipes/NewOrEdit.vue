@@ -59,6 +59,7 @@
             </thead>
             <tbody>
               <form-row
+                ref="formRows"
                 v-for="(ri, index) in recipe.recipeIngredients"
                 :key="index"
                 :v="$v.recipe.recipeIngredients.$each[index]"
@@ -315,6 +316,12 @@ export default {
           energy: 0,
           name: '',
         },
+      });
+
+      this.$nextTick(() => {
+        if (this.$refs.formRows) {
+          this.$refs.formRows[this.$refs.formRows.length - 1].focus();
+        }
       });
     },
   },

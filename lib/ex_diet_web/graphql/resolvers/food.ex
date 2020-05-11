@@ -9,7 +9,7 @@ defmodule ExDietWeb.GraphQL.Resolvers.Food do
     Food.Ingredient
     |> Food.Queries.Calendar.for_user(user)
     |> Food.Queries.Ingredient.search(args)
-    |> Food.Queries.Ingredient.recent_first()
+    |> Food.Queries.Ingredient.most_used_first()
     |> Connection.from_query(&Repo.all/1, args)
   end
 

@@ -8,16 +8,19 @@
       <b-input-group>
         <b-input-group-prepend v-if="disabled">
           <b-btn
+            tabindex="-1"
             :size="size"
             variant="secondary"
             @click="startNewSearch"
           >Edit</b-btn>
         </b-input-group-prepend>
         <b-input
+          ref="input"
           :size="size"
           type="text"
           v-model="queryFilter"
-          @focus.native="focused = true"
+          @keyup.prevent.enter="onEnterKeyUp"
+          @focus.native="onFocus"
           @blur.native="onFocusLost"
           placeholder="Search an ingredient"
           :disabled="disabled"
@@ -72,7 +75,7 @@ export default {
   },
   props: {
     perPage: { default: 15, type: Number },
-    minInputLength: { default: 3, type: Number },
+    minInputLength: { default: 0, type: Number },
     allowAddNew: { default: true, type: Boolean },
     value: { type: Object },
     state: { type: Boolean },
@@ -80,7 +83,7 @@ export default {
   },
   computed: {
     searchable() {
-      return this.queryFilter && this.queryFilter.length >= this.minInputLength;
+      return (this.minInputLength === 0 || (this.queryFilter && this.queryFilter.length >= this.minInputLength));
     },
     dropdownItems() {
       if (!this.allIngredients) {
@@ -113,6 +116,9 @@ export default {
     },
   },
   methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
     startNewSearch() {
       if (this.disabled) {
         this.disabled = false;
@@ -120,8 +126,12 @@ export default {
         this.$emit('input', {});
       }
     },
+    onFocus() {
+      this.focused = true;
+    },
     onFocusLost() {
       setTimeout(() => (this.focused = false), 100);
+      this.$emit('focusLost');
     },
     onSelected(node) {
       this.disabled = true;
@@ -138,6 +148,11 @@ export default {
         fat: 0,
         energy: 0,
       });
+    },
+    onEnterKeyUp() {
+      if (this.dropdownItems.length === 0) {
+        this.onAddIngredientSelected();
+      }
     },
   },
 };

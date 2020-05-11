@@ -155,6 +155,7 @@
           >
             <td v-if="meal.ingredient">
               <ingredients-search-input
+                ref="ingredientsSearchInput"
                 size="sm"
                 :allow-add-new="false"
                 v-model="meal.ingredient"
@@ -336,6 +337,13 @@ export default {
         weight: 0,
         ingredientId: null,
         ingredient: {},
+      });
+
+      this.$nextTick(() => {
+        const inputs = this.$refs.ingredientsSearchInput;
+        if (inputs) {
+          inputs[inputs.length - 1].focus();
+        }
       });
     },
     removeMeal(meal) {

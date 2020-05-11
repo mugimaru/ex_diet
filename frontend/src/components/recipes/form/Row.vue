@@ -3,6 +3,7 @@
     <td>
       <ingredients-search-input
         ref="ingredientSearchInput"
+        @focusLost="onIngredientsSearchFocusLost"
         :allow-add-new="true"
         v-model="value.ingredient"
         :state="!this.v.ingredient.name.$invalid"
@@ -10,7 +11,9 @@
     </td>
     <td>
       <b-input
+        ref="weightInput"
         type="number"
+        @focus="$event.target.select()"
         v-model="value.weight"
         :state="!this.v.weight.$invalid"
       ></b-input>
@@ -59,6 +62,7 @@
     </template>
     <td>
       <b-button
+        tabindex="-1"
         variant="outline-danger"
         @click="$emit('delete')"
       >Delete</b-button>
@@ -110,6 +114,12 @@ export default {
         return true;
       }
       return !this.v.ingredient[attr].$invalid;
+    },
+    focus() {
+      this.$refs.ingredientSearchInput.focus();
+    },
+    onIngredientsSearchFocusLost() {
+      this.$refs.weightInput.focus();
     },
   },
 };
