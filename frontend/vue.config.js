@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
   lintOnSave: false,
@@ -8,23 +8,23 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      '/api': {
-        target: 'http://loclahost:4000/api',
+      "/api": {
+        target: "http://loclahost:4000/api",
         ws: false,
         changeOrigin: true,
       },
-      '/playground': {
-        target: 'http://localhost:3000/playground',
+      "/playground": {
+        target: "http://localhost:3000/playground",
       },
     },
   },
-  outputDir: path.resolve(__dirname, '../priv/static'),
+  outputDir: path.resolve(__dirname, "build"),
   configureWebpack: {
     module: {
       rules: [
         {
           test: /\.(graphql|gql)$/,
-          loader: 'graphql-tag/loader',
+          loader: "graphql-tag/loader",
         },
       ],
     },

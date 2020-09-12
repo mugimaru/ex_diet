@@ -1,20 +1,17 @@
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloLink } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
-import VueApollo from 'vue-apollo';
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloLink } from "apollo-link";
+import { HttpLink } from "apollo-link-http";
+import VueApollo from "vue-apollo";
 
-import { EventBus } from './eventBus';
+import { EventBus } from "./eventBus";
 
 const httpLink = new HttpLink({
-  uri:
-    process.env.NODE_ENV === 'production'
-      ? 'https://exdiet.tk/api/graphql'
-      : 'http://localhost:4000/api/graphql',
+  uri: process.env.NODE_ENV === "production" ? "/api/graphql" : "http://localhost:4000/api/graphql",
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
 
   operation.setContext({
     headers: {
@@ -33,8 +30,8 @@ const apolloClient = new ApolloClient({
 });
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
-  watchLoading (state) {
-    EventBus.$emit('apollo-global-loading-state', state);
+  watchLoading(state) {
+    EventBus.$emit("apollo-global-loading-state", state);
   },
 });
 

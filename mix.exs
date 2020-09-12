@@ -10,7 +10,15 @@ defmodule ExDiet.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: [
+        ex_diet: [
+          include_executables_for: [:unix],
+          applications: [
+            runtime_tools: :permanent
+          ]
+        ]
+      ]
     ]
   end
 
@@ -26,8 +34,8 @@ defmodule ExDiet.Mixfile do
 
   defp deps do
     [
-      {:phoenix, "~> 1.4.9"},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "~> 1.5.4"},
+      {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
       {:cors_plug, "~> 2.0"},
@@ -35,14 +43,12 @@ defmodule ExDiet.Mixfile do
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 2.0"},
       {:guardian_db, "~> 2.0"},
-      {:absinthe, "~> 1.4.9"},
-      {:absinthe_plug, "~> 1.4.2"},
-      {:absinthe_relay, "~> 1.4.2"},
-      {:absinthe_phoenix, ">= 0.0.0"},
+      {:absinthe, "~> 1.5.0"},
+      {:absinthe_plug, "~> 1.5.0"},
+      {:absinthe_relay, "~> 1.5.0"},
+      {:absinthe_phoenix, ">= 2.0.0"},
       {:dataloader, "~> 1.0.0"},
       {:gettext, "~> 0.11"},
-      {:edeliver, "~> 1.7"},
-      {:distillery, "~> 2.0", runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},

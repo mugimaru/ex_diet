@@ -28,3 +28,25 @@ compose-be-run-%:
 
 compose-be-make-%:
 	$(docker-compose) run --rm backend make be-$*
+
+APP_VERSION = "0.2.0"
+IMAGE_VERSION ?= ${APP_VERSION}
+IMAGE_NAME = ex_diet
+BUILD_DATE ?= $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+build-image:
+	docker build -f Dockerfile.release \
+		--build-arg APP_VERSION=${APP_VERSION} \
+		--build-arg BUILD_DATE=${BUILD_DATE} \
+		--build-arg VCS_REF=${VCS_REF} \
+		-t ${IMAGE_NAME}:${IMAGE_VERSION} \
+		--compress \
+		.
+
+push-image-github:
+	docker tag ${IMAGE_NAME}:${IMAGE_VERSION} docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
+	docker tag ${IMAGE_NAME}:${IMAGE_VERSION} docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:lastest
+	docker push docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
+	docker push docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:lastest
+
+release: build-image push-image-github

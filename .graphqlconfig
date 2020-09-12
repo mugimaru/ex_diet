@@ -5,7 +5,8 @@
       "extensions": {
         "endpoints": {
           "dev": "http://localhost:4000/api/graphql",
-          "prod": "https://personal-loud-azurevase.gigalixirapp.com/api/graphql"
+          "dev_release": "http://localhost:4002/api/graphql",
+          "prod": "https://exdiet.tk/api/graphql"
         }
       }
     }
