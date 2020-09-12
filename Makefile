@@ -42,3 +42,7 @@ build-image:
 		-t ${IMAGE_NAME}:${IMAGE_VERSION} \
 		--compress \
 		.
+
+push-image-github:
+	docker tag ${IMAGE_NAME}:${IMAGE_VERSION} docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
+	docker push docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
