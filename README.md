@@ -63,6 +63,6 @@ Run the image:
 
 Run the latest published image:
 
-        docker run --env-file .env docker.pkg.github.com/mugimaru73/ex_diet/ex_diet:lasest
+        docker run --env-file .env docker.pkg.github.com/mugimaru73/ex_diet/ex_diet:latest
 
 Use `.services.release.environment` from `.docker-compose.yml` as a reference to compose .env file.
