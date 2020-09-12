@@ -45,4 +45,8 @@ build-image:
 
 push-image-github:
 	docker tag ${IMAGE_NAME}:${IMAGE_VERSION} docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
+	docker tag ${IMAGE_NAME}:${IMAGE_VERSION} docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:lastest
 	docker push docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:${IMAGE_VERSION}
+	docker push docker.pkg.github.com/mugimaru73/ex_diet/${IMAGE_NAME}:lastest
+
+release: build-image push-image-github
