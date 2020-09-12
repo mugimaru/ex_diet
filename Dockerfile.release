@@ -1,0 +1,71 @@
+FROM node:12.16.3-alpine3.11 as build-frontend
+
+RUN mkdir /app
+# Copy deps manifest
+COPY frontend/package.json /app
+COPY frontend/package-lock.json /app
+WORKDIR /app
+
+# Fetch deps
+RUN npm install
+
+# Copy the rest of the files
+COPY frontend/ /app
+# Build
+RUN npm run build
+
+FROM elixir:1.10.4-alpine as build-backend
+
+ENV MIX_ENV=prod
+
+# Installe build-base packages (bcrypt_elixir requirement)
+RUN apk add --no-cache make build-base
+
+# Copy deps manifest
+RUN mix local.hex --force && mix local.rebar --force
+RUN mkdir /app
+COPY mix.* /app/
+WORKDIR /app
+
+# Fetch & compile deps
+RUN mix deps.get
+RUN mix deps.compile
+
+# Copy the rest of the files
+COPY . /app
+
+# Copy frontend build
+COPY --from=build-frontend /app/build /app/priv/static
+
+# Digest static assets
+RUN mix phx.digest
+
+# Build
+RUN mix release --overwrite
+
+FROM alpine:3.11
+
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+LABEL org.opencontainers.image.authors="pochi.73@gmail.com"
+LABEL org.opencontainers.image.title="ExDiet"
+LABEL org.opencontainers.image.description="ExDiet: calories calculator & daily meal planner"
+LABEL org.opencontainers.image.source="https://github.com/mugimaru73/ex_diet"
+
+RUN apk add --no-cache ncurses-libs
+
+RUN addgroup -S service && adduser -S service -G service
+USER service
+
+COPY --chown=service:service --from=build-backend /app/_build/prod/rel/ex_diet/ /app
+WORKDIR /app
+
+ARG VCS_REF
+LABEL org.opencontainers.image.revision=${VCS_REF}
+ARG BUILD_DATE
+LABEL org.opencontainers.image.created=${BUILD_DATE}
+ARG APP_VERSION
+LABEL org.opencontainers.image.version=${APP_VERSION}
+
+ENTRYPOINT [ "/app/bin/ex_diet" ]
+CMD [ "start" ]
+

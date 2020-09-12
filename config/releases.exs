@@ -13,6 +13,4 @@ config :ex_diet, ExDietWeb.Endpoint,
 
 config :ex_diet, ExDiet.Repo,
   adapter: Ecto.Adapters.Postgres,
-  # "ecto://postgres:postgres@localhost/ecto_simple"
-  url: System.fetch_env!("POSTGRES_URL"),
-  pool_size: System.get_env("POSTGRES_POOL_SIZE", 10) |> String.to_integer()
+  url: System.fetch_env!("POSTGRES_URL")
