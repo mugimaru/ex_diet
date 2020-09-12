@@ -41,8 +41,6 @@ defmodule ExDiet.Mixfile do
       {:absinthe_phoenix, ">= 2.0.0"},
       {:dataloader, "~> 1.0.0"},
       {:gettext, "~> 0.11"},
-      {:edeliver, "~> 1.7"},
-      {:distillery, "~> 2.0", runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
