@@ -26,8 +26,8 @@ defmodule ExDiet.Mixfile do
 
   defp deps do
     [
-      {:phoenix, "~> 1.4.9"},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "~> 1.5.4"},
+      {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
       {:cors_plug, "~> 2.0"},
@@ -35,10 +35,10 @@ defmodule ExDiet.Mixfile do
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 2.0"},
       {:guardian_db, "~> 2.0"},
-      {:absinthe, "~> 1.4.9"},
-      {:absinthe_plug, "~> 1.4.2"},
-      {:absinthe_relay, "~> 1.4.2"},
-      {:absinthe_phoenix, ">= 0.0.0"},
+      {:absinthe, "~> 1.5.0"},
+      {:absinthe_plug, "~> 1.5.0"},
+      {:absinthe_relay, "~> 1.5.0"},
+      {:absinthe_phoenix, ">= 2.0.0"},
       {:dataloader, "~> 1.0.0"},
       {:gettext, "~> 0.11"},
       {:edeliver, "~> 1.7"},

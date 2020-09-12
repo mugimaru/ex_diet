@@ -3,7 +3,8 @@ defmodule ExDiet.GraphQLCase do
 
   defmacro __using__(_) do
     quote do
-      use Phoenix.ConnTest
+      import Plug.Conn
+      import Phoenix.ConnTest
 
       @endpoint ExDietWeb.Endpoint
 

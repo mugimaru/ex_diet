@@ -13,7 +13,7 @@ config :ex_diet, ExDietWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "m4NcRfxYZzAignPAWdzNap0Ljg6SoStDrfecjXTyVB73+LdHMNS6/I145MiRAXe9",
   render_errors: [view: ExDietWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: ExDiet.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: ExDiet.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
