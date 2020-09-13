@@ -29,7 +29,7 @@ compose-be-run-%:
 compose-be-make-%:
 	$(docker-compose) run --rm backend make be-$*
 
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 IMAGE_VERSION ?= ${APP_VERSION}
 IMAGE_NAME = ex_diet
 BUILD_DATE ?= $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
