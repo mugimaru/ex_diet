@@ -31,7 +31,7 @@ services:
       - .:/app
 
   release:
-    image: ex_diet:1.0.0
+    image: ex_diet:1.1.0
     ports:
       - "4002:4000"
     environment:
