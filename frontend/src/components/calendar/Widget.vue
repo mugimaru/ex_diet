@@ -74,7 +74,7 @@
                 size="sm"
                 :allow-add-new="false"
                 v-model="meal.ingredient"
-                @input="meal.ingredientId = meal.ingredient.id && $refs.weightInput[i].focus()"
+                @input="handleIngredientSelected(meal.ingredient.id, i)"
                 :state="!$v.editCalendar.meals.$each[i].ingredientId.$invalid"
               />
             </td>
@@ -83,7 +83,7 @@
                 size="sm"
                 :recipes="allRecipes"
                 v-model="meal.recipe"
-                @input="meal.recipeId = meal.recipe.id && $refs.weightInput[i].focus()"
+                @input="handleRecipeSelected(meal.recipe.id, i)"
                 :state="!$v.editCalendar.meals.$each[i].recipeId.$invalid"
               />
             </td>
@@ -222,6 +222,14 @@ export default {
     },
   },
   methods: {
+    handleRecipeSelected(recipeId, index) {
+      this.editCalendar.meals[index].recipeId = recipeId;
+      this.$refs.weightInput[index].focus();
+    },
+    handleIngredientSelected(ingredientId, index) {
+      this.editCalendar.meals[index].ingredientId = ingredientId;
+      this.$refs.weightInput[index].focus();
+    },
     addRecipeMeal() {
       this.editCalendar.meals.push({
         tmpId: ID(),
