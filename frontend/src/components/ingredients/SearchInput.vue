@@ -1,18 +1,9 @@
 <template>
   <div>
-    <div
-      class="dropdown"
-      id="ingredients-search-dropdown"
-    >
-
+    <div class="dropdown" id="ingredients-search-dropdown">
       <b-input-group>
         <b-input-group-prepend v-if="disabled">
-          <b-btn
-            tabindex="-1"
-            :size="size"
-            variant="secondary"
-            @click="startNewSearch"
-          >Edit</b-btn>
+          <b-btn tabindex="-1" :size="size" variant="secondary" @click="startNewSearch">Edit</b-btn>
         </b-input-group-prepend>
         <b-input
           ref="input"
@@ -30,10 +21,7 @@
         </b-input>
       </b-input-group>
 
-      <div
-        class="dropdown-menu"
-        :class="{ show: (focused && searchable) }"
-      >
+      <div class="dropdown-menu" :class="{ show: focused && searchable }">
         <button
           class="dropdown-item"
           role="menuitem"
@@ -41,15 +29,11 @@
           v-if="allowAddNew && queryFilter"
           @click="onAddIngredientSelected"
         >
-          Add ingredient "{{queryFilter}}"
+          Add ingredient "{{ queryFilter }}"
         </button>
         <b-dropdown-divider v-if="allowAddNew && dropdownItems.length > 0 && queryFilter"></b-dropdown-divider>
-        <b-dropdown-item-button
-          v-for="(item, i) in dropdownItems"
-          :key="i"
-          @click="onSelected(item)"
-        >
-          {{item.title}}
+        <b-dropdown-item-button v-for="(item, i) in dropdownItems" :key="i" @click="onSelected(item)">
+          {{ item.title }}
         </b-dropdown-item-button>
         <b-dropdown-item-button v-if="!allowAddNew && dropdownItems.length === 0">
           Nothing found
@@ -60,10 +44,10 @@
 </template>
 
 <script>
-import allIngredientsQuery from '@/graphql/queries/listIngredients.graphql';
+import allIngredientsQuery from "@/graphql/queries/listIngredients.graphql";
 
 export default {
-  name: 'ingredient-search-input',
+  name: "ingredient-search-input",
   data() {
     return {
       queryFilter: this.value ? this.value.name : null,
@@ -79,11 +63,11 @@ export default {
     allowAddNew: { default: true, type: Boolean },
     value: { type: Object },
     state: { type: Boolean },
-    size: { type: String, default: 'md' },
+    size: { type: String, default: "md" },
   },
   computed: {
     searchable() {
-      return (this.minInputLength === 0 || (this.queryFilter && this.queryFilter.length >= this.minInputLength));
+      return this.minInputLength === 0 || (this.queryFilter && this.queryFilter.length >= this.minInputLength);
     },
     dropdownItems() {
       if (!this.allIngredients) {
@@ -123,7 +107,7 @@ export default {
       if (this.disabled) {
         this.disabled = false;
         this.queryFilter = null;
-        this.$emit('input', {});
+        this.$emit("input", {});
       }
     },
     onFocus() {
@@ -131,16 +115,16 @@ export default {
     },
     onFocusLost() {
       setTimeout(() => (this.focused = false), 100);
-      this.$emit('focusLost');
+      this.$emit("focusLost");
     },
     onSelected(node) {
       this.disabled = true;
       this.queryFilter = node.item.name;
-      this.$emit('input', node.item);
+      this.$emit("input", node.item);
     },
     onAddIngredientSelected() {
       this.disabled = true;
-      this.$emit('input', {
+      this.$emit("input", {
         name: this.queryFilter,
         weight: 0,
         carbonhydrate: 0,
@@ -152,6 +136,9 @@ export default {
     onEnterKeyUp() {
       if (this.dropdownItems.length === 0) {
         this.onAddIngredientSelected();
+      } else {
+        this.focused = false;
+        this.onSelected(this.dropdownItems[0]);
       }
     },
   },
