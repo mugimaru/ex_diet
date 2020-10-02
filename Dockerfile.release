@@ -1,4 +1,21 @@
-FROM node:12.16.3-alpine3.11 as build-frontend
+FROM elixir:1.10.4-alpine as build-backend-deps
+
+RUN apk add --no-cache make build-base
+
+ENV MIX_ENV=prod
+RUN mix local.hex --force && mix local.rebar --force
+
+RUN mkdir /app
+WORKDIR /app
+COPY mix.exs .
+COPY mix.lock .
+COPY apps/ex_diet/mix.exs ./apps/ex_diet/mix.exs
+COPY apps/ex_diet_live/mix.exs ./apps/ex_diet_live/mix.exs
+
+RUN mix deps.get
+RUN mix deps.compile
+
+FROM node:12.16.3-alpine3.11 as build-vue-frontend
 
 RUN mkdir /app
 # Copy deps manifest
@@ -14,36 +31,29 @@ COPY frontend/ /app
 # Build
 RUN npm run build
 
-FROM elixir:1.10.4-alpine as build-backend
+FROM node:12.16.3-alpine3.11 as build-liveview-frontend
 
-ENV MIX_ENV=prod
+COPY --from=build-backend-deps /app /app/
+WORKDIR /app/apps/ex_diet_live/assets
 
-# Install build-base packages (bcrypt_elixir requirement)
-RUN apk add --no-cache make build-base
+COPY ./apps/ex_diet_live/assets/package.json .
+COPY ./apps/ex_diet_live/assets/package-lock.json .
 
-# Copy deps manifest
-RUN mix local.hex --force && mix local.rebar --force
+RUN npm install
 
-RUN mkdir /app
+COPY ./apps/ex_diet_live/assets .
+
+RUN npm run deploy
+
+FROM build-backend-deps as build-backend
+
 WORKDIR /app
-COPY mix.exs .
-COPY mix.lock .
-COPY apps/ex_diet/mix.exs ./apps/ex_diet/mix.exs
-
-# Fetch & compile deps
-RUN mix deps.get
-RUN mix deps.compile
-
-# Copy the rest of the files
 COPY . .
 
-# Copy frontend build
-COPY --from=build-frontend /app/build /app/priv/static
+COPY --from=build-vue-frontend /app/build /app/apps/ex_diet/priv/static
+COPY --from=build-liveview-frontend /app/apps/ex_diet_live/priv/static /app/apps/ex_diet_live/priv/static
 
-# Digest static assets
 RUN mix phx.digest
-
-# Build
 RUN mix release --overwrite
 
 FROM alpine:3.11

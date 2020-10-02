@@ -13,7 +13,9 @@ defmodule ExDiet.Mixfile do
         ex_diet: [
           include_executables_for: [:unix],
           applications: [
-            runtime_tools: :permanent
+            runtime_tools: :permanent,
+            ex_diet: :permanent,
+            ex_diet_live: :permanent
           ]
         ]
       ]

@@ -33,12 +33,17 @@ services:
   release:
     image: ex_diet:2.0.0
     ports:
-      - "4002:4000"
+      - "4010:4000"
+      - "4012:4002"
     environment:
       PORT: 4000
       URL_HOST: localhost
-      URL_PORT: 4002
+      URL_PORT: 4010
       URL_SCHEME: http
+      LV_PORT: 4002
+      LV_URL_HOST: localhost
+      LV_URL_PORT: 4012
+      LV_URL_SCHEME: http
       SECRET_KEY_BASE: m4NcRfxYZzAignPAWdzNap0Ljg6SoStDrfecjXTyVB73+LdHMNS6/I145MiRAXe9
       POSTGRES_URL: ecto://postgres:postgres@db/ex_diet-dev?pool_size=10
     user: service:service

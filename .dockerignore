@@ -12,5 +12,6 @@ priv/static/
 .deliver/releases/
 /.elixir_ls
 /.vscode
+/apps/*/assets/node_modules
 
 .git

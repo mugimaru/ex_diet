@@ -15,7 +15,7 @@ config :ex_diet, ExDiet.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.fetch_env!("POSTGRES_URL")
 
-config :ex_diet, ExDietWeb.Endpoint,
+config :ex_diet_live, ExDietLiveWeb.Endpoint,
   http: [
     port: System.get_env("LV_PORT", "4002") |> String.to_integer()
   ],
