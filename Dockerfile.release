@@ -18,21 +18,24 @@ FROM elixir:1.10.4-alpine as build-backend
 
 ENV MIX_ENV=prod
 
-# Installe build-base packages (bcrypt_elixir requirement)
+# Install build-base packages (bcrypt_elixir requirement)
 RUN apk add --no-cache make build-base
 
 # Copy deps manifest
 RUN mix local.hex --force && mix local.rebar --force
+
 RUN mkdir /app
-COPY mix.* /app/
 WORKDIR /app
+COPY mix.exs .
+COPY mix.lock .
+COPY apps/ex_diet/mix.exs ./apps/ex_diet/mix.exs
 
 # Fetch & compile deps
 RUN mix deps.get
 RUN mix deps.compile
 
 # Copy the rest of the files
-COPY . /app
+COPY . .
 
 # Copy frontend build
 COPY --from=build-frontend /app/build /app/priv/static
