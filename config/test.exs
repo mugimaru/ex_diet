@@ -18,3 +18,7 @@ config :ex_diet, ExDiet.Repo,
   hostname: System.get_env("PG_HOST") || "localhost",
   port: System.get_env("PGPORT") || 5432,
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :ex_diet_live, ExDietLiveWeb.Endpoint,
+  http: [port: 4003],
+  server: false

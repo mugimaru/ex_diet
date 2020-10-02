@@ -6,3 +6,4 @@ config :logger, :console,
   level: :info
 
 config :ex_diet, ExDietWeb.Endpoint, server: true
+config :ex_diet_live, ExDietLiveWeb.Endpoint, server: true

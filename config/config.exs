@@ -40,6 +40,13 @@ config :cors_plug,
 
 config :phoenix, :json_library, Jason
 
+config :ex_diet_live, ExDietLiveWeb.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "NgP3jJpPzxZn3fm28C9YI/0a5jYlg3JRpLwDuAK3+o1fLjiHEFAbOHr1IUjCW/ux",
+  render_errors: [view: ExDietLiveWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: ExDietLive.PubSub,
+  live_view: [signing_salt: "fJqPFvqm"]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
