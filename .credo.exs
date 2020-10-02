@@ -19,8 +19,8 @@
         #
         # you can give explicit globs or simply directories
         # in the latter case `**/*.{ex,exs}` will be used
-        included: ["lib/", "test/"],
-        excluded: [~r"/_build/", ~r"/deps/", ~r"fallback_controller", ~r"factories"]
+        included: ["*/**/lib/", "*/**/test/"],
+        excluded: [~r"/node_modules/", ~r"/stages/", ~r"/_build/", ~r"/deps/", ~r"fallback_controller", ~r"factories"]
       },
       #
       # If you create your own checks, you must specify the source files for
@@ -70,7 +70,6 @@
         # set this value to 0 (zero).
         {Credo.Check.Design.TagTODO, exit_status: 0},
         {Credo.Check.Design.TagFIXME},
-
         {Credo.Check.Readability.FunctionNames},
         {Credo.Check.Readability.LargeNumbers, false},
         {Credo.Check.Readability.MaxLineLength, priority: :low, max_length: 140, ignore_specs: true},
@@ -84,7 +83,6 @@
         {Credo.Check.Readability.VariableNames},
         {Credo.Check.Readability.PreferImplicitTry, false},
         {Credo.Check.Readability.AliasOrder, false},
-
         {Credo.Check.Refactor.ABCSize, max_size: 50},
         {Credo.Check.Refactor.CondStatements},
         {Credo.Check.Refactor.FunctionArity},
@@ -95,7 +93,6 @@
         {Credo.Check.Refactor.NegatedConditionsWithElse},
         {Credo.Check.Refactor.Nesting, max_nesting: 3},
         {Credo.Check.Refactor.UnlessWithElse},
-
         {Credo.Check.Warning.IExPry},
         {Credo.Check.Warning.IoInspect},
         {Credo.Check.Warning.OperationOnSameValues},
@@ -106,7 +103,6 @@
         {Credo.Check.Warning.UnusedStringOperation},
         {Credo.Check.Warning.UnusedTupleOperation},
         {Credo.Check.Warning.OperationWithConstantResult},
-
         {Credo.Check.Refactor.MapInto, false},
         {Credo.Check.Warning.LazyLogging, false}
 
