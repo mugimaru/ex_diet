@@ -1,9 +1,12 @@
 <div class="row">
-  <div class="col s12 l8">
+  <div class="col-sm-12 col-xl-8">
   <form  phx-change="filter">
-    <input type="text" name ="q" value="<%= @filter %>" placeholder="Search ingredients..."/>
+    <div class="input-group mb-3">
+      <span class="input-group-text">todo: search icon</span>
+      <input type="text" name ="q" value="<%= @filter %>" class="form-control" placeholder="Search ingredients..."/>
+    </div>
   </form>
-  <table class="highlight responsive-table">
+  <table class="table table-hover">
     <thead>
       <tr>
           <th>Name</th>
@@ -18,47 +21,48 @@
       <%= for ing = %ExDiet.Food.Ingredient{} <- @data do %>
         <tr>
           <td><%= ing.name %></td>
-          <td class="right-align"><%= format_number ing.protein %></td>
-          <td class="right-align"><%= format_number ing.fat %></td>
-          <td class="right-align"><%= format_number ing.carbonhydrate %></td>
-          <td class="right-align"><%= format_number ing.energy, precision: 0 %></td>
+          <td class="text-right"><%= format_number ing.protein %></td>
+          <td class="text-right"><%= format_number ing.fat %></td>
+          <td class="text-right"><%= format_number ing.carbonhydrate %></td>
+          <td class="text-right"><%= format_number ing.energy, precision: 0 %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
   </div>
-  <div class="col s12 l4">
-      <div class="card" style="margin-top: 2rem; margin-left: 2rem;">
-        <div class="card-content">
+  <div class="col-sm-12 col-xl-4">
+      <div class="card">
+        <div class="card-header">
+          New ingredient
+        </div>
+        <div class="card-body">
           <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
-            <div class="input-field">
-              <%= text_input f, :name %>
-              <label for="name">Name</label>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <%= text_input f, :name, class: "form-control" %>
             </div>
 
-            <div class="input-field">
-              <%= number_input f, :protein %>
-              <label for="protein">protein</label>
+            <div class="mb-3">
+              <label for="protein" class="form-label">protein</label>
+              <%= number_input f, :protein, class: "form-control" %>
             </div>
 
-            <div class="input-field">
-              <%= number_input f, :fat %>
-              <label for="fat">fat</label>
+            <div class="mb-3">
+              <label for="fat" class="form-label">fat</label>
+              <%= number_input f, :fat, class: "form-control" %>
             </div>
 
-            <div class="input-field">
-              <%= number_input f, :carbonhydrate %>
-              <label for="carbonhydrate">carbonhydrate</label>
+            <div class="mb-3">
+              <label for="carbonhydrate" class="form-label">carbonhydrate</label>
+              <%= number_input f, :carbonhydrate, class: "form-control" %>
             </div>
 
-            <div class="input-field">
-              <%= number_input f, :energy %>
-              <label for="energy">energy</label>
+            <div class="mb-3">
+              <label for="energy" class="form-label">energy</label>
+              <%= number_input f, :energy, class: "form-control" %>
             </div>
 
-            <button class="btn light-blue" type="submit" name="action">Create Ingredient
-              <i class="material-icons right">send</i>
-            </button>
+            <button class="btn btn-primary" type="submit" name="action">Create Ingredient</button>
           </form>
         </div>
       </div>

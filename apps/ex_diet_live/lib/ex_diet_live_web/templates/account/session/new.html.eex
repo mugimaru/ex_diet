@@ -1,25 +1,20 @@
-<div class="row">
-  <div class="col s12 m6 offset-m3">
-    <div class="card" class="" style="margin-top: 5rem">
-      <div class="card-content">
-        <%= form_for nil, Routes.account_session_path(@conn, :create), [] %>
-          <div class="input-field">
-            <input id="email" name="email" type="email" value="<%= @email %>" required class="validate">
-            <label for="email">Email</label>
-          </div>
+<div class="row justify-content-center">
+  <div class="card col-md-4 col-12">
+    <div class="card-body">
+      <%= form_for nil, Routes.account_session_path(@conn, :create), [] %>
+        <div class="mb-3">
+          <label class="form-label" for="email">Email address:</label>
+          <input name="email" type="email" value="<%= @email %>" placeholder="Enter email..."  class="form-control" required>
+        </div>
 
-          <div class="input-field">
-            <input id="password" name="password" type="password" required class="validate">
-            <label for="password">Password</label>
-          </div>
+        <div class="mb-3">
+          <label class="form-label" for="password">Password:</label>
+          <input id="password" name="password" type="password"  placeholder="Enter password..." class="form-control" required>
+        </div>
 
-          <button class="btn light-blue" value="<%= @password %>" type="submit" name="action">Login
-            <i class="material-icons right">send</i>
-          </button>
-
-          <a href="<%= Routes.account_registration_path(@conn, :new) %>" style="margin-left: 1rem;">Need to create an account? </a>
-        </form>
-      </div>
+        <button class="btn btn-primary" value="<%= @password %>" type="submit" name="action">Login</button>
+        <a href="<%= Routes.account_registration_path(@conn, :new) %>" class="btn btn-link">Need to create an account? </a>
+      </form>
     </div>
   </div>
 </div>

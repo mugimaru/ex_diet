@@ -6,22 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "ExDietLive", suffix: " · Phoenix Framework" %>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <nav class="light-blue lighten-1" role="navigation">
-      <div class="nav-wrapper container">
-        <a id="logo-container" href="<%= Routes.page_path(@conn, :index) %>" class="brand-logo">ExDiet</a>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <%= link "ExDiet", to: Routes.page_path(@conn, :index), class: "navbar-brand" %>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <%= if assigns[:current_user] do  %>
+            <div class="navbar-nav">
+              <%= for {title, path} <- navbar_pages() do %>
+                <%= navbar_link(@conn, title, path) %>
+              <% end %>
+            </div>
 
-        <%= render_navbar(@conn, wrapper_class: "right hide-on-med-and-down") %>
-        <%= render_navbar(@conn, wrapper_class: "sidenav", wrapper_id: "nav-mobile") %>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <div class="navbar-nav ml-auto">
+              <%= navbar_link(@conn, "Logout", Routes.account_session_path(@conn, :delete), method: :delete) %>
+            </div>
+          <% else %>
+            <div class="navbar-nav ml-auto">
+              <%= navbar_link(@conn, "Login", Routes.account_session_path(@conn, :new)) %>
+            </div>
+          <% end %>
+        </div>
       </div>
     </nav>
+
     <%= @inner_content %>
   </body>
 </html>
