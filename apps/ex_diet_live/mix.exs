@@ -31,6 +31,7 @@ defmodule ExDietLive.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.5.5"},
+      {:phoenix_ecto, "~> 4.0"},
       {:phoenix_live_view, "~> 0.14.6"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},

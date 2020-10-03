@@ -1,1 +1,66 @@
-ingredients
+<div class="row">
+  <div class="col s12 l8">
+  <form  phx-change="filter">
+    <input type="text" name ="q" value="<%= @filter %>" placeholder="Search ingredients..."/>
+  </form>
+  <table class="highlight responsive-table">
+    <thead>
+      <tr>
+          <th>Name</th>
+          <th>Protein</th>
+          <th>Fat</th>
+          <th>CHO</th>
+          <th>Energy</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <%= for ing = %ExDiet.Food.Ingredient{} <- @data do %>
+        <tr>
+          <td><%= ing.name %></td>
+          <td class="right-align"><%= format_number ing.protein %></td>
+          <td class="right-align"><%= format_number ing.fat %></td>
+          <td class="right-align"><%= format_number ing.carbonhydrate %></td>
+          <td class="right-align"><%= format_number ing.energy, precision: 0 %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+  <div class="col s12 l4">
+      <div class="card" style="margin-top: 2rem; margin-left: 2rem;">
+        <div class="card-content">
+          <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
+            <div class="input-field">
+              <%= text_input f, :name %>
+              <label for="name">Name</label>
+            </div>
+
+            <div class="input-field">
+              <%= number_input f, :protein %>
+              <label for="protein">protein</label>
+            </div>
+
+            <div class="input-field">
+              <%= number_input f, :fat %>
+              <label for="fat">fat</label>
+            </div>
+
+            <div class="input-field">
+              <%= number_input f, :carbonhydrate %>
+              <label for="carbonhydrate">carbonhydrate</label>
+            </div>
+
+            <div class="input-field">
+              <%= number_input f, :energy %>
+              <label for="energy">energy</label>
+            </div>
+
+            <button class="btn light-blue" type="submit" name="action">Create Ingredient
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>

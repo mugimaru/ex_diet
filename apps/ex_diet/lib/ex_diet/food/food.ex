@@ -8,6 +8,10 @@ defmodule ExDiet.Food do
 
   alias ExDiet.Food.{Recipe, Ingredient, Calendar, Meal}
 
+  def change_ingredient(%Ingredient{} = ingredient, params \\ %{}) do
+    Ingredient.changeset(ingredient, params)
+  end
+
   def create_ingredient(attrs \\ %{}) do
     %Ingredient{}
     |> Ingredient.changeset(attrs)
