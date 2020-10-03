@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col s12 m6 offset-m3">
+    <div class="card" class="" style="margin-top: 5rem">
+      <div class="card-content">
+        <%= form_for nil, Routes.account_registration_path(@conn, :create), [] %>
+          <div class="input-field">
+            <input id="email" name="email" type="email" value="<%= @email %>" required class="validate">
+            <label for="email">Email</label>
+          </div>
+
+          <div class="input-field">
+            <input id="password" name="password" type="password" required class="validate">
+            <label for="password">Password</label>
+          </div>
+
+          <button class="btn light-blue" value="<%= @password %>" type="submit" name="action">Register
+            <i class="material-icons right">send</i>
+          </button>
+
+          <a href="<%= Routes.account_session_path(@conn, :new) %>" style="margin-left: 1rem;">Need to login? </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

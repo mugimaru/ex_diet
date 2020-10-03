@@ -30,7 +30,7 @@ config :ex_diet, ExDiet.Repo,
   pool_size: 10
 
 config :ex_diet_live, ExDietLiveWeb.Endpoint,
-  http: [port: 4001],
+  http: [port: 4002],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

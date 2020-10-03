@@ -48,6 +48,7 @@ defmodule ExDietLiveWeb do
         layout: {ExDietLiveWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
+      import ExDietLiveWeb.LiveViewHelpers
     end
   end
 

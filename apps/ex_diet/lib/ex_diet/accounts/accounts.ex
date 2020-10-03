@@ -8,6 +8,14 @@ defmodule ExDiet.Accounts do
 
   alias ExDiet.Accounts.{User, Authentication}
 
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
+  def get_user!(id) do
+    Repo.get!(User, id)
+  end
+
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)

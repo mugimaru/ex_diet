@@ -17,6 +17,7 @@ services:
     build: .
     ports:
       - "4000:4000"
+      - "4002:4002"
     command: mix phx.server
     working_dir: /app
     user: ${HOST_UID_GID}

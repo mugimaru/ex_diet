@@ -8,30 +8,40 @@ defmodule ExDietLiveWeb.Router do
     plug :put_root_layout, {ExDietLiveWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ExDietLiveWeb.Plugs.Auth
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :authenticated do
+    plug ExDietLiveWeb.Plugs.Auth, :require_authenticated
+  end
+
+  pipeline :anonymous do
+    plug ExDietLiveWeb.Plugs.Auth, :require_anonymous
   end
 
   scope "/", ExDietLiveWeb do
     pipe_through :browser
-
     live "/", PageLive, :index
+
+    scope "/accounts", Account, as: :account do
+      pipe_through :anonymous
+
+      resources "/", RegistrationController, only: [:new, :create]
+      resources "/sessions", SessionController, only: [:new, :create]
+    end
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ExDietLiveWeb do
-  #   pipe_through :api
-  # end
+  scope "/", ExDietLiveWeb do
+    pipe_through :browser
+    pipe_through :authenticated
 
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
+    delete "/accounts/sessions", Account.SessionController, :delete, as: :account_session
+
+    scope "/food", Food do
+      live "/ingredients", IngredientLive, :index
+    end
+  end
+
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 
