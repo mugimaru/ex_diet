@@ -7,6 +7,12 @@ defmodule ExDietLiveWeb.LayoutView do
     end
   end
 
+  def navbar_pages do
+    %{
+      "Ingredients" => Routes.ingredient_path(ExDietLiveWeb.Endpoint, :index)
+    }
+  end
+
   defp navs_for_user(conn, nil) do
     [
       navbar_link(conn, "Login", Routes.account_session_path(conn, :new))
@@ -24,12 +30,6 @@ defmodule ExDietLiveWeb.LayoutView do
     content_tag(:li, class: class) do
       link(title, to: path, method: Keyword.get(opts, :method, :get))
     end
-  end
-
-  defp navbar_pages do
-    %{
-      "Ingredients" => Routes.ingredient_path(ExDietLiveWeb.Endpoint, :index)
-    }
   end
 
   defp active_nav?(conn, path) do

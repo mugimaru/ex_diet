@@ -47,6 +47,7 @@ defmodule ExDietLiveWeb.Plugs.Auth do
     conn
     |> put_flash(:error, "You must be logged out to access that page")
     |> redirect(to: Routes.page_path(conn, :index))
+    |> halt()
   end
 
   defp check_anonymous(%Plug.Conn{} = conn) do
@@ -61,5 +62,6 @@ defmodule ExDietLiveWeb.Plugs.Auth do
     conn
     |> put_flash(:error, "You must be logged in to access that page")
     |> redirect(to: Routes.page_path(conn, :index))
+    |> halt()
   end
 end

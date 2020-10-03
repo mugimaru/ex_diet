@@ -7,7 +7,7 @@ config :ex_diet, ExDietWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: if(System.get_env("DEBUG"), do: :debug, else: :warn)
 
 # Configure your database
 config :ex_diet, ExDiet.Repo,

@@ -31,7 +31,14 @@ defmodule ExDietLiveWeb.ConnCase do
     end
   end
 
-  setup _tags do
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+  setup tags do
+    if tags[:authenticated] do
+      user = ExDiet.Factory.insert(:user)
+      conn = Phoenix.ConnTest.init_test_session(Phoenix.ConnTest.build_conn(), %{user_id: user.id})
+
+      {:ok, conn: conn, user: user}
+    else
+      {:ok, conn: Phoenix.ConnTest.build_conn()}
+    end
   end
 end
