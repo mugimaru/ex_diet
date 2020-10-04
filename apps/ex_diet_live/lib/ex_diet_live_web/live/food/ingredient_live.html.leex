@@ -1,36 +1,36 @@
 <div class="row">
-  <div class="col-sm-12 col-xl-8">
+  <div class="col-sm-12 col-lg-8 order-1">
   <form  phx-change="filter">
     <div class="input-group mb-3">
       <span class="input-group-text"><%= icon "search" %></span>
       <input type="text" name ="q" value="<%= @filter %>" class="form-control" placeholder="Search ingredients..."/>
     </div>
   </form>
-  <table class="table table-hover">
+  <table class="table table-hover table-responsive">
     <thead>
       <tr>
           <th>Name</th>
-          <th>Protein</th>
-          <th>Fat</th>
-          <th>CHO</th>
-          <th>Energy</th>
+          <th class="d-none d-md-table-cell">Protein</th>
+          <th class="d-none d-md-table-cell">Fat</th>
+          <th class="d-none d-md-table-cell">CHO</th>
+          <th class="d-none d-md-table-cell">Energy</th>
       </tr>
     </thead>
 
     <tbody>
       <%= for ing = %ExDiet.Food.Ingredient{} <- @data do %>
-        <tr phx-click="select_item" phx-value-id="<%= ing.id %>">
+        <tr phx-click="select_item" phx-value-id="<%= ing.id %>" class="<%= if @changeset.data.id == ing.id, do: "table-info", else: ""%>">
           <td><%= ing.name %></td>
-          <td class="text-right"><%= format_number ing.protein %></td>
-          <td class="text-right"><%= format_number ing.fat %></td>
-          <td class="text-right"><%= format_number ing.carbonhydrate %></td>
-          <td class="text-right"><%= format_number ing.energy, precision: 0 %></td>
+          <td class="d-none d-md-table-cell text-right"><%= format_number ing.protein %></td>
+          <td class="d-none d-md-table-cell text-right"><%= format_number ing.fat %></td>
+          <td class="d-none d-md-table-cell text-right"><%= format_number ing.carbonhydrate %></td>
+          <td class="d-none d-md-table-cell text-right"><%= format_number ing.energy, precision: 0 %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
   </div>
-  <div class="col-sm-12 col-xl-4">
+  <div class="col-sm-12 col-lg-4 order-md-first order-lg-2 mb-3">
       <div class="card">
         <div class="card-header">
 
@@ -52,36 +52,36 @@
             </div>
 
             <div class="mb-3">
-              <label for="protein" class="form-label">protein</label>
+              <label for="protein" class="form-label">Protein</label>
               <%= bs_number_input f, :protein, required: true, class: "form-control", step: "0.01" %>
               <%= error_tag f, :protein %>
             </div>
 
             <div class="mb-3">
-              <label for="fat" class="form-label">fat</label>
+              <label for="fat" class="form-label">Fat</label>
               <%= bs_number_input f, :fat, required: true, class: "form-control", step: "0.01" %>
             </div>
 
             <div class="mb-3">
-              <label for="carbonhydrate" class="form-label">carbonhydrate</label>
+              <label for="carbonhydrate" class="form-label">Carbonhydrate</label>
               <%= bs_number_input f, :carbonhydrate, required: true, class: "form-control", step: "0.01" %>
             </div>
 
             <div class="mb-3">
-              <label for="energy" class="form-label">energy</label>
+              <label for="energy" class="form-label">Energy</label>
               <%= bs_number_input f, :energy, required: true, class: "form-control", step: "1" %>
             </div>
 
             <div class="btn-group">
               <%= if @changeset_update do %>
-                <button class="btn btn-success" type="submit" name="action">Update Ingredient</button>
-                <button phx-click="delete" type="button" class="btn btn-danger">Delete Ingredient</button>
+                <button class="btn btn-success" type="submit" name="action">Update</button>
+                <button phx-click="delete" type="button" class="btn btn-danger">Delete</button>
               <% else %>
-                <button class="btn btn-primary" type="submit" name="action">Create Ingredient</button>
+                <button class="btn btn-primary" type="submit" name="action">Create</button>
               <% end %>
             </div>
 
-            <button phx-click="reset_form" type="reset" class="btn btn-warning float-right">Reset Form</button>
+            <button phx-click="reset_form" type="reset" class="btn btn-warning float-right">Reset</button>
           </form>
         </div>
       </div>
