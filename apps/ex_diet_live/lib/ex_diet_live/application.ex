@@ -11,6 +11,7 @@ defmodule ExDietLive.Application do
       ExDietLiveWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: ExDietLive.PubSub},
+      {ExDietLive.Food.UserPubSubDispatcher, []},
       # Start the Endpoint (http/https)
       ExDietLiveWeb.Endpoint
       # Start a worker by calling: ExDietLive.Worker.start_link(arg)

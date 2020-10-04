@@ -6,10 +6,11 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
 
   @impl true
   def mount(_params, session, socket) do
-    :ok = Food.subscribe(Food.Ingredient)
+    socket = assign_user(session, socket)
+    :ok = ExDietLive.Food.UserPubSubDispatcher.subscribe(socket.assigns.current_user, Food.Ingredient)
 
     socket =
-      assign_user(session, socket)
+      socket
       |> set_form_changeset()
       |> assign(has_next_page: false, page: 1, update_mode: :append)
 
@@ -34,16 +35,12 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
   end
 
   @impl true
-  def handle_info({Food, :delete, ingredient}, %{assigns: %{current_user: user, filter: filter, page: page}} = socket) do
-    if ingredient.user_id == user.id do
-      {:noreply, assign(socket, data: reload_data(user, filter, page), update_mode: :replace)}
-    else
-      {:noreply, socket}
-    end
+  def handle_info({Food, :delete, _ingredient}, %{assigns: %{current_user: user, filter: filter, page: page}} = socket) do
+    {:noreply, assign(socket, data: reload_data(user, filter, page), update_mode: :replace)}
   end
 
-  def handle_info({Food, _event, ingredient}, %{assigns: %{current_user: user, filter: filter}} = socket) do
-    if is_nil(filter) || (user.id == ingredient.user_id && String.contains?(ingredient.name, filter)) do
+  def handle_info({Food, _event, ingredient}, %{assigns: %{filter: filter}} = socket) do
+    if is_nil(filter) || String.contains?(String.downcase(ingredient.name), String.downcase(filter)) do
       {:noreply, assign(socket, data: [ingredient], update_mode: :append)}
     else
       {:noreply, socket}
