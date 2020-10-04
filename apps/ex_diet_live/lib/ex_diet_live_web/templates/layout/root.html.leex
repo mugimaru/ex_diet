@@ -25,6 +25,7 @@
             </div>
 
             <div class="navbar-nav ml-auto">
+              <img src="<%= gravatar_url(@current_user.email) %>" alt="avatar">
               <%= navbar_link(@conn, "Logout", Routes.account_session_path(@conn, :delete), method: :delete) %>
             </div>
           <% else %>

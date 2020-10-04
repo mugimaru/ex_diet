@@ -25,4 +25,9 @@ defmodule ExDietLiveWeb.LayoutView do
       Enum.take(conn.path_info, Enum.count(nav_path)) == nav_path
     end
   end
+
+  def gravatar_url(email, size \\ 40) do
+    hash = :crypto.hash(:md5, String.downcase(email)) |> Base.encode16() |> String.downcase()
+    "https://www.gravatar.com/avatar/#{hash}?s=#{size}"
+  end
 end
