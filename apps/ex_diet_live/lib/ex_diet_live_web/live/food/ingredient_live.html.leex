@@ -30,7 +30,9 @@
     </tbody>
   </table>
   <%= if @has_next_page do %>
-    <button class="btn btn-block" phx-click="load_more" phx-disable-with="Loading...">Load More</button>
+    <div id="ingredients-table-spinner" class="d-flex justify-content-center" phx-hook="infiniteScrollHook">
+      <div class="spinner-border" role="status"></div>
+    </div>
   <% end %>
   </div>
   <div class="col-sm-12 col-lg-4 order-md-first order-lg-2 mb-3">

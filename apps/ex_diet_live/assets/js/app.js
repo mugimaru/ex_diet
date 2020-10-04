@@ -18,10 +18,27 @@ import { Socket } from "phoenix";
 import NProgress from "nprogress";
 import { LiveSocket } from "phoenix_live_view";
 
+const infiniteScrollHook = {
+  mounted() {
+    const eventName = this.el.dataset.phxEvent || "load_more";
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        this.pushEvent(eventName);
+      }
+    });
+
+    this.observer.observe(this.el);
+  },
+  destroyed() {
+    this.observer.disconnect();
+  },
+};
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: { infiniteScrollHook },
   params: { _csrf_token: csrfToken },
 });
 
