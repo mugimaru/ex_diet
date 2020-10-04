@@ -6,24 +6,8 @@ defmodule ExDietLiveWeb.LiveViewHelpers do
     assign_new(socket, :current_user, fn -> ExDiet.Accounts.get_user!(user_id) end)
   end
 
-  def format_number(num), do: format_number(num, [])
-
-  def format_number(%Decimal{} = num, opts) do
-    precision = Keyword.get(opts, :precision, 2)
-
-    if precision == 0 do
-      num |> Decimal.round() |> Decimal.to_integer() |> to_string()
-    else
-      case num |> to_string() |> String.split(".") do
-        [num] ->
-          num <> "." <> repeat_str("0", precision)
-        [num, fr] ->
-          num <> "." <> String.pad_leading(fr, precision, "0")
-      end
-    end
-  end
-
-  @spec get_patched_path(uri :: String.t(), params_to_add :: Enumerable.t()) :: {:ok | :unchanged, new_path :: String.t()}
+  @spec get_patched_path(uri :: String.t(), params_to_add :: Enumerable.t()) ::
+          {:ok | :unchanged, new_path :: String.t()}
   @doc """
   Merges given params into query string and returns resulting path and query string
   wich might be useful to update query string via `Phoenix.LiveView.push_patch/2`.
@@ -49,6 +33,24 @@ defmodule ExDietLiveWeb.LiveViewHelpers do
       {:unchanged, path}
     else
       {:ok, path}
+    end
+  end
+
+  def format_number(num), do: format_number(num, [])
+
+  def format_number(%Decimal{} = num, opts) do
+    precision = Keyword.get(opts, :precision, 2)
+
+    if precision == 0 do
+      num |> Decimal.round() |> Decimal.to_integer() |> to_string()
+    else
+      case num |> to_string() |> String.split(".") do
+        [num] ->
+          num <> "." <> repeat_str("0", precision)
+
+        [num, fr] ->
+          num <> "." <> String.pad_leading(fr, precision, "0")
+      end
     end
   end
 

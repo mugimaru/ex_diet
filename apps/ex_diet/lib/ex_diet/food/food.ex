@@ -8,6 +8,10 @@ defmodule ExDiet.Food do
 
   alias ExDiet.Food.{Recipe, Ingredient, Calendar, Meal}
 
+  def subscribe(struct) do
+    Phoenix.PubSub.subscribe(ExDiet.PubSub, topic_for_struct(struct))
+  end
+
   def change_ingredient(%Ingredient{} = ingredient, params \\ %{}) do
     Ingredient.changeset(ingredient, params)
   end
@@ -16,18 +20,21 @@ defmodule ExDiet.Food do
     %Ingredient{}
     |> Ingredient.changeset(attrs)
     |> Repo.insert()
+    |> broadcast_change(:create)
   end
 
   def update_ingredient(%Ingredient{} = ingredient, attrs) do
     ingredient
     |> Ingredient.changeset(attrs)
     |> Repo.update()
+    |> broadcast_change(:update)
   end
 
   def delete_ingredient(%Ingredient{} = ingredient) do
     case count_references(ingredient) do
       0 ->
         Repo.delete(ingredient)
+        |> broadcast_change(:delete)
 
       _ ->
         {:error, :referenced}
@@ -87,4 +94,16 @@ defmodule ExDiet.Food do
         )
     end)
   end
+
+  defp broadcast_change({:ok, struct}, event) do
+    Phoenix.PubSub.broadcast(ExDiet.PubSub, topic_for_struct(struct.__struct__), {__MODULE__, event, struct})
+    {:ok, struct}
+  end
+
+  defp broadcast_change(error, _event) do
+    error
+  end
+
+  defp topic_for_struct(Ingredient), do: "ex_diet:food:ingredients:changes"
+  defp topic_for_struct(Recipe), do: "ex_diet:food:recipes:changes"
 end

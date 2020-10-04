@@ -82,6 +82,8 @@ defmodule ExDietLiveWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
+      import ExDietLiveWeb.PhoenixHTMLBootstrapHelpers
+
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
 
