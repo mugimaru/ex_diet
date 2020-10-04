@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12 col-lg-8 order-1">
-  <form  phx-change="filter">
+  <form id="ingredients_filter" phx-change="filter">
     <div class="input-group mb-3">
       <span class="input-group-text"><%= icon "search" %></span>
       <input type="text" name ="q" value="<%= @filter %>" class="form-control" placeholder="Search ingredients..."/>
@@ -19,7 +19,7 @@
 
     <tbody id="ingredients" phx-update="<%= @update_mode %>">
       <%= for ing = %ExDiet.Food.Ingredient{} <- @data do %>
-        <tr phx-click="select_item" id="<%= ing.id %>" phx-value-id="<%= ing.id %>">
+        <tr phx-click="select_item" id="ingredient-<%= ing.id %>" phx-value-id="<%= ing.id %>">
           <td><%= ing.name %></td>
           <td class="d-none d-md-table-cell text-right"><%= format_number ing.protein %></td>
           <td class="d-none d-md-table-cell text-right"><%= format_number ing.fat %></td>
@@ -44,7 +44,7 @@
           <% end %>
         </div>
         <div class="card-body">
-          <%= f = form_for @changeset, "#", [phx_submit: :save] %>
+          <%= f = form_for @changeset, "#", [id: "ingredient_form", phx_submit: :save] %>
             <%= hidden_input f, :user_id, value: @current_user.id %>
             <%= hidden_input f, :id %>
 

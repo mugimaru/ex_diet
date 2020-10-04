@@ -17,8 +17,37 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
   end
 
   @impl true
-  def handle_info({Food, _, _ingredient}, %{assigns: %{current_user: user, filter: filter, page: page}} = socket) do
-    {:noreply, assign(socket, data: reload_data(user, filter, page), update_mode: :replace)}
+  def handle_params(params, uri, %{assigns: %{current_user: user}} = socket) do
+    filter = Map.get(params, "q")
+    page = 1
+    {has_next_page, new_data} = load_page(user, filter, page)
+
+    {:noreply,
+     assign(socket,
+       uri: uri,
+       data: new_data,
+       has_next_page: has_next_page,
+       filter: filter,
+       page: page,
+       update_mode: :replace
+     )}
+  end
+
+  @impl true
+  def handle_info({Food, :delete, ingredient}, %{assigns: %{current_user: user, filter: filter, page: page}} = socket) do
+    if ingredient.user_id == user.id do
+      {:noreply, assign(socket, data: reload_data(user, filter, page), update_mode: :replace)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_info({Food, _event, ingredient}, %{assigns: %{current_user: user, filter: filter}} = socket) do
+    if is_nil(filter) || (user.id == ingredient.user_id && String.contains?(ingredient.name, filter)) do
+      {:noreply, assign(socket, data: [ingredient], update_mode: :append)}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
@@ -65,8 +94,8 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
       end
 
     case result do
-      {:ok, _ingredient} ->
-        {:noreply, set_form_changeset(socket)}
+      {:ok, ingredient} ->
+        {:noreply, socket |> set_form_changeset() |> assign(data: [ingredient], update_mode: :append)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -80,23 +109,6 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
   def handle_event("load_more", _params, %{assigns: %{current_user: user, page: page, filter: filter}} = socket) do
     {has_next_page, new_data} = load_page(user, filter, page + 1)
     {:noreply, assign(socket, data: new_data, has_next_page: has_next_page, page: page + 1, update_mode: :append)}
-  end
-
-  @impl true
-  def handle_params(params, uri, %{assigns: %{current_user: user}} = socket) do
-    filter = Map.get(params, "q")
-    page = 1
-    {has_next_page, new_data} = load_page(user, filter, page)
-
-    {:noreply,
-     assign(socket,
-       uri: uri,
-       data: new_data,
-       has_next_page: has_next_page,
-       filter: filter,
-       page: page,
-       update_mode: :replace
-     )}
   end
 
   defp set_form_changeset(socket, ingredient \\ %Food.Ingredient{}) do
