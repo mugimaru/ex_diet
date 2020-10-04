@@ -12,6 +12,10 @@ defmodule ExDiet.Food do
     Phoenix.PubSub.subscribe(ExDiet.PubSub, topic_for_struct(struct))
   end
 
+  def get_ingredient!(id) do
+    Repo.get!(Ingredient, id)
+  end
+
   def change_ingredient(%Ingredient{} = ingredient, params \\ %{}) do
     Ingredient.changeset(ingredient, params)
   end

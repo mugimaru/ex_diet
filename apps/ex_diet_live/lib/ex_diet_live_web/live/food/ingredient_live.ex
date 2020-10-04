@@ -7,29 +7,23 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
   @impl true
   def mount(_params, session, socket) do
     :ok = Food.subscribe(Food.Ingredient)
-    {:ok, assign_user(session, socket) |> set_form_changeset() |> assign(:data, [])}
+
+    socket =
+      assign_user(session, socket)
+      |> set_form_changeset()
+      |> assign(has_next_page: false, page: 1, update_mode: :append)
+
+    {:ok, socket, temporary_assigns: [data: []]}
   end
 
   @impl true
-  def handle_info({Food, _, _ingredient}, socket) do
-    {:noreply, assign(socket, :data, load_data(socket.assigns.current_user, socket.assigns.filter))}
+  def handle_info({Food, _, _ingredient}, %{assigns: %{current_user: user, filter: filter, page: page}} = socket) do
+    {:noreply, assign(socket, data: reload_data(user, filter, page), update_mode: :replace)}
   end
 
   @impl true
   def handle_event("select_item", %{"id" => id}, socket) do
-    case Integer.parse(id) do
-      {id, ""} ->
-        case Enum.find(socket.assigns.data, &(&1.id == id)) do
-          nil ->
-            {:noreply, socket}
-
-          ing ->
-            {:noreply, set_form_changeset(socket, ing)}
-        end
-
-      _ ->
-        {:noreply, socket}
-    end
+    {:noreply, set_form_changeset(socket, Food.get_ingredient!(id))}
   end
 
   def handle_event("delete", _params, socket) do
@@ -83,21 +77,50 @@ defmodule ExDietLiveWeb.Food.IngredientLive do
     {:noreply, set_form_changeset(socket)}
   end
 
+  def handle_event("load_more", _params, %{assigns: %{current_user: user, page: page, filter: filter}} = socket) do
+    {has_next_page, new_data} = load_page(user, filter, page + 1)
+    {:noreply, assign(socket, data: new_data, has_next_page: has_next_page, page: page + 1, update_mode: :append)}
+  end
+
   @impl true
-  def handle_params(params, uri, socket) do
+  def handle_params(params, uri, %{assigns: %{current_user: user}} = socket) do
     filter = Map.get(params, "q")
-    {:noreply, assign(socket, uri: uri, data: load_data(socket.assigns.current_user, filter), filter: filter)}
+    page = 1
+    {has_next_page, new_data} = load_page(user, filter, page)
+
+    {:noreply,
+     assign(socket,
+       uri: uri,
+       data: new_data,
+       has_next_page: has_next_page,
+       filter: filter,
+       page: page,
+       update_mode: :replace
+     )}
   end
 
   defp set_form_changeset(socket, ingredient \\ %Food.Ingredient{}) do
     assign(socket, changeset: Food.change_ingredient(ingredient), changeset_update: !!ingredient.id)
   end
 
-  defp load_data(user, filter) do
+  @per_page 30
+  defp reload_data(user, filter, page) do
+    do_load_data(user, filter, page * @per_page, 0)
+  end
+
+  defp load_page(user, filter, page) do
+    offset = (page - 1) * @per_page
+    data = do_load_data(user, filter, @per_page, offset)
+
+    {Enum.count(data) == @per_page, data}
+  end
+
+  defp do_load_data(user, filter, limit, offset) do
     Food.Ingredient
     |> Food.Queries.Calendar.for_user(user)
     |> Food.Queries.Ingredient.search(%{filter: filter})
     |> Food.Queries.Ingredient.most_used_first()
+    |> Food.Queries.Ingredient.slice(limit, offset)
     |> ExDiet.Repo.all()
   end
 end

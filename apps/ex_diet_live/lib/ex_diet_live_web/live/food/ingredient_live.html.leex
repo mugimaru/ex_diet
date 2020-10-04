@@ -17,9 +17,9 @@
       </tr>
     </thead>
 
-    <tbody>
+    <tbody id="ingredients" phx-update="<%= @update_mode %>">
       <%= for ing = %ExDiet.Food.Ingredient{} <- @data do %>
-        <tr phx-click="select_item" phx-value-id="<%= ing.id %>" class="<%= if @changeset.data.id == ing.id, do: "table-info", else: ""%>">
+        <tr phx-click="select_item" id="<%= ing.id %>" phx-value-id="<%= ing.id %>">
           <td><%= ing.name %></td>
           <td class="d-none d-md-table-cell text-right"><%= format_number ing.protein %></td>
           <td class="d-none d-md-table-cell text-right"><%= format_number ing.fat %></td>
@@ -29,6 +29,9 @@
       <% end %>
     </tbody>
   </table>
+  <%= if @has_next_page do %>
+    <button class="btn btn-block" phx-click="load_more" phx-disable-with="Loading...">Load More</button>
+  <% end %>
   </div>
   <div class="col-sm-12 col-lg-4 order-md-first order-lg-2 mb-3">
       <div class="card">

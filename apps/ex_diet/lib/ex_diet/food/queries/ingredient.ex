@@ -24,6 +24,12 @@ defmodule ExDiet.Food.Queries.Ingredient do
 
   def search(query, _), do: query
 
+  def slice(query, limit, offset) when limit > 0 and offset >= 0 do
+    query
+    |> limit([t], ^limit)
+    |> offset([t], ^offset)
+  end
+
   def for_user_or_global(query, %ExDiet.Accounts.User{id: id}) do
     from(q in query, where: is_nil(q.user_id) or q.user_id == ^id)
   end
