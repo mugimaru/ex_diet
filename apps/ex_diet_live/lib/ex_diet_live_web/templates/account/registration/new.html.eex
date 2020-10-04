@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-  <div class="card col-md-4 col-12">
+  <div class="card col-xl-4 col-12">
     <div class="card-body">
       <%= form_for nil, Routes.account_registration_path(@conn, :create), [] %>
         <div class="mb-3">
