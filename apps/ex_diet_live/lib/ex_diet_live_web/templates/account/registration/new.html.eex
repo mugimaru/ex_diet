@@ -12,7 +12,7 @@
           <input id="password" name="password" type="password"  placeholder="Enter password..." class="form-control" required>
         </div>
 
-        <button class="btn btn-primary" value="<%= @password %>" type="submit" name="action">Login</button>
+        <button class="btn btn-primary" value="<%= @password %>" type="submit" name="action">Register</button>
         <a href="<%= Routes.account_session_path(@conn, :new) %>" class="btn btn-link">Need to login? </a>
       </form>
     </div>
