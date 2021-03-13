@@ -57,6 +57,7 @@ defmodule ExDietLiveWeb do
       use Phoenix.LiveComponent
 
       unquote(view_helpers())
+      import ExDietLiveWeb.LiveViewHelpers
     end
   end
 

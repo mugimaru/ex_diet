@@ -13,6 +13,10 @@ defmodule ExDiet.Food.Queries.Calendar do
     end)
   end
 
+  def preload_meals(query) do
+    from(q in query, preload: [meals: [:recipe, :ingredient]])
+  end
+
   def filter(query, filter) do
     Enum.reduce(filter, query, fn
       {:created_before, date}, query ->

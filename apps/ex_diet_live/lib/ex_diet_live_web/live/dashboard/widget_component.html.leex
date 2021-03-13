@@ -1,0 +1,54 @@
+<div class="card mb-4 <%= if @calendar.day == Date.utc_today(), do: "border-info" %>">
+  <div class="card-header">
+    <div class="d-flex justify-content-between">
+      <div>
+        <%= @calendar.day %>
+      </div>
+
+      <div role="group" class="float-right btn-group btn-group-sm">
+        <button type="button" class="btn btn-outline-secondary" style="padding: 2px 4px">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20">
+            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <%= if @calendar.meals == [] do %>
+    <div class="card-body text-center"><!----><span> Empty </span></div>
+  <% else %>
+    <table class="table table-bordered" style="margin: 0">
+      <thead>
+        <th>Meal</th>
+        <th>Weight</th>
+        <th class="d-none d-lg-table-cell">Protein</th>
+        <th class="d-none d-lg-table-cell">Fat</th>
+        <th class="d-none d-lg-table-cell">Carbonhydrate</th>
+        <th>Energy</th>
+      </thead>
+      <tbody>
+        <%= for meal <- @calendar.meals do %>
+          <% nf = %ExDiet.Food.NutritionFacts{} = Food.NutritionFacts.calculate(meal.recipe || meal.ingredient) %>
+          <tr>
+            <td><%= (meal.recipe || meal.ingredient).name %></td>
+            <td><%= meal.weight %></td>
+            <td class="d-none d-lg-table-cell"><%= format_number nf.protein %></td>
+            <td class="d-none d-lg-table-cell"><%= format_number nf.fat %></td>
+            <td class="d-none d-lg-table-cell"><%= format_number nf.carbonhydrate %></td>
+            <td><%= format_number nf.energy, precision: 0 %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <th colspan="2"></th>
+        <th class="d-none d-lg-table-cell"><%= format_number @totals.protein %></th>
+        <th class="d-none d-lg-table-cell"><%= format_number @totals.fat %></th>
+        <th class="d-none d-lg-table-cell"><%= format_number @totals.carbonhydrate %></th>
+        <th><%= format_number @totals.energy, precision: 0 %></th>
+      </tfoot>
+    </table>
+
+  <% end %>
+
+</div>

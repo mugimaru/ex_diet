@@ -37,6 +37,8 @@ defmodule ExDietLiveWeb.Router do
 
     delete("/accounts/sessions", Account.SessionController, :delete, as: :account_session)
 
+    live("/dashboard", DashboardLive, :index)
+
     scope "/food", Food do
       live("/ingredients", IngredientLive, :index)
       live("/recipes", RecipeLive, :index)
@@ -48,7 +50,7 @@ defmodule ExDietLiveWeb.Router do
 
     scope "/" do
       pipe_through(:browser)
-      live_dashboard("/dashboard", metrics: ExDietLiveWeb.Telemetry)
+      live_dashboard("/phx_dashboard", metrics: ExDietLiveWeb.Telemetry)
     end
   end
 end

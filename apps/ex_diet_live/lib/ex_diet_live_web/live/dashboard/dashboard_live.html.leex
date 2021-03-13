@@ -1,0 +1,66 @@
+<div class="row">
+<div class="col-12">
+  <div class="text-center">
+    <div role="group" class="btn-group">
+      <button type="button" class="btn btn-secondary" style="padding: 0 4px" phx-click="set_prev_week">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="24">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <button type="button" class="btn btn-outline-secondary" phx-click="set_current_week">
+        <%= @from_date %> - <%= @to_date %>
+      </button>
+      <button type="button" class="btn btn-secondary" style="padding: 0 4px" phx-click="set_next_week">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="24">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="d-none d-md-block col-12">
+  <div class="text-right">
+    <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="hwbtd" <%= if @hide_widgets_before_today, do: "checked" %> phx-click="toggle_hide_widgets_before_today">
+      <label class="custom-control-label" for="hwbtd"> Hide widgets before today </label>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <div class="col-lg-4 col-12">
+    <div id="recipes-card" class="card">
+      <div class="card-header"><div>Recipes</div></div>
+      <div class="list-group list-group-flush">
+        <%= for recipe <- @recipes do %>
+          <% nf = %ExDiet.Food.NutritionFacts{} = Food.NutritionFacts.calculate(recipe) %>
+          <div class="list-group-item d-flex justify-content-between align-items-center <%= if recipe.eaten, do: "disabled" %>">
+            <span>
+              <span class="badge bg-secondary" style="min-width: 10em">
+                <%= format_number nf.protein, precision: 0 %>/<%= format_number nf.fat, precision: 0 %>/<%= format_number nf.carbonhydrate, precision: 0 %> - <%= format_number nf.energy, precision: 0 %>kcal
+              </span>
+              <%= recipe.name %>
+            </span>
+            <%= if !recipe.eaten do %>
+              <button type="button" class="btn btn-outline-danger btn-sm" style="padding: 0.3em" phx-click="mark_as_eaten" phx-value-id="<%= recipe.id%>">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-8 col-12">
+    <%= for cal <- @calendar do %>
+      <%= if !@hide_widgets_before_today || Date.compare(cal.day, Date.utc_today()) != :lt do %>
+        <%= live_component @socket, ExDietLiveWeb.Dashboard.WidgetComponent, id: cal.day, calendar: cal %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

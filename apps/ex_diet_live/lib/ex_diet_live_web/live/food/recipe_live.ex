@@ -9,8 +9,7 @@ defmodule ExDietLiveWeb.Food.RecipeLive do
     socket = assign_user(session, socket)
     :ok = ExDietLive.Food.UserPubSubDispatcher.subscribe(socket.assigns.current_user, Food.Recipe)
 
-    {:ok,
-     assign(socket, has_next_page: false, page: 1, filter: %{filter: ""}, update_mode: :append),
+    {:ok, assign(socket, has_next_page: false, page: 1, filter: %{filter: ""}, update_mode: :append),
      temporary_assigns: [data: []]}
   end
 
