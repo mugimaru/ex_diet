@@ -44,7 +44,7 @@ defmodule ExDietLiveWeb.LiveViewHelpers do
     if precision == 0 do
       num |> Decimal.round() |> Decimal.to_integer() |> to_string()
     else
-      case num |> to_string() |> String.split(".") do
+      case num |> Decimal.round(precision) |> to_string() |> String.split(".") do
         [num] ->
           num <> "." <> repeat_str("0", precision)
 

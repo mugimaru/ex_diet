@@ -1,0 +1,50 @@
+<div class="d-flex flex-column flex-md-row">
+<div class="custom-control custom-checkbox flex-grow-0 pt-2 pr-2 ml-2 mb-2 mb-md-0">
+  <input
+    type="checkbox"
+    id="cb-exclude-eaten"
+    class="custom-control-input"
+    phx-click="toggle_eaten_filter"
+    <%= if @filter[:eaten] == false, do: "checked", else: "" %>
+  >
+  <label class="custom-control-label" for="cb-exclude-eaten"> Exclude eaten </label>
+</div>
+<form id="recipes_filter" phx-change="filter" class="flex-fill">
+  <div class="input-group mb-3">
+    <span class="input-group-text"><%= icon "search" %></span>
+    <input type="text" name ="q" value="<%= @filter.filter %>" class="form-control" placeholder="Search recipes..."/>
+  </div>
+</form>
+</div>
+
+<table class="table table-hover table-responsive table-bordered">
+  <thead>
+    <tr>
+        <th>Name</th>
+        <th>Weight Cooked</th>
+        <th class="d-none d-md-table-cell">Protein</th>
+        <th class="d-none d-md-table-cell">Fat</th>
+        <th class="d-none d-md-table-cell">CHO</th>
+        <th>Energy</th>
+    </tr>
+  </thead>
+
+  <tbody id="recipes" phx-update="<%= @update_mode %>">
+    <%= for rec = %ExDiet.Food.Recipe{} <- @data do %>
+      <% nf = %ExDiet.Food.NutritionFacts{} = Food.NutritionFacts.calculate(rec) %>
+      <tr phx-click="select_item" id="recipe-<%= rec.id %>" phx-value-id="<%= rec.id %>">
+        <td><%= rec.name %></td>
+        <td class="d-none d-md-table-cell text-right"><%= format_number rec.weight_cooked %></td>
+        <td class="d-none d-md-table-cell text-right"><%= format_number nf.protein %></td>
+        <td class="d-none d-md-table-cell text-right"><%= format_number nf.fat %></td>
+        <td class="d-none d-md-table-cell text-right"><%= format_number nf.carbonhydrate %></td>
+        <td class="text-right"><%= format_number nf.energy, precision: 0 %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= if @has_next_page do %>
+  <div id="recipes-table-spinner" class="d-flex justify-content-center" phx-hook="infiniteScrollHook">
+    <div class="spinner-border" role="status"></div>
+  </div>
+<% end %>

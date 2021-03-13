@@ -3,7 +3,8 @@ defmodule ExDietLiveWeb.LayoutView do
 
   def navbar_pages do
     %{
-      "Ingredients" => Routes.ingredient_path(ExDietLiveWeb.Endpoint, :index)
+      "Ingredients" => Routes.ingredient_path(ExDietLiveWeb.Endpoint, :index),
+      "Recipes" => Routes.recipe_path(ExDietLiveWeb.Endpoint, :index)
     }
   end
 

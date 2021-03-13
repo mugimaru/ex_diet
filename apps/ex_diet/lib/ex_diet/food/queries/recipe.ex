@@ -12,7 +12,7 @@ defmodule ExDiet.Food.Queries.Recipe do
           where: ilike(q.name, ^"%#{filter}%") or ilike(i.name, ^"%#{filter}%")
         )
 
-      {:eaten, eaten}, query ->
+      {:eaten, eaten}, query when not is_nil(eaten) ->
         from(q in query, where: q.eaten == ^eaten)
 
       _, query ->
